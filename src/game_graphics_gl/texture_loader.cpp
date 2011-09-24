@@ -20,6 +20,8 @@
 #include <png.h>
 #include "game_graphics_gl.h"
 
+const GLint FORMAT[] = { GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA };
+
 TextureLoader* TextureLoader::instance_ = 0;
 
 TextureLoader* TextureLoader::getInstance() {
@@ -49,42 +51,38 @@ GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {
     png_init_io(rsp, fp);
     png_read_info(rsp, isp);
     png_uint_32 w, h;
-    int d, t;
+    int d, t, nc;
     png_get_IHDR(rsp, isp, &w, &h, &d, &t, 0, 0, 0);
-    bool s = png_get_valid(rsp, isp, PNG_INFO_sRGB) && d <= 8;
     bool trns = png_get_valid(rsp, isp, PNG_INFO_tRNS);
-    GLint ct;
-    int a = 0;
     switch (t) {
     case PNG_COLOR_TYPE_GRAY:
         if (d < 8)
             png_set_expand_gray_1_2_4_to_8(rsp);
         if (!trns) {
-            ct = s ? GL_SLUMINANCE : GL_LUMINANCE;
+            nc = 1;
             break;
         } // Fall through.
     case PNG_COLOR_TYPE_GRAY_ALPHA:
-        ct = s ? GL_SLUMINANCE_ALPHA : GL_LUMINANCE_ALPHA;
-        a = 1;
+        nc = 2;
         break;
     case PNG_COLOR_TYPE_PALETTE:
         png_set_palette_to_rgb(rsp); // Fall through.
     case PNG_COLOR_TYPE_RGB:
         if (!trns) {
-            ct = s ? GL_SRGB : GL_RGB;
+            nc = 3;
             break;
         } // Fall through.
     case PNG_COLOR_TYPE_RGBA:
-        ct = s ? GL_SRGB_ALPHA : GL_RGBA;
-        a = 3;
+        nc = 4;
         break;
     }
+    GLint ct = FORMAT[nc - 1];
     if (trns)
         png_set_tRNS_to_alpha(rsp);
     GLint dt = d <= 8 ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT;
     if (d == 16)
         png_set_swap(rsp);
-    int rb = png_get_rowbytes(rsp, isp);
+    int rb = w * nc * (d <= 8 ? 1 : 2);
     png_bytep data = (png_bytep) png_malloc(rsp, h * rb);
     png_bytep* rp = (png_bytep*) png_malloc(rsp, h * sizeof(png_bytep));
     for (int i = 0; i < h; i++)
@@ -92,16 +90,17 @@ GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {
     png_read_image(rsp, rp);
     png_read_end(rsp, 0);
     fclose(fp);
-    if (premultiply && a > 0) {
+    if (premultiply && (nc & 1) == 0) {
+        int a = nc - 1, l = h * w * nc;
         if (d == 16) {
             png_uint_16p data16 = (png_uint_16p) data;
-            for (int i = 0; i < h * w * (a + 1); i += (a + 1)) {
+            for (int i = 0; i < l; i += nc) {
                 for (int j = 0; j < a; j++)
                     data16[i + j] = ((png_uint_32) data16[i + j]
                             * (png_uint_32) data16[i + a] + 32767) / 65535;
             }
         } else {
-            for (int i = 0; i < h * w * (a + 1); i += (a + 1)) {
+            for (int i = 0; i < l; i += nc) {
                 for (int j = 0; j < a; j++)
                     data[i + j] = ((png_uint_16) data[i + j]
                             * (png_uint_16) data[i + a] + 127) / 255;
@@ -116,8 +115,9 @@ GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
             GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    GLint tw = (nc & 1) == 0 ? GL_CLAMP_TO_BORDER : GL_CLAMP_TO_EDGE;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tw);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tw);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexImage2D(GL_TEXTURE_2D, 0, ct, w, h, 0, ct, dt, data);
     glBindTexture(GL_TEXTURE_2D, 0);
