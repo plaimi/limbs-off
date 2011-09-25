@@ -24,9 +24,9 @@ class TestUniverse;
 
 class TestBody: public Body {
 public:
-    TestBody() {
-        x_ = 0.0;
-        y_ = 0.0;
+    TestBody(float x, float y) {
+        x_ = x;
+        y_ = y;
         orientation_ = 0;
     }
     friend class TestUniverse;
@@ -48,9 +48,11 @@ int main(int argc, char *argv[]) {
     Screen* s = Screen::getInstance();
     TextureLoader* l = TextureLoader::getInstance();
     GLuint t = l->loadTexture("test.png", true);
-    TestBody b;
+    TestBody a(-3.0, -3.0), b(3.0, 3.0);
     TestUniverse u(&b);
-    BodySprite bs(&b, t, 1.0, 1.0, 0.0, 0.0, 0.0);
+    Disk bd(10.0, 64);
+    Sprite bs(t, 4.0, 4.0);
+    BodyGraphic dg(&a, &bd, 0.0, 0.0, 0.0), sg(&b, &bs, 0.0, 0.0, 0.0);
     SDL_Event event;
     bool quit = false;
     while (!quit) {
@@ -63,7 +65,10 @@ int main(int argc, char *argv[]) {
         }
         u.update();
         glClear(GL_COLOR_BUFFER_BIT);
-        bs.draw();
+        glColor3f(0.4, 0.8, 0.4);
+        dg.draw();
+        glColor3f(1.0, 1.0, 1.0);
+        sg.draw();
         SDL_GL_SwapBuffers();
     }
     return 0;

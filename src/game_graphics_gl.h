@@ -24,15 +24,37 @@
 #include "graphics.h"
 #include "physics.h"
 
-class BodySprite: Graphic {
+#define PI (3.141592653589793)
+
+class BodyGraphic: public Graphic {
 public:
-    BodySprite(Body* body, GLuint texture, GLfloat w, GLfloat h, GLfloat ox,
-            GLfloat oy, GLfloat oa);
+    BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,
+            GLfloat oa);
     void draw();
 private:
     Body* body_;
+    Graphic* graphic_;
+    GLfloat ox_, oy_, oa_;
+};
+
+class Sprite: public Graphic {
+public:
+    Sprite(GLuint texture, GLfloat w, GLfloat h);
+    void draw();
+private:
     GLuint texture_;
-    GLfloat w_, h_, ox_, oy_, oa_;
+    GLfloat w_, h_;
+};
+
+class Disk: public Graphic {
+public:
+    Disk(GLfloat r, int n);
+    void draw();
+private:
+    GLfloat r_;
+    int n_;
+    GLuint displayList_;
+    void makeDisplayList();
 };
 
 class TextureLoader {
