@@ -1,0 +1,32 @@
+# Autotools stuff.
+/autom4te.cache
+/aclocal.m4
+/config.guess
+/config.h.in
+/config.sub
+/configure
+/depcomp
+/install-sh
+/ltmain.sh
+/missing
+Makefile
+Makefile.in
+config.h
+config.log
+config.status
+libtool
+stamp-h1
+
+# ChangeLog is generated from git log.
+/ChangeLog
+
+
+# Binaries.
+bin
+!/src/bin
+/src/bin/*
+!/src/bin/*.*
+*.[oa]
+
+.*
+*~
