@@ -24,8 +24,6 @@
 #include "graphics.h"
 #include "physics.h"
 
-#define PI (3.141592653589793)
-
 class BodyGraphic: public Graphic {
 public:
     BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,

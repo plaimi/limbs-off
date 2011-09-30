@@ -22,9 +22,21 @@
 Particle::~Particle() {
 }
 
+state2f Particle::getState() {
+    return s_;
+}
+
+vector2f Particle::getPosition() {
+    return p_;
+}
+
 void Particle::getPosition(float& x, float& y) {
     x = x_;
     y = y_;
+}
+
+vector2f Particle::getVelocity() {
+    return v_;
 }
 
 void Particle::getVelocity(float& vx, float& vy) {

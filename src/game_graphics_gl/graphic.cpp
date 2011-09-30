@@ -18,6 +18,7 @@
  */
 
 #include <math.h>
+#include "geometry.h"
 #include "game_graphics_gl.h"
 
 BodyGraphic::BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,
@@ -30,7 +31,7 @@ void BodyGraphic::draw() {
     body_->getPosition(x, y);
     glPushMatrix();
     glTranslatef(x, y, 0.0);
-    glRotatef(body_->getOrientation() - oa_, 0.0, 0.0, 1.0);
+    glRotatef((body_->getOrientation() - oa_) * IN_DEG, 0.0, 0.0, 1.0);
     glTranslatef(-ox_, -oy_, 0.0);
     graphic_->draw();
     glPopMatrix();

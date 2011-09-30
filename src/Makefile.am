@@ -17,6 +17,7 @@ bin_limbs_off_SOURCES = \
 	graphics.cpp \
 	physics.h \
 	physics.cpp \
+	geometry.h \
 	game_graphics_gl.h \
 	game_graphics_gl/graphic.cpp \
 	game_graphics_gl/screen.cpp \

@@ -20,13 +20,26 @@
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
+#include "geometry.h"
+
 class Particle {
 public:
+    state2f getState();
+    vector2f getPosition();
     void getPosition(float& x, float& y);
+    vector2f getVelocity();
     void getVelocity(float& vx, float& vy);
     virtual ~Particle();
 protected:
-    float x_, y_, vx_, vy_;
+    union {
+        state2f s_;
+        struct {
+            vector2f p_, v_;
+        };
+        struct {
+            float x_, y_, vx_, vy_;
+        };
+    };
 };
 
 class Mass: public Particle {
