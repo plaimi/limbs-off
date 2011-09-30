@@ -76,54 +76,6 @@ struct vector2 {
     }
 };
 
-template<typename T>
-struct state2 {
-    vector2<T> p, v;
-    vector2<T> &operator[](unsigned int i) {
-        return *(&p + i);
-    }
-    const vector2<T> &operator[](unsigned int i) const {
-        return *(&p + i);
-    }
-    const state2<T> operator()(const vector2<T> p0, const vector2<T> v0) {
-        p = p0;
-        v = v0;
-        return *this;
-    }
-    const state2<T> operator-(void) const {
-        return state2<T> ()(-p, -v);
-    }
-    const state2<T> operator+(const state2<T> &s) const {
-        return state2<T> ()(p + s.p, v + s.v);
-    }
-    const state2<T> operator-(const state2<T> &s) const {
-        return state2<T> ()(p - s.p, v - s.v);
-    }
-    const state2<T> operator*(const T f) const {
-        return state2<T> ()(p * f, v * f);
-    }
-    const state2<T> operator/(const T d) const {
-        return state2<T> ()(p / d, v / d);
-    }
-    const state2<T> &operator+=(const state2<T> &s) {
-        (*this)(p + s.p, v + s.v);
-        return *this;
-    }
-    const state2<T> &operator-=(const state2<T> &s) {
-        (*this)(p - s.p, v - s.v);
-        return *this;
-    }
-    const state2<T> &operator*=(const T f) {
-        (*this)(p * f, v * f);
-        return *this;
-    }
-    const state2<T> &operator/=(const T d) {
-        (*this)(p / d, v / d);
-        return *this;
-    }
-};
-
 typedef vector2<float> vector2f;
-typedef state2<float> state2f;
 
 #endif /* GEOMETRY_H_ */
