@@ -51,7 +51,6 @@ bool Screen::initialize() {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    printf("%x", glGetError());
     return glGetError() == GL_NO_ERROR;
 }
 
