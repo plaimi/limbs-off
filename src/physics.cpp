@@ -22,24 +22,24 @@
 Particle::~Particle() {
 }
 
-state2f Particle::getState() {
+state2p Particle::getState() {
     return s_;
 }
 
-vector2f Particle::getPosition() {
+vector2p Particle::getPosition() {
     return p_;
 }
 
-void Particle::getPosition(float& x, float& y) {
+void Particle::getPosition(phys_t& x, phys_t& y) {
     x = x_;
     y = y_;
 }
 
-vector2f Particle::getVelocity() {
+vector2p Particle::getVelocity() {
     return v_;
 }
 
-void Particle::getVelocity(float& vx, float& vy) {
+void Particle::getVelocity(phys_t& vx, phys_t& vy) {
     vx = vx_;
     vy = vy_;
 }
@@ -47,15 +47,15 @@ void Particle::getVelocity(float& vx, float& vy) {
 Mass::~Mass() {
 }
 
-float Mass::getMass() {
+phys_t Mass::getMass() {
     return mass_;
 }
 
-float Body::getOrientation() {
+phys_t Body::getOrientation() {
     return orientation_;
 }
 
-float Body::getAngularVelocity() {
+phys_t Body::getAngularVelocity() {
     return av_;
 }
 

@@ -24,7 +24,7 @@ class TestUniverse;
 
 class TestBody: public Body {
 public:
-    TestBody(float x, float y) {
+    TestBody(phys_t x, phys_t y) {
         x_ = x;
         y_ = y;
         orientation_ = 0;

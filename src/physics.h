@@ -22,6 +22,11 @@
 
 #include "geometry.h"
 
+#define sqrtp(x) sqrt(x)
+#define remainderp(x, y) remainder(x, y)
+
+typedef double phys_t;
+
 template<typename T>
 struct state2 {
     vector2<T> p, v;
@@ -69,44 +74,45 @@ struct state2 {
     }
 };
 
-typedef state2<float> state2f;
+typedef vector2<phys_t> vector2p;
+typedef state2<phys_t> state2p;
 
 class Particle {
 public:
-    state2f getState();
-    vector2f getPosition();
-    void getPosition(float& x, float& y);
-    vector2f getVelocity();
-    void getVelocity(float& vx, float& vy);
+    state2p getState();
+    vector2p getPosition();
+    void getPosition(phys_t& x, phys_t& y);
+    vector2p getVelocity();
+    void getVelocity(phys_t& vx, phys_t& vy);
     virtual ~Particle();
 protected:
     union {
-        state2f s_;
+        state2p s_;
         struct {
-            vector2f p_, v_;
+            vector2p p_, v_;
         };
         struct {
-            float x_, y_, vx_, vy_;
+            phys_t x_, y_, vx_, vy_;
         };
     };
 };
 
 class Mass: public Particle {
 public:
-    float getMass();
+    phys_t getMass();
     virtual ~Mass();
 protected:
-    float mass_;
+    phys_t mass_;
 };
 
 class Body: public Mass {
 public:
-    float getOrientation();
-    float getAngularVelocity();
+    phys_t getOrientation();
+    phys_t getAngularVelocity();
     virtual ~Body();
 protected:
-    float orientation_;
-    float av_;
+    phys_t orientation_;
+    phys_t av_;
 };
 
 #endif /* PHYSICS_H_ */

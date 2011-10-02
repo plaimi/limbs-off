@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include "geometry.h"
+#include "physics.h"
 #include "game_graphics_gl.h"
 
 BodyGraphic::BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,
@@ -27,7 +28,7 @@ BodyGraphic::BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,
 }
 
 void BodyGraphic::draw() {
-    float x, y;
+    phys_t x, y;
     body_->getPosition(x, y);
     glPushMatrix();
     glTranslatef(x, y, 0.0);
