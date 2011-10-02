@@ -20,6 +20,7 @@
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
+#include <math.h>
 #include "geometry.h"
 
 #define sqrtp(x) sqrt(x)
@@ -27,9 +28,18 @@
 
 typedef double phys_t;
 
+const float G = 6.67384e-11;
+
 template<typename T>
 struct state2 {
-    vector2<T> p, v;
+    union {
+        struct {
+            vector2<T> p, v;
+        };
+        struct {
+            phys_t x, y, vx, vy;
+        };
+    };
     vector2<T> &operator[](unsigned int i) {
         return *(&p + i);
     }
@@ -39,6 +49,11 @@ struct state2 {
     const state2<T> operator()(const vector2<T> p0, const vector2<T> v0) {
         p = p0;
         v = v0;
+        return *this;
+    }
+    const state2<T> operator()(const T x, const T y, const T vx, const T vy) {
+        p(x, y);
+        v(vx, vy);
         return *this;
     }
     const state2<T> operator-(void) const {

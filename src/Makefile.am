@@ -22,6 +22,8 @@ bin_limbs_off_SOURCES = \
 	game_graphics_gl/graphic.cpp \
 	game_graphics_gl/screen.cpp \
 	game_graphics_gl/texture_loader.cpp \
+	game_physics.h \
+	game_physics.cpp \
 	bin/limbs_off.cpp
 
 bin_limbs_off_LDFLAGS = 
