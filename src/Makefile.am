@@ -15,6 +15,10 @@ bin_PROGRAMS = bin/limbs_off
 bin_limbs_off_SOURCES = \
 	graphics.h \
 	graphics.cpp \
+	init.h \
+	init.cpp \
+	input_handler.h \
+	input_handler.cpp \
 	physics.h \
 	physics.cpp \
 	geometry.h \

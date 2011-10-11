@@ -16,4 +16,6 @@ clean-local:
 	test ChangeLog -nt .git-timestamp && mv -f ChangeLog ChangeLog~ || \
 		rm -f ChangeLog;
 
-SUBDIRS = src
+SUBDIRS = \
+	  src \
+	  test
