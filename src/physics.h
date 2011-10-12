@@ -37,56 +37,22 @@ struct state2 {
             vector2<T> p, v;
         };
         struct {
-            phys_t x, y, vx, vy;
+            T x, y, vx, vy;
         };
     };
-    vector2<T> &operator[](unsigned int i) {
-        return *(&p + i);
-    }
-    const vector2<T> &operator[](unsigned int i) const {
-        return *(&p + i);
-    }
-    const state2<T> operator()(const vector2<T> p0, const vector2<T> v0) {
-        p = p0;
-        v = v0;
-        return *this;
-    }
-    const state2<T> operator()(const T x, const T y, const T vx, const T vy) {
-        p(x, y);
-        v(vx, vy);
-        return *this;
-    }
-    const state2<T> operator-(void) const {
-        return state2<T> ()(-p, -v);
-    }
-    const state2<T> operator+(const state2<T> &s) const {
-        return state2<T> ()(p + s.p, v + s.v);
-    }
-    const state2<T> operator-(const state2<T> &s) const {
-        return state2<T> ()(p - s.p, v - s.v);
-    }
-    const state2<T> operator*(const T f) const {
-        return state2<T> ()(p * f, v * f);
-    }
-    const state2<T> operator/(const T d) const {
-        return state2<T> ()(p / d, v / d);
-    }
-    const state2<T> &operator+=(const state2<T> &s) {
-        (*this)(p + s.p, v + s.v);
-        return *this;
-    }
-    const state2<T> &operator-=(const state2<T> &s) {
-        (*this)(p - s.p, v - s.v);
-        return *this;
-    }
-    const state2<T> &operator*=(const T f) {
-        (*this)(p * f, v * f);
-        return *this;
-    }
-    const state2<T> &operator/=(const T d) {
-        (*this)(p / d, v / d);
-        return *this;
-    }
+    vector2<T>& operator[](unsigned int i);
+    const vector2<T>& operator[](unsigned int i) const;
+    const state2<T> operator()(const vector2<T> p0, const vector2<T> v0);
+    const state2<T> operator()(const T x, const T y, const T vx, const T vy);
+    const state2<T> operator-() const;
+    const state2<T> operator+(const state2<T>& s) const;
+    const state2<T> operator-(const state2<T>& s) const;
+    const state2<T> operator*(const T f) const;
+    const state2<T> operator/(const T d) const;
+    const state2<T>& operator+=(const state2<T>& s);
+    const state2<T>& operator-=(const state2<T>& s);
+    const state2<T>& operator*=(const T f);
+    const state2<T>& operator/=(const T d);
 };
 
 typedef vector2<phys_t> vector2p;
@@ -129,5 +95,7 @@ protected:
     phys_t orientation_;
     phys_t av_;
 };
+
+#include "physics_inl.h"
 
 #endif /* PHYSICS_H_ */

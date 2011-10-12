@@ -26,56 +26,26 @@
 template<typename T>
 struct vector2 {
     T x, y;
-    T &operator[](unsigned int i) {
-        return *(&x + i);
-    }
-    const T &operator[](unsigned int i) const {
-        return *(&x + i);
-    }
-    const vector2<T> operator()(const T x0, const T y0) {
-        x = x0;
-        y = y0;
-        return *this;
-    }
-    const vector2<T> operator-(void) const {
-        return vector2<T> ()(-x, -y);
-    }
-    const vector2<T> operator+(const vector2<T> &v) const {
-        return vector2<T> ()(x + v.x, y + v.y);
-    }
-    const vector2<T> operator-(const vector2<T> &v) const {
-        return vector2<T> ()(x - v.x, y - v.y);
-    }
-    const vector2<T> operator*(const T f) const {
-        return vector2<T> ()(x * f, y * f);
-    }
-    const vector2<T> operator/(const T d) const {
-        return vector2<T> ()(x / d, y / d);
-    }
-    const vector2<T> &operator+=(const vector2<T> &v) {
-        (*this)(x + v.x, y + v.y);
-        return *this;
-    }
-    const vector2<T> &operator-=(const vector2<T> &v) {
-        (*this)(x - v.x, y - v.y);
-        return *this;
-    }
-    const vector2<T> &operator*=(const T f) {
-        (*this)(x * f, y * f);
-        return *this;
-    }
-    const vector2<T> &operator/=(const T d) {
-        (*this)(x / d, y / d);
-        return *this;
-    }
-    T operator*(const vector2<T> &v) const {
-        return x * v.x + y * v.y;
-    }
-    T squared() const {
-        return x * x + y * y;
-    }
+    T& operator[](unsigned int i);
+    const T& operator[](unsigned int i) const;
+    const vector2<T> operator()(const T x0, const T y0);
+    const vector2<T> operator-() const;
+    const vector2<T> operator~() const;
+    const vector2<T> operator+(const vector2<T>& v) const;
+    const vector2<T> operator-(const vector2<T>& v) const;
+    const vector2<T> operator*(const T f) const;
+    const vector2<T> operator/(const T d) const;
+    const vector2<T>& operator+=(const vector2<T>& v);
+    const vector2<T>& operator-=(const vector2<T>& v);
+    const vector2<T>& operator*=(const T f);
+    const vector2<T>& operator/=(const T d);
+    T operator*(const vector2<T>& v) const;
+    T operator/(const vector2<T>& v) const;
+    T squared() const;
+    const vector2<T> rotate(vector2<T> u);
+    const vector2<T> rotated(vector2<T> u) const;
 };
 
-typedef vector2<float> vector2f;
+#include "geometry_inl.h"
 
 #endif /* GEOMETRY_H_ */

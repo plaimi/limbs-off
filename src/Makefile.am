@@ -20,8 +20,9 @@ bin_limbs_off_SOURCES = \
 	input_handler.h \
 	input_handler.cpp \
 	physics.h \
-	physics.cpp \
+	physics_inl.h \
 	geometry.h \
+	geometry_inl.h \
 	game_graphics_gl.h \
 	game_graphics_gl/graphic.cpp \
 	game_graphics_gl/screen.cpp \
