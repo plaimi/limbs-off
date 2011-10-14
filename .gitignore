@@ -27,6 +27,8 @@ bin
 /src/bin/*
 !/src/bin/*.*
 *.[oa]
+limbs_off
+test/input_bindings
 
 .*
 *~
