@@ -67,11 +67,15 @@ private:
 
 class Screen {
 public:
+    static const int DM_FRONT_TO_BACK = 1, DM_PREMUL = 2, DM_SMOOTH = 4;
     static Screen* getInstance();
+    void setDrawingMode(int mode, int mask = -1, bool update = true);
+    void updateDrawingMode();
 protected:
     Screen();
 private:
     static Screen* instance_;
+    int drawingMode_;
     static bool initialize();
 };
 

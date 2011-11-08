@@ -21,37 +21,48 @@
 #include "game_graphics_gl.h"
 #include "game_physics.h"
 
-const phys_t GM = 480.5;
+const phys_t GM = 628;
 const phys_t R = 9.0;
 const phys_t S = sqrtp(GM / R);
+const phys_t PR = 7.0;
 
 int main(int argc, char *argv[]) {
     Screen* s = Screen::getInstance();
+    s->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1, false);
     TextureLoader* l = TextureLoader::getInstance();
     GLuint t = l->loadTexture("test.png", true);
     AstroBody p(GM, 0.0);
     Character c(50.0, state2p()(R, 0.0, 0.0, S), 0.0, 2.0 * S / R);
     Universe u(&p, &c);
-    Disk pd(7.0, 64);
+    Disk pd(PR, 64);
     Sprite cs(t, 1.0, 1.0);
     BodyGraphic pg(&p, &pd, 0.0, 0.0, 0.0), cg(&c, &cs, 0.0, 0.0, 0.0);
     SDL_Event event;
     bool quit = false;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_KEYDOWN && event.key.keysym.sym
-                    == SDLK_ESCAPE)
+            switch (event.type) {
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                    quit = true;
+                    break;
+                default:
+                    ;
+                }
+                break;
+            case SDL_QUIT:
                 quit = true;
-            if (event.type == SDL_QUIT)
-                quit = true;
+                break;
+            }
         }
         for (int i = 0; i < 10; i++)
             u.update(1.0 / 600.0);
         glClear(GL_COLOR_BUFFER_BIT);
-        glColor3f(0.4, 0.8, 0.4);
-        pg.draw();
         glColor3f(1.0, 1.0, 1.0);
         cg.draw();
+        glColor3f(0.4, 0.8, 0.4);
+        pg.draw();
         SDL_GL_SwapBuffers();
     }
     return 0;

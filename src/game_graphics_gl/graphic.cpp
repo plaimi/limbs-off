@@ -43,6 +43,7 @@ Sprite::Sprite(GLuint texture, GLfloat w, GLfloat h) :
 }
 
 void Sprite::draw() {
+    Screen::getInstance()->setDrawingMode(-1, Screen::DM_PREMUL);
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_);
@@ -65,6 +66,7 @@ Disk::Disk(GLfloat r, int n) :
 }
 
 void Disk::draw() {
+    Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
     if (displayList_ == 0)
         makeDisplayList();
     else

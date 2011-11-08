@@ -21,6 +21,10 @@
 #include "geometry.h"
 #include "game_physics.h"
 
+SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av) :
+    Body(s, mass, orientation, av) {
+}
+
 void SmallBody::update(phys_t dt) {
     s_ += (ds_[0] + (ds_[1] + ds_[2]) * 2.0 + ds_[3]) * (dt / 6.0);
     orientation_ = remainderp(orientation_ + dt * av_, 2 * PI);
@@ -32,18 +36,11 @@ void SmallBody::setDeltaState(int i, vector2p a) {
 }
 
 AstroBody::AstroBody(phys_t gm, phys_t av) :
-    gm(gm) {
-    mass_ = gm / G;
-    s_(0.0, 0.0, 0.0, 0.0);
-    orientation_ = 0.0;
-    av_ = av;
+    Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av), gm(gm) {
 }
 
-Character::Character(phys_t mass, state2p state, phys_t o, phys_t av) {
-    mass_ = mass;
-    s_ = state;
-    orientation_ = o;
-    av_ = av;
+Character::Character(phys_t mass, state2p state, phys_t o, phys_t av) :
+    SmallBody(state, mass, o, av) {
 }
 
 Universe::Universe(AstroBody* planet, Character* character) :
@@ -51,19 +48,22 @@ Universe::Universe(AstroBody* planet, Character* character) :
 }
 
 void Universe::update(phys_t dt) {
-    planet_->orientation_ += remainderp(
+    planet_->orientation_ = remainderp(
             planet_->orientation_ + dt * planet_->av_, 2 * PI);
-    const phys_t dts[] = { 0.0, 0.5 * dt, 0.5 * dt, dt };
+    const phys_t dts[] = { 0.5 * dt, 0.5 * dt, dt };
     for (int i = 0; i < 4; i++) {
-        // Set initial values for the delta state.
-        character_->setDeltaState(i,
-                character_->v_ + character_->ds_[i - 1].v * dts[i]);
+        vector2p v = character_->v_;
         // Calculate the distance vector to the planet.
-        vector2p d = (planet_->p_ - character_->p_) + (planet_->p_
-                - character_->ds_[i - 1].p) * dts[i];
+        vector2p d = planet_->p_ - character_->p_;
+        if (i > 0) {
+            v += character_->ds_[i - 1].v * dts[i - 1];
+            d += (planet_->p_ - character_->ds_[i - 1].p) * dts[i - 1];
+        }
+        // Set initial values for the delta state.
+        character_->setDeltaState(i, v);
         // Calculate acceleration and update delta velocity.
-        phys_t ds = d.squared();
-        character_->ds_[i].v += d * (planet_->gm / (sqrtp(ds) * ds));
+        phys_t dd = d.squared();
+        character_->ds_[i].v += d * (planet_->gm / (sqrtp(dd) * dd));
     }
     character_->update(dt);
 }

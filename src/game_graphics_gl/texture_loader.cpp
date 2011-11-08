@@ -85,7 +85,7 @@ GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {
     int rb = w * nc * (d <= 8 ? 1 : 2);
     png_bytep data = (png_bytep) png_malloc(rsp, h * rb);
     png_bytep* rp = (png_bytep*) png_malloc(rsp, h * sizeof(png_bytep));
-    for (int i = 0; i < h; i++)
+    for (png_uint_32 i = 0; i < h; i++)
         rp[i] = data + i * rb;
     png_read_image(rsp, rp);
     png_read_end(rsp, 0);

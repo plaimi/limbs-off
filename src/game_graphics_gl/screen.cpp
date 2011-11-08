@@ -35,6 +35,8 @@ const int SCREEN_DEPTH = 32;
 bool Screen::initialize() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         return false;
+    atexit(SDL_Quit);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     if (!SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_DEPTH, SDL_OPENGL))
         return false;
     SDL_WM_SetCaption("OpenGL Test", 0);
@@ -50,9 +52,32 @@ bool Screen::initialize() {
     glDisable(GL_LIGHTING);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     return glGetError() == GL_NO_ERROR;
 }
 
-Screen::Screen() {
+Screen::Screen() :
+    drawingMode_(0) {
+}
+
+void Screen::setDrawingMode(int mode, int mask, bool update) {
+    drawingMode_ ^= (drawingMode_ ^ mode) & mask;
+    if (update)
+        updateDrawingMode();
+}
+
+void Screen::updateDrawingMode() {
+    GLenum s, d;
+    bool pm = drawingMode_ & DM_PREMUL;
+    if (drawingMode_ & DM_FRONT_TO_BACK) {
+        s = pm ? GL_ONE_MINUS_DST_ALPHA : GL_SRC_ALPHA_SATURATE;
+        d = GL_ONE;
+    } else {
+        s = pm ? GL_ONE : GL_SRC_ALPHA;
+        d = GL_ONE_MINUS_SRC_ALPHA;
+    }
+    glBlendFunc(s, d);
+    if ((drawingMode_ & (DM_SMOOTH | DM_PREMUL)) == DM_SMOOTH)
+        glEnable(GL_POLYGON_SMOOTH);
+    else
+        glDisable(GL_POLYGON_SMOOTH);
 }

@@ -97,6 +97,10 @@ inline const state2<T>& state2<T>::operator/=(const T d) {
     return *this;
 }
 
+inline Particle::Particle(state2p s) :
+    s_(s) {
+}
+
 inline Particle::~Particle() {
 }
 
@@ -122,11 +126,19 @@ inline void Particle::getVelocity(phys_t& vx, phys_t& vy) {
     vy = vy_;
 }
 
+inline Mass::Mass(state2p s, phys_t mass) :
+    Particle(s), mass_(mass) {
+}
+
 inline Mass::~Mass() {
 }
 
 inline phys_t Mass::getMass() {
     return mass_;
+}
+
+inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av) :
+    Mass(s, mass), orientation_(orientation), av_(av) {
 }
 
 inline Body::~Body() {

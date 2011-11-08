@@ -76,6 +76,7 @@ protected:
             phys_t x_, y_, vx_, vy_;
         };
     };
+    Particle(state2p s);
 };
 
 class Mass: public Particle {
@@ -84,6 +85,7 @@ public:
     virtual ~Mass();
 protected:
     phys_t mass_;
+    Mass(state2p s, phys_t mass);
 };
 
 class Body: public Mass {
@@ -94,6 +96,7 @@ public:
 protected:
     phys_t orientation_;
     phys_t av_;
+    Body(state2p s, phys_t mass, phys_t orientation, phys_t av);
 };
 
 #include "physics_inl.h"

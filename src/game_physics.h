@@ -25,6 +25,8 @@
 class Universe;
 
 class SmallBody: public Body {
+protected:
+    SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av);
 private:
     void update(phys_t dt);
     void setDeltaState(int i, vector2p a);
