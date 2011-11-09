@@ -20,6 +20,8 @@
 #ifndef GEOMETRY_H_
 #define GEOMETRY_H_
 
+#include "template_math.h"
+
 #define PI (3.141592653589793)
 #define IN_DEG (180.0 / PI)
 
@@ -45,6 +47,46 @@ struct vector2 {
     const vector2<T> rotate(vector2<T> u);
     const vector2<T> rotated(vector2<T> u) const;
 };
+
+enum ShapeType {
+    CIRCLE, RECTANGLE
+};
+
+template<typename T>
+class Shape {
+public:
+    ShapeType getType() {
+        return type_;
+    }
+protected:
+    ShapeType type_;
+};
+
+template<typename T>
+class Circle: public Shape<T> {
+public:
+    Circle(T radius) :
+        radius_(radius) {
+        Shape<T>::type_ = CIRCLE;
+    }
+    T getRadius() {
+        return radius_;
+    }
+protected:
+    T radius_;
+};
+
+/**
+ * Calculate intersection between a line and a circle.
+ *
+ * @param a point on line at t=0.
+ * @param b point on line at t=1.
+ * @param rr squared radius of the circle.
+ * @param[out] t1 t of first intersection.
+ * @param[out] t2 t of second intersection.
+ */
+template<typename T>
+bool intersectLineCircle(vector2<T> a, vector2<T> b, T rr, T& t1, T& t2);
 
 #include "geometry_inl.h"
 

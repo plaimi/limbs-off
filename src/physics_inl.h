@@ -23,6 +23,38 @@
 #include "physics.h"
 
 template<typename T>
+inline const state1<T> state1<T>::operator()(const T p0, const T v0) {
+    p = p0;
+    v = v0;
+    return *this;
+}
+
+template<typename T>
+inline const state1<T> state1<T>::operator-() const {
+    return state1<T> ()(-p, -v);
+}
+
+template<typename T>
+inline const state1<T> state1<T>::operator+(const state1<T> &s) const {
+    return state1<T> ()(p + s.p, v + s.v);
+}
+
+template<typename T>
+inline const state1<T> state1<T>::operator-(const state1<T> &s) const {
+    return state1<T> ()(p - s.p, v - s.v);
+}
+
+template<typename T>
+inline const state1<T> state1<T>::operator*(const T f) const {
+    return state1<T> ()(p * f, v * f);
+}
+
+template<typename T>
+inline const state1<T> state1<T>::operator/(const T d) const {
+    return state1<T> ()(p / d, v / d);
+}
+
+template<typename T>
 inline vector2<T>& state2<T>::operator[](unsigned int i) {
     return *(&p + i);
 }
@@ -137,8 +169,17 @@ inline phys_t Mass::getMass() {
     return mass_;
 }
 
-inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av) :
-    Mass(s, mass), orientation_(orientation), av_(av) {
+inline vector2p Mass::getMomentum() {
+    return v_ * mass_;
+}
+
+inline void Mass::applyImpulse(vector2p i) {
+    v_ += i / mass_;
+}
+
+inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av,
+        phys_t moi, Shape<phys_t>* shape) :
+    Mass(s, mass), orientation_(orientation), av_(av), moi_(moi), shape_(shape) {
 }
 
 inline Body::~Body() {
@@ -150,6 +191,38 @@ inline phys_t Body::getOrientation() {
 
 inline phys_t Body::getAngularVelocity() {
     return av_;
+}
+
+inline phys_t Body::getMomentOfInertia() {
+    return moi_;
+}
+
+inline Shape<phys_t>* Body::getShape() {
+    return shape_;
+}
+
+inline phys_t Body::getAngularMomentum() {
+    return av_ * moi_;
+}
+
+inline vector2p Body::getMomentumAt(vector2p p, vector2p vp) {
+    phys_t pp = p.squared();
+    vector2p m = (v_ + ~p * av_ - vp) * mass_;
+    m -= ~p * (~p * m * mass_ / (moi_ + mass_ * pp));
+    return m;
+}
+
+inline vector2p Body::getVelocityAt(vector2p p) {
+    return v_ + ~p * av_;
+}
+
+inline void Body::applyAngularImpulse(phys_t i) {
+    av_ += i / moi_;
+}
+
+inline void Body::applyImpulseAt(vector2p i, vector2p p) {
+    applyImpulse(i);
+    applyAngularImpulse(p / i);
 }
 
 #endif /* PHYSICS_INL_H_ */

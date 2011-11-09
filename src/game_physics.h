@@ -26,29 +26,31 @@ class Universe;
 
 class SmallBody: public Body {
 protected:
-    SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av);
+    SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
+            phys_t moi, Shape<phys_t>* shape);
 private:
-    void update(phys_t dt);
     void setDeltaState(int i, vector2p a);
+    bodystate getNextState(phys_t dt);
     state2p ds_[4];
-    friend class Universe;
+    friend class GameUniverse;
 };
 
 class AstroBody: public Body {
 public:
     const phys_t gm;
-    AstroBody(phys_t gm, phys_t av);
-    friend class Universe;
+    AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape);
+    friend class GameUniverse;
 };
 
 class Character: public SmallBody {
 public:
-    Character(phys_t mass, state2p state, phys_t o, phys_t av);
+    Character(phys_t mass, state2p state, phys_t moi, phys_t o, phys_t av,
+            Shape<phys_t>* shape);
 };
 
-class Universe {
+class GameUniverse: public Universe {
 public:
-    Universe(AstroBody* planet, Character* character);
+    GameUniverse(AstroBody* planet, Character* character);
     void update(phys_t dt);
 private:
     AstroBody* planet_;

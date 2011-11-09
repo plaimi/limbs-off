@@ -38,8 +38,11 @@ limbs_off_SOURCES = \
 	src/input_handler.cpp \
 	src/physics.h \
 	src/physics_inl.h \
+	src/physics.cpp \
 	src/geometry.h \
 	src/geometry_inl.h \
+	src/template_math.h \
+	src/template_math_inl.h \
 	src/game_graphics_gl.h \
 	src/game_graphics_gl/graphic.cpp \
 	src/game_graphics_gl/screen.cpp \

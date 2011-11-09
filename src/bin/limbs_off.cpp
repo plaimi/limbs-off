@@ -23,7 +23,7 @@
 
 const phys_t GM = 628;
 const phys_t R = 9.0;
-const phys_t S = sqrtp(GM / R);
+const phys_t S = sqrt<phys_t> (GM / R) * 0.5;
 const phys_t PR = 7.0;
 
 int main(int argc, char *argv[]) {
@@ -31,12 +31,17 @@ int main(int argc, char *argv[]) {
     s->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1, false);
     TextureLoader* l = TextureLoader::getInstance();
     GLuint t = l->loadTexture("test.png", true);
-    AstroBody p(GM, 0.0);
-    Character c(50.0, state2p()(R, 0.0, 0.0, S), 0.0, 2.0 * S / R);
-    Universe u(&p, &c);
+    Circle<phys_t> pc = Circle<phys_t> (PR);
+    AstroBody p(GM, 2 * GM * PR * PR / 5, -0.05, &pc);
+    Circle<phys_t> cc = Circle<phys_t> (1.0);
+    Character c(50.0, state2p()(R, 0.0, 0.0, S), 2 * 50.0 * 1 * 1 / 5, 0.0,
+            -5.0, &cc);
+    GameUniverse u(&p, &c);
     Disk pd(PR, 64);
-    Sprite cs(t, 1.0, 1.0);
-    BodyGraphic pg(&p, &pd, 0.0, 0.0, 0.0), cg(&c, &cs, 0.0, 0.0, 0.0);
+    Disk pdr(PR, 4);
+    Sprite cs(t, 1, 1);
+    BodyGraphic pg(&p, &pd, 0.0, 0.0, 0.0), pgr(&p, &pdr, 0.0, 0.0, 0.0), cg(
+            &c, &cs, 0.0, 0.0, 0.0);
     SDL_Event event;
     bool quit = false;
     while (!quit) {
@@ -61,6 +66,8 @@ int main(int argc, char *argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
         glColor3f(1.0, 1.0, 1.0);
         cg.draw();
+        glColor3f(0.8, 0.4, 0.4);
+        pgr.draw();
         glColor3f(0.4, 0.8, 0.4);
         pg.draw();
         SDL_GL_SwapBuffers();

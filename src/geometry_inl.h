@@ -119,4 +119,18 @@ inline const vector2<T> vector2<T>::rotated(vector2<T> u) const {
     return vector2<T> (*this).rotate(u);
 }
 
+template<typename T>
+bool intersectLineCircle(vector2<T> a, vector2<T> b, T rr, T& t1, T& t2) {
+    vector2<T> d = b - a;
+    T dd = d.squared(), h = a / b;
+    T delta = rr * dd - h * h;
+    if (delta <= 0)
+        return false;
+    T srd = sqrt<T> (delta);
+    T tm = -a * d;
+    t1 = (tm - srd) / dd;
+    t2 = (tm + srd) / dd;
+    return true;
+}
+
 #endif /* GEOMETRY_INL_H_ */

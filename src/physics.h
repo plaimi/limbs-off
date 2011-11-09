@@ -23,12 +23,20 @@
 #include <math.h>
 #include "geometry.h"
 
-#define sqrtp(x) sqrt(x)
-#define remainderp(x, y) remainder(x, y)
-
 typedef double phys_t;
 
 const float G = 6.67384e-11;
+
+template<typename T>
+struct state1 {
+    T p, v;
+    const state1<T> operator()(const T p0, const T v0);
+    const state1<T> operator-() const;
+    const state1<T> operator+(const state1<T> &s) const;
+    const state1<T> operator-(const state1<T> &s) const;
+    const state1<T> operator*(const T f) const;
+    const state1<T> operator/(const T d) const;
+};
 
 template<typename T>
 struct state2 {
@@ -56,7 +64,26 @@ struct state2 {
 };
 
 typedef vector2<phys_t> vector2p;
+typedef state1<phys_t> state1p;
 typedef state2<phys_t> state2p;
+
+struct bodystate {
+    union {
+        state2p l;
+        struct {
+            vector2p p, v;
+        };
+        struct {
+            phys_t x, y, vx, vy;
+        };
+    };
+    union {
+        state1p a;
+        struct {
+            phys_t o, av;
+        };
+    };
+};
 
 class Particle {
 public:
@@ -77,27 +104,53 @@ protected:
         };
     };
     Particle(state2p s);
+    friend class Universe;
 };
 
 class Mass: public Particle {
 public:
     phys_t getMass();
+    vector2p getMomentum();
     virtual ~Mass();
 protected:
     phys_t mass_;
     Mass(state2p s, phys_t mass);
+    void applyImpulse(vector2p i);
+    friend class Universe;
 };
 
 class Body: public Mass {
 public:
     phys_t getOrientation();
     phys_t getAngularVelocity();
+    phys_t getMomentOfInertia();
+    Shape<phys_t>* getShape();
+    phys_t getAngularMomentum();
+    vector2p getMomentumAt(vector2p p, vector2p vp);
+    vector2p getVelocityAt(vector2p p);
     virtual ~Body();
 protected:
     phys_t orientation_;
     phys_t av_;
-    Body(state2p s, phys_t mass, phys_t orientation, phys_t av);
+    phys_t moi_;
+    Shape<phys_t>* shape_;
+    Body(state2p s, phys_t mass, phys_t orientation, phys_t av, phys_t moi,
+            Shape<phys_t>* shape);
+    void applyAngularImpulse(phys_t i);
+    void applyImpulseAt(vector2p i, vector2p p);
+    friend class Universe;
 };
+
+class Universe {
+public:
+    virtual void update(phys_t dt) = 0;
+};
+
+bool collide(Body* a, Body* b, bodystate& na, bodystate& nb, phys_t& t,
+        vector2p& p, vector2p& n);
+
+vector2p bounce1(Body* a, Body* b, vector2p& pa, vector2p pb, vector2p n,
+        phys_t restitution, phys_t friction, phys_t rr);
 
 #include "physics_inl.h"
 
