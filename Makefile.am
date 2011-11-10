@@ -1,20 +1,21 @@
 ## Process this file with automake to produce Makefile.in
 
-nogit = test ! -d .git
+nogit = test ! -d $(srcdir)/.git
+git = git --work-tree=$(srcdir)
 
 dist-hook all: ChangeLog
 
 ChangeLog: .git-timestamp
-	- $(nogit) || (git log --date=short \
+	- $(nogit) || ($(git) log --date=short \
 		--pretty="format:%ad  %an  <%ae>%n%w(76,8,8)%s%n%+b" > ChangeLog && \
 		touch -r .git-timestamp ChangeLog)
 
 .git-timestamp::
-	- $(nogit) || touch -d "@`git log -1 --format=%ct`" .git-timestamp
+	- $(nogit) || touch -d "@`$(git) log -1 --format=%ct`" .git-timestamp
 
 clean-local:
-	test ChangeLog -nt .git-timestamp && mv -f ChangeLog ChangeLog~ || \
-		rm -f ChangeLog;
+	$(nogit) || (test ChangeLog -nt .git-timestamp && \
+		mv -f ChangeLog ChangeLog~ || rm -f ChangeLog);
 
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
