@@ -20,6 +20,9 @@
 #include <SDL/SDL.h>
 #include "game_graphics_gl.h"
 #include "game_physics.h"
+#include "init.h"
+#include "input_handler.h"
+#include "player.h"
 
 const phys_t GM = 628;
 const phys_t R = 9.0;
@@ -36,6 +39,7 @@ int main(int argc, char *argv[]) {
     Circle<phys_t> cc = Circle<phys_t> (1.0);
     Character c(50.0, state2p()(R, 0.0, 0.0, S), 2 * 50.0 * 1 * 1 / 5, 0.0,
             -5.0, &cc);
+    Player player(&c);
     GameUniverse u(&p, &c);
     Disk pd(PR, 64);
     Disk pdr(PR, 4);
@@ -43,6 +47,7 @@ int main(int argc, char *argv[]) {
     BodyGraphic pg(&p, &pd, 0.0, 0.0, 0.0), pgr(&p, &pdr, 0.0, 0.0, 0.0), cg(
             &c, &cs, 0.0, 0.0, 0.0);
     SDL_Event event;
+    Init::readBindings(&player, "src/controllers.conf");
     bool quit = false;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
@@ -55,10 +60,14 @@ int main(int argc, char *argv[]) {
                 default:
                     ;
                 }
+                // Fall through
+            case SDL_KEYUP:
+                if (InputHandler* handler = InputHandler::getHandler(event.key.keysym.sym)) {
+                    handler->handle(event);
+                }
                 break;
             case SDL_QUIT:
                 quit = true;
-                break;
             }
         }
         for (int i = 0; i < 10; i++)

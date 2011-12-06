@@ -19,20 +19,13 @@
 
 #include "input_handler.h"
 
-InputHandler* InputHandler::handlers[SDLK_LAST];
-
-void InputHandler::handle(SDL_Event event) {
-    switch (event.type) {
-        case SDL_KEYDOWN:
-            printf("%d/n", bindings[event.key.keysym.sym]);
-    }
-}
+InputHandler* InputHandler::handlers_[SDLK_LAST];
 
 void InputHandler::bindKey(SDLKey key, ActionType action) {
-    bindings[key] = action;
-    handlers[key] = this;
+    bindings_[key] = action;
+    handlers_[key] = this;
 }
 
 InputHandler* InputHandler::getHandler(SDLKey key) {
-    return handlers[key];
+    return handlers_[key];
 }

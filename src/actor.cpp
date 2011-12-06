@@ -17,14 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INIT_H_
-#define INIT_H_
+#include "actor.h"
 
-#include "input_handler.h"
-
-namespace Init {
-     // Opens the config and reads the keys.
-    void readBindings(InputHandler* handler, const char* file);
+Actor::Actor(Character* character) :
+    character_(character) {
 };
-
-#endif /* INIT_H_ */

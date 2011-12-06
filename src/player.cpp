@@ -17,14 +17,12 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INIT_H_
-#define INIT_H_
+#include <SDL/SDL.h>
+#include "player.h"
 
-#include "input_handler.h"
+Player::Player(Character* character) :
+    Actor(character) {
+}
 
-namespace Init {
-     // Opens the config and reads the keys.
-    void readBindings(InputHandler* handler, const char* file);
-};
-
-#endif /* INIT_H_ */
+void Player::handle(SDL_Event event) {
+}

@@ -27,21 +27,16 @@
 
 class InputHandler {
 public:
-    /**
-     * Return the input handler.
-     */
+    // Return the input handler.
     static InputHandler* getHandler(SDLKey key);
-    /**
-     * Treat input event.
-     */
-    void handle(SDL_Event event);
-    /**
-     * Pair a key with an action type.
-     */
+    // Treat input event.
+    virtual void handle(SDL_Event event) = 0;
+    // Pair a key with an action type.
     void bindKey(SDLKey key, ActionType action);
+protected:
+    ActionType bindings_[SDLK_LAST];
 private:
-    static InputHandler* handlers[SDLK_LAST];
-    ActionType bindings[SDLK_LAST];
+    static InputHandler* handlers_[SDLK_LAST];
 };
 
 #endif /* INPUT_HANDLER_H_ */

@@ -31,6 +31,8 @@ AM_CFLAGS =\
 bin_PROGRAMS = limbs_off
 
 limbs_off_SOURCES = \
+	src/actor.h \
+	src/actor.cpp \
 	src/graphics.h \
 	src/graphics.cpp \
 	src/init.h \
@@ -40,6 +42,8 @@ limbs_off_SOURCES = \
 	src/physics.h \
 	src/physics_inl.h \
 	src/physics.cpp \
+	src/player.h \
+	src/player.cpp \
 	src/geometry.h \
 	src/geometry_inl.h \
 	src/template_math.h \
