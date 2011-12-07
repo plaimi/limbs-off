@@ -18,11 +18,15 @@
  */
 
 #include <SDL/SDL.h>
+#include "step_timer.h"
 #include "game_graphics_gl.h"
 #include "game_physics.h"
 #include "init.h"
 #include "input_handler.h"
 #include "player.h"
+
+const double MAX_FPS = 150;
+const double STEPS_PER_SECOND = 600;
 
 const phys_t GM = 628;
 const phys_t R = 9.0;
@@ -49,6 +53,8 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
     Init::readBindings(&player, "src/controllers.conf");
     bool quit = false;
+    Uint32 time = SDL_GetTicks();
+    StepTimer timer;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -70,8 +76,10 @@ int main(int argc, char *argv[]) {
                 quit = true;
             }
         }
-        for (int i = 0; i < 10; i++)
-            u.update(1.0 / 600.0);
+        int steps = timer.getStepTime() * STEPS_PER_SECOND;
+        timer.time(steps / STEPS_PER_SECOND);
+        for (int i = 0; i < steps; i++)
+            u.update(1.0 / STEPS_PER_SECOND);
         glClear(GL_COLOR_BUFFER_BIT);
         glColor3f(1.0, 1.0, 1.0);
         cg.draw();
@@ -80,6 +88,14 @@ int main(int argc, char *argv[]) {
         glColor3f(0.4, 0.8, 0.4);
         pg.draw();
         SDL_GL_SwapBuffers();
+        Uint32 d = SDL_GetTicks() - time;
+        int w = 1000 / MAX_FPS - d;
+        if (w > 0) {
+            SDL_Delay(w);
+            d = SDL_GetTicks() - time;
+        }
+        time += d;
+        timer.targetTime(d / 1000.0);
     }
     return 0;
 }

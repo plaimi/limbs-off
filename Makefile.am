@@ -48,6 +48,8 @@ limbs_off_SOURCES = \
 	src/geometry_inl.h \
 	src/template_math.h \
 	src/template_math_inl.h \
+	src/step_timer.h \
+	src/step_timer.cpp \
 	src/game_graphics_gl.h \
 	src/game_graphics_gl/graphic.cpp \
 	src/game_graphics_gl/screen.cpp \
