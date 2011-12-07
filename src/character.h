@@ -6,8 +6,8 @@
 
 class Character: public SmallBody {
 public:
-    Character(phys_t mass, state2p state, phys_t moi, phys_t o, phys_t av,
-            Shape<phys_t>* shape);
+    Character(phys_t mass, state2p state, phys_t inertiaMoment, phys_t
+            orientation, phys_t angVel, Shape<phys_t>* shape);
     // Return current velocity (_vel)
     double getVel();
     // Procedures for setting request states
