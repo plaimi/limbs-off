@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
             -5.0, &characterCircle);
     Player player(&character);
 
-    GameUniverse universe(&planet, &character);
+    GameUniverse universe(&planet);
+    universe.addBody(&character);
     Disk planetDisk(PR, 64);
     Disk planetSquare(PR, 4);
     Sprite characterSprite(tex, 1, 1);

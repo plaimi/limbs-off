@@ -20,6 +20,7 @@
 #ifndef GAME_PHYSICS_H_
 #define GAME_PHYSICS_H_
 
+#include <vector>
 #include "physics.h"
 
 class Universe;
@@ -50,11 +51,12 @@ public:
 
 class GameUniverse: public Universe {
 public:
-    GameUniverse(AstroBody* planet, Character* character);
+    GameUniverse(AstroBody* planet);
     void update(phys_t dt);
+    void addBody(SmallBody* b);
 private:
     AstroBody* planet_;
-    Character* character_;
+    std::vector<SmallBody*> smallBodies_;
 };
 
 #endif /* GAME_PHYSICS_H_ */

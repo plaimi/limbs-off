@@ -48,41 +48,49 @@ Character::Character(phys_t mass, state2p state, phys_t moi, phys_t o,
     SmallBody(state, mass, o, av, moi, shape) {
 }
 
-GameUniverse::GameUniverse(AstroBody* planet, Character* character) :
-    planet_(planet), character_(character) {
+GameUniverse::GameUniverse(AstroBody* planet) :
+    planet_(planet) {
 }
 
 void GameUniverse::update(phys_t dt) {
     planet_->orientation_ = remainder<phys_t> (
             planet_->orientation_ + dt * planet_->av_, 2 * PI);
     const phys_t dts[] = { 0.5 * dt, 0.5 * dt, dt };
-    for (int i = 0; i < 4; i++) {
-        vector2p v = character_->v_;
-        // Calculate the distance vector to the planet.
-        vector2p d = planet_->p_ - character_->p_;
-        if (i > 0) {
-            v += character_->ds_[i - 1].v * dts[i - 1];
-            d += (planet_->p_ - character_->ds_[i - 1].p) * dts[i - 1];
+    std::vector<SmallBody*>::iterator ib;
+    for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
+        SmallBody* b = *ib;
+        for (int i = 0; i < 4; i++) {
+            vector2p v = b->v_;
+            // Calculate the distance vector to the planet.
+            vector2p d = planet_->p_ - b->p_;
+            if (i > 0) {
+                v += b->ds_[i - 1].v * dts[i - 1];
+                d += (planet_->p_ - b->ds_[i - 1].p) * dts[i - 1];
+            }
+            // Set initial values for the delta state.
+            b->setDeltaState(i, v);
+            // Calculate acceleration and update delta velocity.
+            phys_t dd = d.squared();
+            b->ds_[i].v += d * (planet_->gm / (sqrt<phys_t> (dd) * dd));
         }
-        // Set initial values for the delta state.
-        character_->setDeltaState(i, v);
-        // Calculate acceleration and update delta velocity.
-        phys_t dd = d.squared();
-        character_->ds_[i].v += d * (planet_->gm / (sqrt<phys_t> (dd) * dd));
+        bodystate np = { { planet_->s_ }, { state1p()(planet_->orientation_,
+                planet_->av_) } };
+        bodystate bs = b->getNextState(dt);
+        phys_t t;
+        vector2p p, n;
+        if (collide(planet_, b, np, bs, t, p, n)) {
+            b->s_ = bs.l;
+            vector2p pg = p + planet_->p_, pc = pg - b->p_;
+            vector2p im = bounce1(b, planet_, pc, p, -n, 0.8, 0.2, 0.02);
+            b->applyImpulseAt(im, pc);
+            // TODO: Recalculate gravity.
+            b->p_ += b->v_ * (dt * (1 - t));
+        } else
+            b->s_ = bs.l;
+        b->orientation_ += dt * b->av_;
     }
-    bodystate np = { { planet_->s_ }, { state1p()(planet_->orientation_,
-            planet_->av_) } };
-    bodystate b = character_->getNextState(dt);
-    phys_t t;
-    vector2p p, n;
-    if (collide(planet_, character_, np, b, t, p, n)) {
-        character_->s_ = b.l;
-        vector2p pg = p + planet_->p_, pc = pg - character_->p_;
-        vector2p im = bounce1(character_, planet_, pc, p, -n, 0.8, 0.2, 0.02);
-        character_->applyImpulseAt(im, pc);
-        // TODO: Recalculate gravity.
-        character_->p_ += character_->v_ * (dt * (1 - t));
-    } else
-        character_->s_ = b.l;
-    character_->orientation_ += dt * character_->av_;
+}
+
+void GameUniverse::addBody(SmallBody* b) {
+    smallBodies_.push_back(b);
 }
