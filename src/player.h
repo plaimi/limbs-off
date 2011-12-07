@@ -21,7 +21,7 @@
 #define PLAYER_H_ 
 
 #include "actor.h"
-#include "game_physics.h"
+#include "character.h"
 #include "event_handler.h"
 
 class Player : public Actor, public EventHandler {

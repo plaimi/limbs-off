@@ -22,6 +22,7 @@
 
 #include "physics.h"
 
+class Character;
 class Universe;
 
 class SmallBody: public Body {
@@ -40,12 +41,6 @@ public:
     const phys_t gm;
     AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape);
     friend class GameUniverse;
-};
-
-class Character: public SmallBody {
-public:
-    Character(phys_t mass, state2p state, phys_t moi, phys_t o, phys_t av,
-            Shape<phys_t>* shape);
 };
 
 class GameUniverse: public Universe {

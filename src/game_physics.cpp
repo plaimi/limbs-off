@@ -18,6 +18,7 @@
  */
 
 #include <math.h>
+#include "character.h"
 #include "geometry.h"
 #include "game_physics.h"
 
@@ -41,11 +42,6 @@ bodystate SmallBody::getNextState(phys_t dt) {
 
 AstroBody::AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape) :
     Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av, moi, shape), gm(gm) {
-}
-
-Character::Character(phys_t mass, state2p state, phys_t moi, phys_t o,
-        phys_t av, Shape<phys_t>* shape) :
-    SmallBody(state, mass, o, av, moi, shape) {
 }
 
 GameUniverse::GameUniverse(AstroBody* planet, Character* character) :

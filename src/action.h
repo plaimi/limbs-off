@@ -25,9 +25,9 @@ public:
     Action();
 };
 
-// NUM_ACTIONTYPE is a sizeOf
+// NUM_ACTIONTYPE is a length
 enum ActionType {
-    LEFT, RIGHT, JUMP, CROUCH, FIRE, LPUNCH, RPUNCH, LKICK, RKICK, NUM_ACTIONTYPE
+    NOTHING, LEFT, RIGHT, JUMP, CROUCH, FIRE, LPUNCH, RPUNCH, LKICK, RKICK, NUM_ACTIONTYPE
 };
 
 #endif /* ACTION_H_ */

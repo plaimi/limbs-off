@@ -33,6 +33,8 @@ bin_PROGRAMS = limbs_off
 limbs_off_SOURCES = \
 	src/actor.h \
 	src/actor.cpp \
+	src/character.h \
+	src/character.cpp \
 	src/graphics.h \
 	src/graphics.cpp \
 	src/init.h \
@@ -61,21 +63,9 @@ limbs_off_LDFLAGS =
 
 limbs_off_LDADD = $(GL_LIBS) $(SDL_LIBS) $(PNG_LIBS)
 
-TESTS = test/input_bindings
+TESTS = 
 
-check_PROGRAMS = test/input_bindings
-
-test_input_bindings_SOURCES = \
-			test/input_bindings.cpp \
-			src/action.h \
-			src/input_handler.h \
-			src/input_handler.cpp \
-			src/init.h \
-			src/init.cpp
-
-test_input_bindings_LDFLAGS = 
-
-test_input_bindings_LDADD = $(SDL_LIBS)
+check_PROGRAMS = 
 
 limbs_off_datadir = $(datadir)/limbs-off
 
