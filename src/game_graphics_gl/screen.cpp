@@ -20,7 +20,10 @@
 #include <SDL/SDL.h>
 #include "game_graphics_gl.h"
 
-Screen* Screen::instance_ = 0;
+Screen* Screen::instance_ = NULL;
+int Screen::screenWidth_ = 640;
+int Screen::screenHeight_ = 480;
+int Screen::screenDepth_ = 0;
 
 Screen* Screen::getInstance() {
     if (!instance_ && initialize())
@@ -28,23 +31,25 @@ Screen* Screen::getInstance() {
     return instance_;
 }
 
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
-const int SCREEN_DEPTH = 32;
+void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth) {
+    screenWidth_ = screenWidth;
+    screenHeight_ = screenHeight;
+    screenDepth_ = screenDepth;
+}
 
 bool Screen::initialize() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         return false;
     atexit(SDL_Quit);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    if (!SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_DEPTH, SDL_OPENGL))
+    if (SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_, SDL_OPENGL) == NULL)
         return false;
-    SDL_WM_SetCaption("OpenGL Test", 0);
+    SDL_WM_SetCaption("Limbs Off", 0);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     const float R = 15.0;
-    const float W = R * SCREEN_WIDTH / SCREEN_HEIGHT;
+    const float W = R * screenWidth_ / screenHeight_;
     glOrtho(-W, W, -R, R, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

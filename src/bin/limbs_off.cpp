@@ -34,6 +34,7 @@ const phys_t S = sqrt<phys_t> (GM / R) * 0.5;
 const phys_t PR = 7.0;
 
 int main(int argc, char *argv[]) {
+    Screen::setVideoMode(1024, 768, 32);
     Screen* screen = Screen::getInstance();
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1, false);
     TextureLoader* texLoader = TextureLoader::getInstance();
