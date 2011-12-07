@@ -24,5 +24,16 @@ Player::Player(Character* character) :
     Actor(character) {
 }
 
-void Player::handle(SDL_Event event) {
+bool Player::handle(SDL_Event event) {
+    if (event.type != SDL_KEYDOWN && event.type != SDL_KEYUP) {
+        return false;
+    }
+    if (!bindings_[event.key.keysym.sym]) {
+        return false;
+    }
+    return true;
+}
+
+void Player::bindKey(SDLKey key, ActionType action) {
+    bindings_[key] = action;
 }

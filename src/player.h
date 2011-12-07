@@ -22,12 +22,18 @@
 
 #include "actor.h"
 #include "game_physics.h"
-#include "input_handler.h"
+#include "event_handler.h"
 
-class Player : public Actor, public InputHandler {
+class Player : public Actor, public EventHandler {
 public:
     Player(Character* character);
-    void handle(SDL_Event event);
+    // Handle keyboard event
+    bool handle(SDL_Event event);
+    // Bind key to action
+    void bindKey(SDLKey key, ActionType action);
+private:
+    // All bindindgs
+    ActionType bindings_[SDLK_LAST];
 };
 
 #endif /* PLAYER_H_ */

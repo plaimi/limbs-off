@@ -20,11 +20,11 @@
 #ifndef INIT_H_
 #define INIT_H_
 
-#include "input_handler.h"
+#include "player.h"
 
 namespace Init {
      // Opens the config and reads the keys.
-    void readBindings(InputHandler* handler, const char* file);
+    void readBindings(Player* player, const char* file);
 };
 
 #endif /* INIT_H_ */

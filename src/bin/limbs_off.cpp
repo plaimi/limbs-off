@@ -22,7 +22,7 @@
 #include "game_graphics_gl.h"
 #include "game_physics.h"
 #include "init.h"
-#include "input_handler.h"
+#include "event_handler.h"
 #include "player.h"
 
 const double MAX_FPS = 150;
@@ -34,22 +34,24 @@ const phys_t S = sqrt<phys_t> (GM / R) * 0.5;
 const phys_t PR = 7.0;
 
 int main(int argc, char *argv[]) {
-    Screen* s = Screen::getInstance();
-    s->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1, false);
-    TextureLoader* l = TextureLoader::getInstance();
-    GLuint t = l->loadTexture("test.png", true);
-    Circle<phys_t> pc = Circle<phys_t> (PR);
-    AstroBody p(GM, 2 * GM * PR * PR / 5, -0.05, &pc);
-    Circle<phys_t> cc = Circle<phys_t> (1.0);
-    Character c(50.0, state2p()(R, 0.0, 0.0, S), 2 * 50.0 * 1 * 1 / 5, 0.0,
-            -5.0, &cc);
-    Player player(&c);
-    GameUniverse u(&p, &c);
-    Disk pd(PR, 64);
-    Disk pdr(PR, 4);
-    Sprite cs(t, 1, 1);
-    BodyGraphic pg(&p, &pd, 0.0, 0.0, 0.0), pgr(&p, &pdr, 0.0, 0.0, 0.0), cg(
-            &c, &cs, 0.0, 0.0, 0.0);
+    Screen* screen = Screen::getInstance();
+    screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1, false);
+    TextureLoader* texLoader = TextureLoader::getInstance();
+    GLuint tex = texLoader->loadTexture("test.png", true);
+    Circle<phys_t> planetCircle = Circle<phys_t> (PR);
+    AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
+    Circle<phys_t> characterCircle = Circle<phys_t> (1.0);
+    Character character(50.0, state2p()(R, 0.0, 0.0, S), 2 * 50.0 * 1 * 1 / 5, 0.0,
+            -5.0, &characterCircle);
+    Player player(&character);
+
+    GameUniverse universe(&planet, &character);
+    Disk planetDisk(PR, 64);
+    Disk planetSquare(PR, 4);
+    Sprite characterSprite(tex, 1, 1);
+    BodyGraphic planetGraphic(&planet, &planetDisk, 0.0, 0.0, 0.0),
+        planetSquareGraphic(&planet, &planetSquare, 0.0, 0.0, 0.0),
+        characterGraphic(&character, &characterSprite, 0.0, 0.0, 0.0);
     SDL_Event event;
     Init::readBindings(&player, "src/controllers.conf");
     bool quit = false;
@@ -57,36 +59,23 @@ int main(int argc, char *argv[]) {
     StepTimer timer;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                    quit = true;
-                    break;
-                default:
-                    ;
-                }
-                // Fall through
-            case SDL_KEYUP:
-                if (InputHandler* handler = InputHandler::getHandler(event.key.keysym.sym)) {
-                    handler->handle(event);
-                }
-                break;
-            case SDL_QUIT:
+            if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
+                break;
             }
+            player.handle(event);
         }
         int steps = timer.getStepTime() * STEPS_PER_SECOND;
         timer.time(steps / STEPS_PER_SECOND);
-        for (int i = 0; i < steps; i++)
-            u.update(1.0 / STEPS_PER_SECOND);
+        for (int i = 0; i < steps; ++i)
+            universe.update(1.0 / STEPS_PER_SECOND);
         glClear(GL_COLOR_BUFFER_BIT);
         glColor3f(1.0, 1.0, 1.0);
-        cg.draw();
+        characterGraphic.draw();
         glColor3f(0.8, 0.4, 0.4);
-        pgr.draw();
+        planetSquareGraphic.draw();
         glColor3f(0.4, 0.8, 0.4);
-        pg.draw();
+        planetGraphic.draw();
         SDL_GL_SwapBuffers();
         Uint32 d = SDL_GetTicks() - time;
         int w = 1000 / MAX_FPS - d;

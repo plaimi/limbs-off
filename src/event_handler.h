@@ -17,15 +17,18 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "input_handler.h"
+#ifndef EVENT_HANDLER_H_
+#define EVENT_HANDLER_H_
 
-InputHandler* InputHandler::handlers_[SDLK_LAST];
+#include <iostream>
+#include <fstream>
+#include <SDL/SDL.h>
+#include "action.h"
 
-void InputHandler::bindKey(SDLKey key, ActionType action) {
-    bindings_[key] = action;
-    handlers_[key] = this;
-}
+class EventHandler {
+public:
+    // Treat input event.
+    virtual bool handle(SDL_Event event) = 0;
+};
 
-InputHandler* InputHandler::getHandler(SDLKey key) {
-    return handlers_[key];
-}
+#endif /* EVENT_HANDLER_H_ */

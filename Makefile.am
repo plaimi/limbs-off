@@ -37,8 +37,7 @@ limbs_off_SOURCES = \
 	src/graphics.cpp \
 	src/init.h \
 	src/init.cpp \
-	src/input_handler.h \
-	src/input_handler.cpp \
+	src/event_handler.h \
 	src/physics.h \
 	src/physics_inl.h \
 	src/physics.cpp \

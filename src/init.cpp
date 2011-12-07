@@ -17,12 +17,13 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "init.h"
 #include <string>
+#include "init.h"
+#include "player.h"
 
 using namespace std;
 
-void Init::readBindings(InputHandler* handler, const char* file) {
+void Init::readBindings(Player* player, const char* file) {
     string tmp;
     int keyCode, actionType;
     ifstream in;
@@ -35,7 +36,7 @@ void Init::readBindings(InputHandler* handler, const char* file) {
         getline(in, tmp, ':');
         in >> keyCode;
         in >> actionType;
-        handler->bindKey((SDLKey) keyCode, (ActionType) actionType);
+        player->bindKey((SDLKey) keyCode, (ActionType) actionType);
     }
     in.close();
 }
