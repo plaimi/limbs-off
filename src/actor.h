@@ -20,12 +20,12 @@
 #ifndef ACTOR_H_
 #define ACTOR_H_ 
 
-#include "game_physics.h"
+#include "character.h"
 
 class Actor {
 public:
     Actor(Character* character);
-private:
+protected:
     Character* character_;
 };
 
