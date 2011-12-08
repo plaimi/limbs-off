@@ -1,7 +1,7 @@
 #include "character.h"
 
-Character::Character(phys_t mass, state2p state, phys_t inertiaMoment, phys_t
-        orientation, phys_t angVel, Shape<phys_t>* shape) :
+Character::Character(state2p state, phys_t mass, phys_t orientation, phys_t angVel,
+        phys_t inertiaMoment, Shape<phys_t>* shape) :
             // Physical object
             SmallBody(state, mass, orientation, angVel, inertiaMoment, shape),
             // Request states
