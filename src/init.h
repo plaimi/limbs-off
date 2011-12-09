@@ -23,8 +23,8 @@
 #include "player.h"
 
 namespace Init {
-     // Opens the config and reads the keys.
-    void readBindings(Player* player, const char* file);
-};
+// Opens the config and reads the keys.
+void readBindings(Player* player, const char* file);
+}
 
 #endif /* INIT_H_ */

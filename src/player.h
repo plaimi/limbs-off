@@ -24,7 +24,7 @@
 #include "character.h"
 #include "event_handler.h"
 
-class Player : public Actor, public EventHandler {
+class Player: public Actor, public EventHandler {
 public:
     Player(Character* character);
     // Handle keyboard event

@@ -23,10 +23,10 @@
 
 Player::Player(Character* character) :
     Actor(character) {
-        // Initialise bindings_ to avoid gibberish
-        for (int i = 0; i < SDLK_LAST; ++i) {
-            bindings_[i] = NOTHING;
-        }
+    // Initialise bindings_ to avoid gibberish
+    for (int i = 0; i < SDLK_LAST; ++i) {
+        bindings_[i] = NOTHING;
+    }
 }
 
 bool Player::handle(SDL_Event event) {

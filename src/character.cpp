@@ -1,7 +1,7 @@
 #include "character.h"
 
-Character::Character(state2p state, phys_t mass, phys_t orientation, phys_t angVel,
-        phys_t inertiaMoment, Shape<phys_t>* shape) :
+Character::Character(state2p state, phys_t mass, phys_t orientation,
+        phys_t angVel, phys_t inertiaMoment, Shape<phys_t>* shape) :
             // Physical object
             SmallBody(state, mass, orientation, angVel, inertiaMoment, shape),
             // Request states
@@ -12,7 +12,7 @@ Character::Character(state2p state, phys_t mass, phys_t orientation, phys_t angV
             powerLeftPunch_(0.0), powerRightKick_(0.0), powerRightPunch_(0.0),
             // Velocity
             vel_(0) {
-};
+}
 
 double Character::getVel() {
     return vel_;

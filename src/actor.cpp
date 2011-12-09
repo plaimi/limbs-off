@@ -21,4 +21,4 @@
 
 Actor::Actor(Character* character) :
     character_(character) {
-};
+}

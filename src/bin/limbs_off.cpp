@@ -36,14 +36,15 @@ const phys_t PR = 7.0;
 int main(int argc, char *argv[]) {
     Screen::setVideoMode(1024, 768, 32);
     Screen* screen = Screen::getInstance();
-    screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1, false);
+    screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1,
+            false);
     TextureLoader* texLoader = TextureLoader::getInstance();
     GLuint tex = texLoader->loadTexture("test.png", true);
     Circle<phys_t> planetCircle = Circle<phys_t> (PR);
     AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
     Circle<phys_t> characterCircle = Circle<phys_t> (1.0);
-    Character character(state2p()(R, 0.0, 0.0, S), 50.0, 0.0, -5.0, 2 * 50.0 * 1
-            * 1 / 5, &characterCircle);
+    Character character(state2p()(R, 0.0, 0.0, S), 50.0, 0.0, -5.0,
+            2 * 50.0 * 1 * 1 / 5, &characterCircle);
     Player player(&character);
 
     GameUniverse universe(&planet);
@@ -52,8 +53,8 @@ int main(int argc, char *argv[]) {
     Disk planetSquare(PR, 4);
     Sprite characterSprite(tex, 1, 1);
     BodyGraphic planetGraphic(&planet, &planetDisk, 0.0, 0.0, 0.0),
-        planetSquareGraphic(&planet, &planetSquare, 0.0, 0.0, 0.0),
-        characterGraphic(&character, &characterSprite, 0.0, 0.0, 0.0);
+            planetSquareGraphic(&planet, &planetSquare, 0.0, 0.0, 0.0),
+            characterGraphic(&character, &characterSprite, 0.0, 0.0, 0.0);
     SDL_Event event;
     Init::readBindings(&player, "src/controllers.conf");
     bool quit = false;

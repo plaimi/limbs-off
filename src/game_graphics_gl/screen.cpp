@@ -42,7 +42,8 @@ bool Screen::initialize() {
         return false;
     atexit(SDL_Quit);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    if (SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_, SDL_OPENGL) == NULL)
+    if (SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_, SDL_OPENGL)
+            == NULL)
         return false;
     SDL_WM_SetCaption("Limbs Off", 0);
     glClearColor(0.0, 0.0, 0.0, 0.0);
