@@ -27,6 +27,10 @@ SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
     Body(s, mass, orientation, av, moi, shape) {
 }
 
+bool SmallBody::interact(AstroBody* b, double dt, vector2p& p, vector2p& im) {
+    return false;
+}
+
 void SmallBody::setDeltaState(int i, vector2p a) {
     ds_[i].p = a;
     ds_[i].v(0.0, 0.0);
@@ -83,6 +87,9 @@ void GameUniverse::update(phys_t dt) {
             b->p_ += b->v_ * (dt * (1 - t));
         } else
             b->s_ = bs.l;
+        vector2p pg, im;
+        if (b->interact(planet_, dt, pg, im))
+            b->applyImpulseAt(im, pg - b->p_);
         b->orientation_ += dt * b->av_;
     }
 }

@@ -36,6 +36,7 @@ void Character::leftPunch(bool state) {
 
 void Character::jump(bool state) {
     jump_ = state;
+    powerJump_ = state;
 }
 
 void Character::move(double vel) {
@@ -48,4 +49,26 @@ void Character::rightKick(bool state) {
 
 void Character::rightPunch(bool state) {
     rightPunch_ = state;
+}
+
+bool Character::interact(AstroBody* b, double dt, vector2p& p, vector2p& im) {
+    phys_t t1, t2;
+    vector2p pc = getPosition(), pb = b->getPosition();
+    vector2p la = pc - pb, lb = ~la * (0.5 * vel_);
+    phys_t r = ((Circle<phys_t>*) (b->getShape()))->getRadius();
+    phys_t rr = r * r;
+    if (intersectLineCircle<phys_t> (la, lb, rr, t1, t2)) {
+        vector2p ib = la * (1 - t1) + lb * t1;
+        p = ib + pb;
+        vector2p ic = p - pc;
+        phys_t dd = ic.squared();
+        phys_t l = 2.0 * (1.0 - powerJump_);
+        if (dd < l * l) {
+            phys_t d = sqrt(dd);
+            vector2p n = ic / d;
+            im = -n * (2000 * (l - d) + max(0.0, getMomentum() * n * 8)) * dt;
+            return true;
+        }
+    }
+    return false;
 }

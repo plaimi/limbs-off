@@ -30,6 +30,8 @@ class SmallBody: public Body {
 protected:
     SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
             phys_t moi, Shape<phys_t>* shape);
+    virtual bool interact(class AstroBody* bvz, double dt, vector2p& p,
+            vector2p& im);
 private:
     void setDeltaState(int i, vector2p a);
     bodystate getNextState(phys_t dt);

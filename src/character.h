@@ -19,6 +19,8 @@ public:
     void move(double vel);
     void rightKick(bool state);
     void rightPunch(bool state);
+protected:
+    bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
 private:
     // Requests
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
