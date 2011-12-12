@@ -46,7 +46,6 @@ int main(int argc, char *argv[]) {
     Character character(state2p()(R, 0.0, 0.0, S), 50.0, 0.0, -5.0,
             2 * 50.0 * 1 * 1 / 5, &characterCircle);
     Player player(&character);
-
     GameUniverse universe(&planet);
     universe.addBody(&character);
     Disk planetDisk(PR, 64);
@@ -60,6 +59,7 @@ int main(int argc, char *argv[]) {
     bool quit = false;
     Uint32 time = SDL_GetTicks();
     StepTimer timer;
+    Camera camera(character.getPosition(), 0.5, 0.0);
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE) {
@@ -72,6 +72,14 @@ int main(int argc, char *argv[]) {
         timer.time(steps / STEPS_PER_SECOND);
         for (int i = 0; i < steps; ++i)
             universe.update(1.0 / STEPS_PER_SECOND);
+        camera.setTargetPosition(character.getPosition());
+        vector2p characterToPlanet = character.getPosition() - planet.getPosition();
+        camera.setTargetRadius(sqrt(characterToPlanet.squared()));
+        camera.setTargetRotation(atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
+        camera.update(steps / STEPS_PER_SECOND);
+
+        glPushMatrix();
+        camera.apply();
         glClear(GL_COLOR_BUFFER_BIT);
         glColor3f(1.0, 1.0, 1.0);
         characterGraphic.draw();
@@ -79,6 +87,8 @@ int main(int argc, char *argv[]) {
         planetSquareGraphic.draw();
         glColor3f(0.4, 0.8, 0.4);
         planetGraphic.draw();
+        glPopMatrix();
+
         SDL_GL_SwapBuffers();
         Uint32 d = SDL_GetTicks() - time;
         int w = 1000 / MAX_FPS - d;

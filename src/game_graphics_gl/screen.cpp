@@ -49,7 +49,7 @@ bool Screen::initialize() {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    const float R = 15.0;
+    const float R = 1.0;
     const float W = R * screenWidth_ / screenHeight_;
     glOrtho(-W, W, -R, R, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);

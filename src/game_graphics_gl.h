@@ -82,4 +82,18 @@ private:
     static bool initialize();
 };
 
+class Camera {
+public:
+    Camera(vector2p position, double radius, double rotation);
+    void apply();
+    void update(double deltaTime);
+    void setTargetPosition(vector2p target);
+    void setTargetRadius(double target);
+    void setTargetRotation(double target);
+private:
+    vector2p position_, targetPosition_;
+    double radius_, targetRadius_;
+    double rotation_, targetRotation_;
+};
+
 #endif /* GAME_GRAPHICS_GL_H_ */

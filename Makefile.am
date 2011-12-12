@@ -52,6 +52,7 @@ limbs_off_SOURCES = \
 	src/step_timer.h \
 	src/step_timer.cpp \
 	src/game_graphics_gl.h \
+	src/game_graphics_gl/camera.cpp \
 	src/game_graphics_gl/graphic.cpp \
 	src/game_graphics_gl/screen.cpp \
 	src/game_graphics_gl/texture_loader.cpp \
