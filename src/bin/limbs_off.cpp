@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
         camera.setTargetRadius(sqrt(characterToPlanet.squared()));
         camera.setTargetRotation(atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
         camera.update(steps / STEPS_PER_SECOND);
+        character.update(steps / STEPS_PER_SECOND);
 
         glPushMatrix();
         camera.apply();

@@ -19,6 +19,8 @@ public:
     void move(double vel);
     void rightKick(bool state);
     void rightPunch(bool state);
+    // Update power meters
+    void update(double deltaTime);
 protected:
     bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
 private:

@@ -36,7 +36,6 @@ void Character::leftPunch(bool state) {
 
 void Character::jump(bool state) {
     jump_ = state;
-    powerJump_ = state;
 }
 
 void Character::move(double vel) {
@@ -51,22 +50,36 @@ void Character::rightPunch(bool state) {
     rightPunch_ = state;
 }
 
-bool Character::interact(AstroBody* b, double dt, vector2p& p, vector2p& im) {
+void Character::update(double deltaTime) {
+    double decay = pow(.2, deltaTime);
+    if (jump_) {
+        if (powerJump_ >= 1.0) {
+            jump_ = false;
+        }
+        powerJump_ = 1.5 * (1.0 - decay) + powerJump_ * decay;
+    }
+    if (!jump_) {
+        powerJump_ = 0.0;
+    }
+}
+
+bool Character::interact(AstroBody* body, double deltaTime, vector2p& interactPoint, vector2p& impulse) {
     phys_t t1, t2;
-    vector2p pc = getPosition(), pb = b->getPosition();
-    vector2p la = pc - pb, lb = ~la * (0.5 * vel_);
-    phys_t r = ((Circle<phys_t>*) (b->getShape()))->getRadius();
-    phys_t rr = r * r;
-    if (intersectLineCircle<phys_t> (la, lb, rr, t1, t2)) {
-        vector2p ib = la * (1 - t1) + lb * t1;
-        p = ib + pb;
-        vector2p ic = p - pc;
-        phys_t dd = ic.squared();
-        phys_t l = 2.0 * (1.0 - powerJump_);
-        if (dd < l * l) {
-            phys_t d = sqrt(dd);
-            vector2p n = ic / d;
-            im = -n * (2000 * (l - d) + max(0.0, getMomentum() * n * 8)) * dt;
+    vector2p posCharacter = getPosition(), posBody = body->getPosition();
+    vector2p legA = posCharacter - posBody;
+    vector2p legB = ~legA * (0.5 * vel_);
+    phys_t radius = ((Circle<phys_t>*) (body->getShape()))->getRadius();
+    phys_t radiusSqr = radius * radius;
+    if (intersectLineCircle<phys_t> (legA, legB, radiusSqr, t1, t2)) {
+        vector2p interactBody = legA * (1 - t1) + legB * t1;
+        interactPoint = interactBody + posBody;
+        vector2p interactCharacter = interactPoint - posCharacter;
+        phys_t distanceSqr = interactCharacter.squared();
+        phys_t leg = 2.0 * (1.0 - powerJump_);
+        if (distanceSqr < leg * leg) {
+            phys_t distance = sqrt(distanceSqr);
+            vector2p n = interactCharacter / distance;
+            impulse = -n * (2000.0 * (leg - distance) + max(0.0, getMomentum() * n * 8.0)) * deltaTime;
             return true;
         }
     }

@@ -40,10 +40,10 @@ void Camera::setTargetRotation(double target) {
 
 void Camera::update(double deltaTime) {
     double decay = pow(.25, deltaTime);
-    position_ = targetPosition_ * (1 - decay) + position_ * decay;
-    radius_ = targetRadius_ * (1 - decay) + radius_ * decay;
-    double diff = remainder((targetRotation_ - rotation_), 360);
-    rotation_ += (1 - decay) * diff;
+    position_ = targetPosition_ * (1.0 - decay) + position_ * decay;
+    radius_ = targetRadius_ * (1.0 - decay) + radius_ * decay;
+    double diff = remainder((targetRotation_ - rotation_), 360.0);
+    rotation_ += (1.0 - decay) * diff;
 }
 
 void Camera::apply() {
