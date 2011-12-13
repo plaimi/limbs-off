@@ -3,7 +3,7 @@
 Character::Character(state2p state, phys_t mass, phys_t orientation,
         phys_t angVel, phys_t inertiaMoment, Shape<phys_t>* shape) :
             // Physical object
-            SmallBody(state, mass, orientation, angVel, inertiaMoment, shape),
+            body_(this, state, mass, orientation, angVel, inertiaMoment, shape),
             // Request states
             crouch_(false), fire_(false), jump_(false), leftKick_(false),
             leftPunch_(false), rightKick_(false), rightPunch_(false),
@@ -14,8 +14,16 @@ Character::Character(state2p state, phys_t mass, phys_t orientation,
             vel_(0) {
 }
 
+void Character::addToUniverse(GameUniverse* u) {
+    u->addBody(&body_);
+}
+
 double Character::getVel() {
     return vel_;
+}
+
+vector2p Character::getPosition() {
+    return body_.getPosition();
 }
 
 void Character::crouch(bool state) {
@@ -63,11 +71,19 @@ void Character::update(double deltaTime) {
     }
 }
 
-bool Character::interact(AstroBody* body, double deltaTime, vector2p& interactPoint, vector2p& impulse) {
+Character::CharacterBody::CharacterBody(Character* parent, state2p state,
+        phys_t mass, phys_t orientation, phys_t angVel, phys_t inertiaMoment,
+        Shape<phys_t>* shape) :
+    SmallBody(state, mass, orientation, angVel, inertiaMoment, shape),
+            parent_(parent) {
+}
+
+bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
+        vector2p& interactPoint, vector2p& impulse) {
     phys_t t1, t2;
     vector2p posCharacter = getPosition(), posBody = body->getPosition();
     vector2p legA = posCharacter - posBody;
-    vector2p legB = ~legA * (0.5 * vel_);
+    vector2p legB = ~legA * (0.5 * parent_->vel_);
     phys_t radius = ((Circle<phys_t>*) (body->getShape()))->getRadius();
     phys_t radiusSqr = radius * radius;
     if (intersectLineCircle<phys_t> (legA, legB, radiusSqr, t1, t2)) {
@@ -75,13 +91,23 @@ bool Character::interact(AstroBody* body, double deltaTime, vector2p& interactPo
         interactPoint = interactBody + posBody;
         vector2p interactCharacter = interactPoint - posCharacter;
         phys_t distanceSqr = interactCharacter.squared();
-        phys_t leg = 2.0 * (1.0 - powerJump_);
+        phys_t leg = 2.0 * (1.0 - parent_->powerJump_);
         if (distanceSqr < leg * leg) {
             phys_t distance = sqrt(distanceSqr);
             vector2p n = interactCharacter / distance;
-            impulse = -n * (2000.0 * (leg - distance) + max(0.0, getMomentum() * n * 8.0)) * deltaTime;
+            impulse = -n * (2000.0 * (leg - distance) + max(0.0,
+                    getMomentum() * n * 8.0)) * deltaTime;
             return true;
         }
     }
     return false;
+}
+
+CharacterGraphic::CharacterGraphic(Character* c) :
+    c_(c), bodyDisk_(1.0, 16), body_(&c->body_, &bodyDisk_, 0, 0, 0) {
+}
+
+void CharacterGraphic::draw() {
+    glColor3f(0.2, 0.2, 0.8);
+    body_.draw();
 }

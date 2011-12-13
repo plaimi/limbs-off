@@ -71,6 +71,10 @@ void Screen::setDrawingMode(int mode, int mask, bool update) {
         updateDrawingMode();
 }
 
+int Screen::getDrawingMode() {
+    return drawingMode_;
+}
+
 void Screen::updateDrawingMode() {
     GLenum s, d;
     bool pm = drawingMode_ & DM_PREMUL;

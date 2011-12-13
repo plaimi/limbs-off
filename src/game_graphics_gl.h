@@ -55,6 +55,14 @@ private:
     void makeDisplayList();
 };
 
+class TestDisk: public Graphic {
+public:
+    TestDisk(GLfloat r, int n);
+    void draw();
+private:
+    Disk disk_, square_;
+};
+
 class TextureLoader {
 public:
     static TextureLoader* getInstance();
@@ -71,6 +79,7 @@ public:
     static Screen* getInstance();
     static void setVideoMode(int screenWidth, int screenHeight, int screenDepth);
     void setDrawingMode(int mode, int mask = -1, bool update = true);
+    int getDrawingMode();
     void updateDrawingMode();
 protected:
     Screen();

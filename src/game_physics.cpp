@@ -18,7 +18,6 @@
  */
 
 #include <math.h>
-#include "character.h"
 #include "geometry.h"
 #include "game_physics.h"
 

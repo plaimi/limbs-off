@@ -39,7 +39,6 @@ int main(int argc, char *argv[]) {
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1,
             false);
     TextureLoader* texLoader = TextureLoader::getInstance();
-    GLuint tex = texLoader->loadTexture("character.png", true);
     Circle<phys_t> planetCircle = Circle<phys_t> (PR);
     AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
     Circle<phys_t> characterCircle = Circle<phys_t> (1.0);
@@ -47,15 +46,12 @@ int main(int argc, char *argv[]) {
             2 * 50.0 * 1 * 1 / 5, &characterCircle);
     Player player(&character);
     GameUniverse universe(&planet);
-    universe.addBody(&character);
-    Disk planetDisk(PR, 64);
-    Disk planetSquare(PR, 4);
-    Sprite characterSprite(tex, 1, 1);
-    BodyGraphic planetGraphic(&planet, &planetDisk, 0.0, 0.0, 0.0),
-            planetSquareGraphic(&planet, &planetSquare, 0.0, 0.0, 0.0),
-            characterGraphic(&character, &characterSprite, 0.0, 0.0, 0.0);
+    character.addToUniverse(&universe);
+    TestDisk planetDisk(PR, 64);
+    CharacterGraphic characterGraphic(&character);
+    BodyGraphic planetGraphic(&planet, &planetDisk, 0.0, 0.0, 0.0);
     SDL_Event event;
-    tex = texLoader->loadTexture("background.png", true);
+    GLuint tex = texLoader->loadTexture("background.png", true);
     double backgroundSize = sqrt(1 + 1.6 * 1.6);
     Sprite backgroundSprite(tex, backgroundSize, backgroundSize);
     Init::readBindings(&player, "src/controllers.conf");
@@ -76,9 +72,11 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < steps; ++i)
             universe.update(1.0 / STEPS_PER_SECOND);
         camera.setTargetPosition(character.getPosition());
-        vector2p characterToPlanet = character.getPosition() - planet.getPosition();
+        vector2p characterToPlanet = character.getPosition()
+                - planet.getPosition();
         camera.setTargetRadius(sqrt(characterToPlanet.squared()));
-        camera.setTargetRotation(atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
+        camera.setTargetRotation(
+                atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
         camera.update(steps / STEPS_PER_SECOND);
         character.update(steps / STEPS_PER_SECOND);
 
@@ -87,8 +85,6 @@ int main(int argc, char *argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
         glColor3d(1.0, 1.0, 1.0);
         characterGraphic.draw();
-        glColor3d(0.8, 0.4, 0.4);
-        planetSquareGraphic.draw();
         glColor3d(0.4, 0.8, 0.4);
         planetGraphic.draw();
         glPopMatrix();

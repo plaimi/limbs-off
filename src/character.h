@@ -3,13 +3,25 @@
 
 #include "game_physics.h"
 #include "physics.h"
+#include "game_graphics_gl.h"
 
-class Character: public SmallBody {
+class Character {
 public:
+    class CharacterBody: public SmallBody {
+    public:
+        CharacterBody(Character* parent, state2p state, phys_t mass,
+                phys_t orientation, phys_t angVel, phys_t inertiaMoment,
+                Shape<phys_t>* shape);
+    protected:
+        Character* parent_;
+        bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
+    };
     Character(state2p state, phys_t mass, phys_t orientation, phys_t angVel,
             phys_t inertiaMoment, Shape<phys_t>* shape);
+    void addToUniverse(GameUniverse* u);
     // Return current velocity (_vel)
     double getVel();
+    vector2p getPosition();
     // Procedures for setting request states
     void crouch(bool state);
     void fire(bool state);
@@ -21,9 +33,8 @@ public:
     void rightPunch(bool state);
     // Update power meters
     void update(double deltaTime);
-protected:
-    bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
 private:
+    CharacterBody body_;
     // Requests
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
     // Power meters
@@ -31,6 +42,17 @@ private:
             powerRightKick_, powerRightPunch_;
     // Velocity and direction
     double vel_;
+    friend class CharacterGraphic;
+};
+
+class CharacterGraphic: public Graphic {
+public:
+    CharacterGraphic(Character* c);
+    void draw();
+private:
+    Character* c_;
+    TestDisk bodyDisk_;
+    BodyGraphic body_;
 };
 
 #endif

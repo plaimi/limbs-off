@@ -92,3 +92,20 @@ void Disk::makeDisplayList() {
     glEnd();
     glEndList();
 }
+
+TestDisk::TestDisk(GLfloat r, int n) :
+    disk_(r, n), square_(r, 4) {
+}
+
+void TestDisk::draw() {
+    bool ftb = Screen::getInstance()->getDrawingMode()
+            & Screen::DM_FRONT_TO_BACK;
+    if (!ftb)
+        disk_.draw();
+    glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
+    glColor3f(1.0, 1.0, 1.0);
+    square_.draw();
+    glPopAttrib();
+    if (ftb)
+        disk_.draw();
+}
