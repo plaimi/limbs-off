@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1,
             false);
     TextureLoader* texLoader = TextureLoader::getInstance();
-    GLuint tex = texLoader->loadTexture("test.png", true);
+    GLuint tex = texLoader->loadTexture("character.png", true);
     Circle<phys_t> planetCircle = Circle<phys_t> (PR);
     AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
     Circle<phys_t> characterCircle = Circle<phys_t> (1.0);
@@ -55,6 +55,9 @@ int main(int argc, char *argv[]) {
             planetSquareGraphic(&planet, &planetSquare, 0.0, 0.0, 0.0),
             characterGraphic(&character, &characterSprite, 0.0, 0.0, 0.0);
     SDL_Event event;
+    tex = texLoader->loadTexture("background.png", true);
+    double backgroundSize = sqrt(1 + 1.6 * 1.6);
+    Sprite backgroundSprite(tex, backgroundSize, backgroundSize);
     Init::readBindings(&player, "src/controllers.conf");
     bool quit = false;
     Uint32 time = SDL_GetTicks();
@@ -82,12 +85,18 @@ int main(int argc, char *argv[]) {
         glPushMatrix();
         camera.apply();
         glClear(GL_COLOR_BUFFER_BIT);
-        glColor3f(1.0, 1.0, 1.0);
+        glColor3d(1.0, 1.0, 1.0);
         characterGraphic.draw();
-        glColor3f(0.8, 0.4, 0.4);
+        glColor3d(0.8, 0.4, 0.4);
         planetSquareGraphic.draw();
-        glColor3f(0.4, 0.8, 0.4);
+        glColor3d(0.4, 0.8, 0.4);
         planetGraphic.draw();
+        glPopMatrix();
+
+        glPushMatrix();
+        glRotated(camera.getRotation(), 0.0, 0.0, -1.0);
+        glColor3d(1.0, 1.0, 1.0);
+        backgroundSprite.draw();
         glPopMatrix();
 
         SDL_GL_SwapBuffers();

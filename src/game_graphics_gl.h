@@ -85,14 +85,24 @@ private:
 class Camera {
 public:
     Camera(vector2p position, double radius, double rotation);
-    void apply();
+    // Update pos/rad/rot
     void update(double deltaTime);
+    // Set pos/rad/rot
+    void apply();
+    // Get pos/rad/rot
+    vector2p getPosition();
+    double getRadius();
+    double getRotation();
+    // Set desired pos/rad/rot
     void setTargetPosition(vector2p target);
     void setTargetRadius(double target);
     void setTargetRotation(double target);
 private:
+    // Pos and desired pos
     vector2p position_, targetPosition_;
+    // Rad and desired rad
     double radius_, targetRadius_;
+    // Rot and desired rot
     double rotation_, targetRotation_;
 };
 

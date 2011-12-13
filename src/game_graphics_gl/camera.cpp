@@ -26,6 +26,17 @@ Camera::Camera(vector2p position, double radius, double rotation) :
         targetRadius_(radius), rotation_(rotation), targetRotation_(rotation) {
 }
 
+vector2p Camera::getPosition() {
+    return position_;
+}
+
+double Camera::getRadius() {
+    return radius_;
+}
+
+double Camera::getRotation() {
+    return rotation_;
+}
 void Camera::setTargetPosition(vector2p target) {
     targetPosition_ = target;
 }
@@ -47,7 +58,7 @@ void Camera::update(double deltaTime) {
 }
 
 void Camera::apply() {
-    glScaled(1 / radius_, 1 / radius_, 0.0);
     glRotated(rotation_, 0.0, 0.0, -1.0);
+    glScaled(1.0 / radius_, 1.0 / radius_, 0.0);
     glTranslated(-position_.x, -position_.y, 0.0);
 }
