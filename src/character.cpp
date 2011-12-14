@@ -1,5 +1,9 @@
 #include "character.h"
 
+namespace {
+const float COL_BODY[] = { 0.2, 0.2, 0.8 };
+}
+
 Character::Character(state2p state, phys_t mass, phys_t orientation,
         phys_t angVel, phys_t inertiaMoment, Shape<phys_t>* shape) :
             // Physical object
@@ -104,10 +108,8 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
 }
 
 CharacterGraphic::CharacterGraphic(Character* c) :
-    c_(c), bodyDisk_(1.0, 16), body_(&c->body_, &bodyDisk_, 0, 0, 0) {
-}
-
-void CharacterGraphic::draw() {
-    glColor3f(0.2, 0.2, 0.8);
-    body_.draw();
+    c_(c), bodyFixture_(&c->body_), bodyColor_(COL_BODY), body_(1.0, 16) {
+    body_.addModifier(&bodyFixture_);
+    body_.getDisk()->addModifier(&bodyColor_);
+    addGraphic(&body_);
 }

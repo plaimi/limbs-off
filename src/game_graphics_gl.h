@@ -20,25 +20,53 @@
 #ifndef GAME_GRAPHICS_GL_H_
 #define GAME_GRAPHICS_GL_H_
 
+#include <vector>
 #include <GL/gl.h>
 #include "graphics.h"
 #include "physics.h"
 
-class BodyGraphic: public Graphic {
+class Camera;
+
+class GraphicFixture: public GraphicModifier {
 public:
-    BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,
-            GLfloat oa);
-    void draw();
+    GraphicFixture(Body* body);
+    void begin();
+    void end();
 private:
     Body* body_;
-    Graphic* graphic_;
-    GLfloat ox_, oy_, oa_;
+};
+
+class ColorModifier: public GraphicModifier {
+public:
+    ColorModifier(const float* color);
+    void begin();
+    void end();
+private:
+    const float* color_;
+};
+
+class BackgroundModifier: public GraphicModifier {
+public:
+    BackgroundModifier(Camera* camera);
+    void begin();
+    void end();
+private:
+    Camera* camera_;
+};
+
+class StackGraphic: public Graphic {
+public:
+    /** Adds a graphic to the top of the stack. */
+    void addGraphic(Graphic* g);
+    void doDraw();
+private:
+    std::vector<Graphic*> graphics_;
 };
 
 class Sprite: public Graphic {
 public:
     Sprite(GLuint texture, GLfloat w, GLfloat h);
-    void draw();
+    void doDraw();
 private:
     GLuint texture_;
     GLfloat w_, h_;
@@ -47,7 +75,7 @@ private:
 class Disk: public Graphic {
 public:
     Disk(GLfloat r, int n);
-    void draw();
+    void doDraw();
 private:
     GLfloat r_;
     int n_;
@@ -55,10 +83,11 @@ private:
     void makeDisplayList();
 };
 
-class TestDisk: public Graphic {
+class TestDisk: public StackGraphic {
 public:
     TestDisk(GLfloat r, int n);
-    void draw();
+    Disk* getDisk();
+    Disk* getSquare();
 private:
     Disk disk_, square_;
 };
@@ -91,13 +120,11 @@ private:
     static bool initialize();
 };
 
-class Camera {
+class Camera: public GraphicModifier {
 public:
     Camera(vector2p position, double radius, double rotation);
     // Update pos/rad/rot
     void update(double deltaTime);
-    // Set pos/rad/rot
-    void apply();
     // Get pos/rad/rot
     vector2p getPosition();
     double getRadius();
@@ -106,6 +133,10 @@ public:
     void setTargetPosition(vector2p target);
     void setTargetRadius(double target);
     void setTargetRotation(double target);
+    /** Rotates and translates OpenGL matrix. */
+    void apply();
+    void begin();
+    void end();
 private:
     // Pos and desired pos
     vector2p position_, targetPosition_;

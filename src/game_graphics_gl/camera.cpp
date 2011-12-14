@@ -62,3 +62,12 @@ void Camera::apply() {
     glScaled(1.0 / radius_, 1.0 / radius_, 0.0);
     glTranslated(-position_.x, -position_.y, 0.0);
 }
+
+void Camera::begin() {
+    glPushMatrix();
+    apply();
+}
+
+void Camera::end() {
+    glPopMatrix();
+}

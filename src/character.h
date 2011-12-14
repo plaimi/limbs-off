@@ -45,14 +45,14 @@ private:
     friend class CharacterGraphic;
 };
 
-class CharacterGraphic: public Graphic {
+class CharacterGraphic: public StackGraphic {
 public:
     CharacterGraphic(Character* c);
-    void draw();
 private:
     Character* c_;
-    TestDisk bodyDisk_;
-    BodyGraphic body_;
+    GraphicFixture bodyFixture_;
+    ColorModifier bodyColor_;
+    TestDisk body_;
 };
 
 #endif

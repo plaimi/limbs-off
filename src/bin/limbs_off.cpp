@@ -33,6 +33,8 @@ const phys_t R = 9.0;
 const phys_t S = sqrt<phys_t> (GM / R) * 0.5;
 const phys_t PR = 7.0;
 
+const float COL_PLANET[] = { 0.4, 0.8, 0.4 };
+
 int main(int argc, char *argv[]) {
     Screen::setVideoMode(1024, 768, 32);
     Screen* screen = Screen::getInstance();
@@ -49,16 +51,26 @@ int main(int argc, char *argv[]) {
     character.addToUniverse(&universe);
     TestDisk planetDisk(PR, 64);
     CharacterGraphic characterGraphic(&character);
-    BodyGraphic planetGraphic(&planet, &planetDisk, 0.0, 0.0, 0.0);
+    GraphicFixture planetFixture(&planet);
+    ColorModifier planetColor(COL_PLANET);
+    planetDisk.addModifier(&planetFixture);
+    planetDisk.getDisk()->addModifier(&planetColor);
     SDL_Event event;
     GLuint tex = texLoader->loadTexture("background.png", true);
-    double backgroundSize = sqrt(1 + 1.6 * 1.6);
-    Sprite backgroundSprite(tex, backgroundSize, backgroundSize);
+    Sprite backgroundSprite(tex, 1, 1);
     Init::readBindings(&player, "src/controllers.conf");
     bool quit = false;
     Uint32 time = SDL_GetTicks();
     StepTimer timer;
     Camera camera(character.getPosition(), 0.5, 0.0);
+    StackGraphic foreground, scene;
+    foreground.addGraphic(&planetDisk);
+    foreground.addGraphic(&characterGraphic);
+    foreground.addModifier(&camera);
+    BackgroundModifier backgroundModifier(&camera);
+    backgroundSprite.addModifier(&backgroundModifier);
+    scene.addGraphic(&backgroundSprite);
+    scene.addGraphic(&foreground);
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE) {
@@ -80,22 +92,10 @@ int main(int argc, char *argv[]) {
         camera.update(steps / STEPS_PER_SECOND);
         character.update(steps / STEPS_PER_SECOND);
 
-        glPushMatrix();
-        camera.apply();
         glClear(GL_COLOR_BUFFER_BIT);
-        glColor3d(1.0, 1.0, 1.0);
-        characterGraphic.draw();
-        glColor3d(0.4, 0.8, 0.4);
-        planetGraphic.draw();
-        glPopMatrix();
-
-        glPushMatrix();
-        glRotated(camera.getRotation(), 0.0, 0.0, -1.0);
-        glColor3d(1.0, 1.0, 1.0);
-        backgroundSprite.draw();
-        glPopMatrix();
-
+        scene.draw();
         SDL_GL_SwapBuffers();
+
         Uint32 d = SDL_GetTicks() - time;
         int w = 1000 / MAX_FPS - d;
         if (w > 0) {

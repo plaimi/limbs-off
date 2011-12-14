@@ -22,27 +22,72 @@
 #include "physics.h"
 #include "game_graphics_gl.h"
 
-BodyGraphic::BodyGraphic(Body* body, Graphic* graphic, GLfloat ox, GLfloat oy,
-        GLfloat oa) :
-    body_(body), graphic_(graphic), ox_(ox), oy_(oy), oa_(oa) {
+GraphicFixture::GraphicFixture(Body* body) :
+    body_(body) {
 }
 
-void BodyGraphic::draw() {
+void GraphicFixture::begin() {
     phys_t x, y;
     body_->getPosition(x, y);
     glPushMatrix();
     glTranslatef(x, y, 0.0);
-    glRotatef((body_->getOrientation() - oa_) * IN_DEG, 0.0, 0.0, 1.0);
-    glTranslatef(-ox_, -oy_, 0.0);
-    graphic_->draw();
+    glRotatef(body_->getOrientation() * IN_DEG, 0.0, 0.0, 1.0);
+}
+
+void GraphicFixture::end() {
     glPopMatrix();
+}
+
+ColorModifier::ColorModifier(const float* color) :
+    color_(color) {
+}
+
+void ColorModifier::begin() {
+    glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
+    glColor3fv(color_);
+}
+
+void ColorModifier::end() {
+    glPopAttrib();
+}
+
+BackgroundModifier::BackgroundModifier(Camera* camera) :
+    camera_(camera) {
+}
+
+void BackgroundModifier::begin() {
+    const float SIZE = sqrt(1.0 + 16.0 / 9.0);
+    glPushMatrix();
+    glScaled(SIZE, SIZE, 1.0);
+    glRotated(camera_->getRotation(), 0.0, 0.0, -1.0);
+}
+
+void BackgroundModifier::end() {
+    glPopMatrix();
+}
+
+void StackGraphic::addGraphic(Graphic* g) {
+    graphics_.push_back(g);
+}
+
+void StackGraphic::doDraw() {
+    // Draw all the graphics in the stack in the correct order.
+    if (Screen::getInstance()->getDrawingMode() & Screen::DM_FRONT_TO_BACK) {
+        std::vector<Graphic*>::reverse_iterator i;
+        for (i = graphics_.rbegin(); i < graphics_.rend(); i++)
+            (*i)->draw();
+    } else {
+        std::vector<Graphic*>::iterator i;
+        for (i = graphics_.begin(); i < graphics_.end(); i++)
+            (*i)->draw();
+    }
 }
 
 Sprite::Sprite(GLuint texture, GLfloat w, GLfloat h) :
     texture_(texture), w_(w), h_(h) {
 }
 
-void Sprite::draw() {
+void Sprite::doDraw() {
     Screen::getInstance()->setDrawingMode(-1, Screen::DM_PREMUL);
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
@@ -65,7 +110,7 @@ Disk::Disk(GLfloat r, int n) :
     r_(r), n_(n), displayList_(0) {
 }
 
-void Disk::draw() {
+void Disk::doDraw() {
     Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
     if (displayList_ == 0)
         makeDisplayList();
@@ -95,17 +140,14 @@ void Disk::makeDisplayList() {
 
 TestDisk::TestDisk(GLfloat r, int n) :
     disk_(r, n), square_(r, 4) {
+    addGraphic(&disk_);
+    addGraphic(&square_);
 }
 
-void TestDisk::draw() {
-    bool ftb = Screen::getInstance()->getDrawingMode()
-            & Screen::DM_FRONT_TO_BACK;
-    if (!ftb)
-        disk_.draw();
-    glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
-    glColor3f(1.0, 1.0, 1.0);
-    square_.draw();
-    glPopAttrib();
-    if (ftb)
-        disk_.draw();
+Disk* TestDisk::getDisk() {
+    return &disk_;
+}
+
+Disk* TestDisk::getSquare() {
+    return &square_;
 }
