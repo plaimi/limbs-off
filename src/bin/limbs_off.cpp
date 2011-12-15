@@ -75,18 +75,18 @@ int main(int argc, char *argv[]) {
     scene.addGraphic(&foreground);
     while (!quit) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN &&
-                    event.key.keysym.sym == SDLK_ESCAPE) {
+            if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN
+                    && event.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
                 break;
             }
-            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym
+                    == SDLK_RETURN) {
                 if (!screen->getFullscreen()) {
                     prevWidth = screen->getSurfaceWidth();
                     prevHeight = screen->getSurfaceHeight();
                     screen->setVideoMode(0, 0, 32, true);
-                }
-                else
+                } else
                     screen->setVideoMode(prevWidth, prevHeight, 32, false);
 
             }

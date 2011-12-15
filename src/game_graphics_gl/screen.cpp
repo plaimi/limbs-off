@@ -51,8 +51,7 @@ int Screen::getDepth() {
     return depth_;
 }
 
-void Screen::setVideoMode(int width, int height, int depth,
-        bool fullscreen) {
+void Screen::setVideoMode(int width, int height, int depth, bool fullscreen) {
     surfaceWidth_ = width ? width : screenWidth_;
     surfaceHeight_ = height ? height : screenHeight_;
     depth_ = depth;
@@ -63,7 +62,7 @@ void Screen::setVideoMode(int width, int height, int depth,
 
 void Screen::updateVideoMode() {
     surface_ = SDL_SetVideoMode(surfaceWidth_, surfaceHeight_, depth_,
-            SDL_OPENGL | SDL_RESIZABLE | (fullscreen_ ? SDL_FULLSCREEN : 0));
+            SDL_OPENGL | (fullscreen_ ? SDL_FULLSCREEN : SDL_RESIZABLE));
     initGl();
 }
 
