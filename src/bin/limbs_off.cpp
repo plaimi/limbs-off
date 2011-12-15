@@ -77,6 +77,8 @@ int main(int argc, char *argv[]) {
                 quit = true;
                 break;
             }
+            if (screen->handle(event))
+                continue;
             player.handle(event);
         }
         int steps = timer.getStepTime() * STEPS_PER_SECOND;

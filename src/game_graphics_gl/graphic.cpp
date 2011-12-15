@@ -56,9 +56,11 @@ BackgroundModifier::BackgroundModifier(Camera* camera) :
 }
 
 void BackgroundModifier::begin() {
-    const float SIZE = sqrt(1.0 + 16.0 / 9.0);
+    Screen* s = Screen::getInstance();
+    double w = s->getGlWidth(), h = s->getGlHeight();
+    double r = sqrt(w * w + h * h);
     glPushMatrix();
-    glScaled(SIZE, SIZE, 1.0);
+    glScaled(r, r, 1.0);
     glRotated(camera_->getRotation(), 0.0, 0.0, -1.0);
 }
 

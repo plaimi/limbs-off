@@ -33,7 +33,7 @@ Screen* Screen::getInstance() {
     return instance_;
 }
 
-void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth, 
+void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth,
         bool fullscreen) {
     screenWidth_ = screenWidth;
     screenHeight_ = screenHeight;
@@ -44,8 +44,17 @@ void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth,
 }
 
 void Screen::updateVideoMode() {
-    surface_ = SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_, 
-        SDL_OPENGL | (fullscreen_ ? SDL_FULLSCREEN : 0));
+    surface_ = SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_,
+            SDL_OPENGL | SDL_RESIZABLE | (fullscreen_ ? SDL_FULLSCREEN : 0));
+    initGl();
+}
+
+double Screen::getGlWidth() {
+    return 1.0 * screenWidth_ / screenHeight_;
+}
+
+double Screen::getGlHeight() {
+    return 1.0;
 }
 
 bool Screen::initialize() {
@@ -57,19 +66,22 @@ bool Screen::initialize() {
     if (surface_ == NULL)
         return false;
     SDL_WM_SetCaption("Limbs Off", 0);
+    return glGetError() == GL_NO_ERROR;
+}
+
+void Screen::initGl() {
+    glViewport(0, 0, screenWidth_, screenHeight_);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    const float R = 1.0;
-    const float W = R * screenWidth_ / screenHeight_;
-    glOrtho(-W, W, -R, R, -1.0, 1.0);
+    double w = getGlWidth(), h = getGlHeight();
+    glOrtho(-w, w, -h, h, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glEnable(GL_BLEND);
-    return glGetError() == GL_NO_ERROR;
 }
 
 Screen::Screen() :
@@ -101,4 +113,14 @@ void Screen::updateDrawingMode() {
         glEnable(GL_POLYGON_SMOOTH);
     else
         glDisable(GL_POLYGON_SMOOTH);
+}
+
+bool Screen::handle(const SDL_Event& event) {
+    if (event.type == SDL_VIDEORESIZE) {
+        screenWidth_ = event.resize.w;
+        screenHeight_ = event.resize.h;
+        updateVideoMode();
+        return true;
+    }
+    return false;
 }

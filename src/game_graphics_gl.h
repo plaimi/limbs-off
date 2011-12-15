@@ -22,9 +22,9 @@
 
 #include <vector>
 #include <GL/gl.h>
-#include <SDL/SDL.h>
 #include "graphics.h"
 #include "physics.h"
+#include "event_handler.h"
 
 class Camera;
 
@@ -103,17 +103,22 @@ private:
     static TextureLoader* instance_;
 };
 
-class Screen {
+class Screen: EventHandler {
 public:
     static const int DM_FRONT_TO_BACK = 1, DM_PREMUL = 2, DM_SMOOTH = 4;
     static Screen* getInstance();
-    static void setVideoMode(int screenWidth, int screenHeight, int screenDepth, bool fullscreen = false);
+    static void setVideoMode(int screenWidth, int screenHeight,
+            int screenDepth, bool fullscreen = false);
+    static double getGlWidth();
+    static double getGlHeight();
     static void updateVideoMode();
     void setDrawingMode(int mode, int mask = -1, bool update = true);
     int getDrawingMode();
     void updateDrawingMode();
+    bool handle(const SDL_Event& event);
 protected:
     Screen();
+    static void initGl();
 private:
     // Video mode
     static bool fullscreen_;
