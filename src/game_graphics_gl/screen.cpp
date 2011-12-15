@@ -21,9 +21,11 @@
 #include "game_graphics_gl.h"
 
 bool Screen::fullscreen_ = false;
-int Screen::screenWidth_ = 640;
-int Screen::screenHeight_ = 480;
-int Screen::screenDepth_ = 0;
+int Screen::surfaceWidth_ = 640;
+int Screen::surfaceHeight_ = 480;
+int Screen::screenWidth_ = 0;
+int Screen::screenHeight_ = 0;
+int Screen::depth_ = 0;
 SDL_Surface* Screen::surface_ = NULL;
 Screen* Screen::instance_ = NULL;
 
@@ -33,24 +35,40 @@ Screen* Screen::getInstance() {
     return instance_;
 }
 
-void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth,
+bool Screen::getFullscreen() {
+    return fullscreen_;
+}
+
+int Screen::getSurfaceWidth() {
+    return surfaceWidth_;
+}
+
+int Screen::getSurfaceHeight() {
+    return surfaceHeight_;
+}
+
+int Screen::getDepth() {
+    return depth_;
+}
+
+void Screen::setVideoMode(int width, int height, int depth,
         bool fullscreen) {
-    screenWidth_ = screenWidth;
-    screenHeight_ = screenHeight;
-    screenDepth_ = screenDepth;
+    surfaceWidth_ = width ? width : screenWidth_;
+    surfaceHeight_ = height ? height : screenHeight_;
+    depth_ = depth;
     fullscreen_ = fullscreen;
     if (surface_)
         updateVideoMode();
 }
 
 void Screen::updateVideoMode() {
-    surface_ = SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_,
+    surface_ = SDL_SetVideoMode(surfaceWidth_, surfaceHeight_, depth_,
             SDL_OPENGL | SDL_RESIZABLE | (fullscreen_ ? SDL_FULLSCREEN : 0));
     initGl();
 }
 
 double Screen::getGlWidth() {
-    return 1.0 * screenWidth_ / screenHeight_;
+    return 1.0 * surfaceWidth_ / surfaceHeight_;
 }
 
 double Screen::getGlHeight() {
@@ -62,6 +80,9 @@ bool Screen::initialize() {
         return false;
     atexit(SDL_Quit);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    const SDL_VideoInfo* screenSize = SDL_GetVideoInfo();
+    screenWidth_ = screenSize->current_w;
+    screenHeight_ = screenSize->current_h;
     updateVideoMode();
     if (surface_ == NULL)
         return false;
@@ -70,7 +91,7 @@ bool Screen::initialize() {
 }
 
 void Screen::initGl() {
-    glViewport(0, 0, screenWidth_, screenHeight_);
+    glViewport(0, 0, surfaceWidth_, surfaceHeight_);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -117,8 +138,8 @@ void Screen::updateDrawingMode() {
 
 bool Screen::handle(const SDL_Event& event) {
     if (event.type == SDL_VIDEORESIZE) {
-        screenWidth_ = event.resize.w;
-        screenHeight_ = event.resize.h;
+        surfaceWidth_ = event.resize.w;
+        surfaceHeight_ = event.resize.h;
         updateVideoMode();
         return true;
     }

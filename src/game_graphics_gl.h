@@ -107,8 +107,12 @@ class Screen: EventHandler {
 public:
     static const int DM_FRONT_TO_BACK = 1, DM_PREMUL = 2, DM_SMOOTH = 4;
     static Screen* getInstance();
-    static void setVideoMode(int screenWidth, int screenHeight,
-            int screenDepth, bool fullscreen = false);
+    static void setVideoMode(int width, int height, int depth,
+            bool fullscreen = false);
+    static bool getFullscreen();
+    static int getSurfaceWidth();
+    static int getSurfaceHeight();
+    static int getDepth();
     static double getGlWidth();
     static double getGlHeight();
     static void updateVideoMode();
@@ -122,7 +126,8 @@ protected:
 private:
     // Video mode
     static bool fullscreen_;
-    static int screenWidth_, screenHeight_, screenDepth_;
+    // Screen & window dimensions, & depth info
+    static int screenWidth_, screenHeight_, depth_, surfaceWidth_, surfaceHeight_;
     // The singleton
     static Screen* instance_;
     // The surface pointer for SetVideoMode

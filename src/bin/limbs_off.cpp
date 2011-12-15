@@ -40,6 +40,8 @@ int main(int argc, char *argv[]) {
     Screen* screen = Screen::getInstance();
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1,
             false);
+    // Keep track of window size when entering fullscreen mode
+    int prevWidth, prevHeight;
     TextureLoader* texLoader = TextureLoader::getInstance();
     Circle<phys_t> planetCircle = Circle<phys_t> (PR);
     AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
@@ -77,6 +79,16 @@ int main(int argc, char *argv[]) {
                     event.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
                 break;
+            }
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+                if (!screen->getFullscreen()) {
+                    prevWidth = screen->getSurfaceWidth();
+                    prevHeight = screen->getSurfaceHeight();
+                    screen->setVideoMode(0, 0, 32, true);
+                }
+                else
+                    screen->setVideoMode(prevWidth, prevHeight, 32, false);
+
             }
             if (screen->handle(event))
                 continue;
