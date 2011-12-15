@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <GL/gl.h>
+#include <SDL/SDL.h>
 #include "graphics.h"
 #include "physics.h"
 
@@ -106,16 +107,21 @@ class Screen {
 public:
     static const int DM_FRONT_TO_BACK = 1, DM_PREMUL = 2, DM_SMOOTH = 4;
     static Screen* getInstance();
-    static void setVideoMode(int screenWidth, int screenHeight, int screenDepth);
+    static void setVideoMode(int screenWidth, int screenHeight, int screenDepth, bool fullscreen = false);
+    static void updateVideoMode();
     void setDrawingMode(int mode, int mask = -1, bool update = true);
     int getDrawingMode();
     void updateDrawingMode();
 protected:
     Screen();
 private:
-    static Screen* instance_;
     // Video mode
+    static bool fullscreen_;
     static int screenWidth_, screenHeight_, screenDepth_;
+    // The singleton
+    static Screen* instance_;
+    // The surface pointer for SetVideoMode
+    static SDL_Surface* surface_;
     int drawingMode_;
     static bool initialize();
 };

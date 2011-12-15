@@ -20,10 +20,12 @@
 #include <SDL/SDL.h>
 #include "game_graphics_gl.h"
 
-Screen* Screen::instance_ = NULL;
+bool Screen::fullscreen_ = false;
 int Screen::screenWidth_ = 640;
 int Screen::screenHeight_ = 480;
 int Screen::screenDepth_ = 0;
+SDL_Surface* Screen::surface_ = NULL;
+Screen* Screen::instance_ = NULL;
 
 Screen* Screen::getInstance() {
     if (!instance_ && initialize())
@@ -31,10 +33,19 @@ Screen* Screen::getInstance() {
     return instance_;
 }
 
-void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth) {
+void Screen::setVideoMode(int screenWidth, int screenHeight, int screenDepth, 
+        bool fullscreen) {
     screenWidth_ = screenWidth;
     screenHeight_ = screenHeight;
     screenDepth_ = screenDepth;
+    fullscreen_ = fullscreen;
+    if (surface_)
+        updateVideoMode();
+}
+
+void Screen::updateVideoMode() {
+    surface_ = SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_, 
+        SDL_OPENGL | (fullscreen_ ? SDL_FULLSCREEN : 0));
 }
 
 bool Screen::initialize() {
@@ -42,8 +53,8 @@ bool Screen::initialize() {
         return false;
     atexit(SDL_Quit);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    if (SDL_SetVideoMode(screenWidth_, screenHeight_, screenDepth_, SDL_OPENGL)
-            == NULL)
+    updateVideoMode();
+    if (surface_ == NULL)
         return false;
     SDL_WM_SetCaption("Limbs Off", 0);
     glClearColor(0.0, 0.0, 0.0, 0.0);
