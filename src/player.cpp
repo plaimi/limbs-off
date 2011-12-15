@@ -29,7 +29,7 @@ Player::Player(Character* character) :
     }
 }
 
-bool Player::handle(SDL_Event event) {
+bool Player::handle(const SDL_Event& event) {
     // Check that event is a keyboard event
     if (event.type != SDL_KEYDOWN && event.type != SDL_KEYUP) {
         return false;

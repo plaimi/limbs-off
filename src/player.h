@@ -21,6 +21,7 @@
 #define PLAYER_H_ 
 
 #include "actor.h"
+#include "action.h"
 #include "character.h"
 #include "event_handler.h"
 
@@ -28,7 +29,7 @@ class Player: public Actor, public EventHandler {
 public:
     Player(Character* character);
     // Handle keyboard event
-    bool handle(SDL_Event event);
+    bool handle(const SDL_Event& event);
     // Bind key to action
     void bindKey(SDLKey key, ActionType action);
 private:

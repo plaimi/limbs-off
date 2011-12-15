@@ -17,6 +17,7 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fstream>
 #include <string>
 #include "init.h"
 #include "player.h"

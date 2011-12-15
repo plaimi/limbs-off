@@ -20,15 +20,12 @@
 #ifndef EVENT_HANDLER_H_
 #define EVENT_HANDLER_H_
 
-#include <iostream>
-#include <fstream>
 #include <SDL/SDL.h>
-#include "action.h"
 
 class EventHandler {
 public:
     // Treat input event.
-    virtual bool handle(SDL_Event event) = 0;
+    virtual bool handle(const SDL_Event& event) = 0;
 };
 
 #endif /* EVENT_HANDLER_H_ */
