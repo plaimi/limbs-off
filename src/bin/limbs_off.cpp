@@ -45,9 +45,7 @@ int main(int argc, char *argv[]) {
     TextureLoader* texLoader = TextureLoader::getInstance();
     Circle<phys_t> planetCircle = Circle<phys_t> (PR);
     AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
-    Circle<phys_t> characterCircle = Circle<phys_t> (1.0);
-    Character character(state2p()(R, 0.0, 0.0, S), 50.0, 0.0, -5.0,
-            2 * 50.0 * 1 * 1 / 5, &characterCircle);
+    Character character(state2p()(R, 0.0, 0.0, S), 0.0);
     Player player(&character);
     GameUniverse universe(&planet);
     character.addToUniverse(&universe);
@@ -88,7 +86,6 @@ int main(int argc, char *argv[]) {
                     screen->setVideoMode(0, 0, 32, true);
                 } else
                     screen->setVideoMode(prevWidth, prevHeight, 32, false);
-
             }
             if (screen->handle(event))
                 continue;

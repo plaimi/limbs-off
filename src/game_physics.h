@@ -27,9 +27,10 @@ class Character;
 class Universe;
 
 class SmallBody: public Body {
-protected:
+public:
     SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
             phys_t moi, Shape<phys_t>* shape);
+protected:
     virtual bool interact(class AstroBody* bvz, double dt, vector2p& p,
             vector2p& im);
 private:
@@ -46,14 +47,41 @@ public:
     friend class GameUniverse;
 };
 
+class Link {
+public:
+    Link(SmallBody* a, SmallBody* b);
+    virtual void update(phys_t dt, class GameUniverse* u) = 0;
+protected:
+    SmallBody* const a_;
+    SmallBody* const b_;
+};
+
 class GameUniverse: public Universe {
 public:
     GameUniverse(AstroBody* planet);
     void update(phys_t dt);
     void addBody(SmallBody* b);
+    void addLink(Link* l);
+    void applyImpulse(SmallBody* a, SmallBody* b, vector2p im, vector2p pos);
+    void applyAngularImpulse(SmallBody* a, SmallBody* b, phys_t im);
 private:
     AstroBody* planet_;
     std::vector<SmallBody*> smallBodies_;
+    std::vector<Link*> links_;
+};
+
+class FixtureSpring: public Link {
+public:
+    FixtureSpring(SmallBody* a, SmallBody* b, phys_t lStiff, phys_t lDamp,
+            phys_t aStiff, phys_t aDamp);
+    void setPosition(vector2p position);
+    void setOrientation(phys_t orientation);
+    state2p getTargetState();
+    void update(phys_t dt, GameUniverse* u);
+protected:
+    phys_t lStiff_, lDamp_, aStiff_, aDamp_;
+    vector2p position_;
+    phys_t orientation_;
 };
 
 #endif /* GAME_PHYSICS_H_ */

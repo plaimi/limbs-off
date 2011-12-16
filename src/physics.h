@@ -146,6 +146,8 @@ public:
     virtual void update(phys_t dt) = 0;
 };
 
+phys_t momentInertia(phys_t mass, phys_t radius, phys_t dist = 1.0);
+
 bool collide(Body* a, Body* b, bodystate& na, bodystate& nb, phys_t& t,
         vector2p& p, vector2p& n);
 

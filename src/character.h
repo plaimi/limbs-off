@@ -15,8 +15,7 @@ public:
         Character* parent_;
         bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
     };
-    Character(state2p state, phys_t mass, phys_t orientation, phys_t angVel,
-            phys_t inertiaMoment, Shape<phys_t>* shape);
+    Character(state2p state, phys_t orientation);
     void addToUniverse(GameUniverse* u);
     // Return current velocity (_vel)
     double getVel();
@@ -33,7 +32,10 @@ public:
     // Update power meters
     void update(double deltaTime);
 private:
+    Circle<phys_t> shapeBody_, shapeHead_;
     CharacterBody body_;
+    SmallBody head_;
+    FixtureSpring neck_;
     // Requests
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
     // Power meters
@@ -41,6 +43,7 @@ private:
             powerRightKick_, powerRightPunch_;
     // Velocity and direction
     double vel_;
+    state2p getStateAt(vector2p p);
     friend class CharacterGraphic;
 };
 
@@ -49,9 +52,9 @@ public:
     CharacterGraphic(Character* c);
 private:
     Character* c_;
-    GraphicFixture bodyFixture_;
+    GraphicFixture bodyFixture_, headFixture_;
     ColorModifier bodyColor_;
-    TestDisk body_;
+    TestDisk body_, head_;
 };
 
 #endif

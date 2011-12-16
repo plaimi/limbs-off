@@ -91,8 +91,66 @@ void GameUniverse::update(phys_t dt) {
             b->applyImpulseAt(im, pg - b->p_);
         b->orientation_ += dt * b->av_;
     }
+    std::vector<Link*>::iterator il;
+    for (il = links_.begin(); il < links_.end(); il++)
+        (*il)->update(dt, this);
 }
 
 void GameUniverse::addBody(SmallBody* b) {
     smallBodies_.push_back(b);
+}
+
+void GameUniverse::addLink(Link* l) {
+    links_.push_back(l);
+}
+
+void GameUniverse::applyImpulse(SmallBody* a, SmallBody* b, vector2p im,
+        vector2p pos) {
+    a->applyImpulseAt(im, pos);
+    b->applyImpulseAt(-im, pos + a->p_ - b->p_);
+}
+
+void GameUniverse::applyAngularImpulse(SmallBody* a, SmallBody* b, phys_t im) {
+    a->applyAngularImpulse(im);
+    b->applyAngularImpulse(-im);
+}
+
+Link::Link(SmallBody* a, SmallBody* b) :
+    a_(a), b_(b) {
+}
+
+FixtureSpring::FixtureSpring(SmallBody* a, SmallBody* b, phys_t lStiff,
+        phys_t lDamp, phys_t aStiff, phys_t aDamp) :
+    Link(a, b), lStiff_(lStiff), lDamp_(lDamp), aStiff_(aStiff), aDamp_(aDamp),
+            position_(vector2p()(0, 0)), orientation_(0.0) {
+}
+
+void FixtureSpring::setPosition(vector2p position) {
+    position_ = position;
+}
+
+void FixtureSpring::setOrientation(phys_t orientation) {
+    orientation_ = orientation;
+}
+
+state2p FixtureSpring::getTargetState() {
+    phys_t orientation = a_->getOrientation();
+    vector2p offset = position_.rotated(
+            vector2p()(cos(orientation), sin(orientation)));
+    state2p r;
+    r.p = a_->getPosition() + offset;
+    r.v = a_->getVelocityAt(offset);
+    return r;
+}
+
+void FixtureSpring::update(phys_t dt, GameUniverse* u) {
+    state2p target = getTargetState();
+    state2p d = b_->getState() - target;
+    vector2p n = d.p / sqrt(d.p.squared());
+    vector2p im = (d.p * lStiff_ + n * (d.v * n * lDamp_)) * dt;
+    u->applyImpulse(a_, b_, im, target.p - a_->getPosition());
+    phys_t da = b_->getOrientation() - a_->getOrientation() + orientation_;
+    da = remainder<phys_t> (da, 2 * PI);
+    phys_t dav = b_->getAngularVelocity() - a_->getAngularVelocity();
+    u->applyAngularImpulse(a_, b_, (da * aStiff_ + dav * aDamp_) * dt);
 }

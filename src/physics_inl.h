@@ -225,4 +225,8 @@ inline void Body::applyImpulseAt(vector2p i, vector2p p) {
     applyAngularImpulse(p / i);
 }
 
+inline phys_t momentInertia(phys_t mass, phys_t radius, phys_t dist) {
+    return radius * radius * dist * mass;
+}
+
 #endif /* PHYSICS_INL_H_ */
