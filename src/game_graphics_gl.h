@@ -127,7 +127,8 @@ private:
     // Video mode
     static bool fullscreen_;
     // Screen & window dimensions, & depth info
-    static int screenWidth_, screenHeight_, depth_, surfaceWidth_, surfaceHeight_;
+    static int screenWidth_, screenHeight_, depth_, surfaceWidth_,
+            surfaceHeight_;
     // The singleton
     static Screen* instance_;
     // The surface pointer for SetVideoMode
@@ -138,15 +139,15 @@ private:
 
 class Camera: public GraphicModifier {
 public:
-    Camera(vector2p position, double radius, double rotation);
+    Camera(state2p state, double radius, double rotation);
     // Update pos/rad/rot
     void update(double deltaTime);
     // Get pos/rad/rot
-    vector2p getPosition();
+    state2p getState();
     double getRadius();
     double getRotation();
     // Set desired pos/rad/rot
-    void setTargetPosition(vector2p target);
+    void setTargetState(state2p target);
     void setTargetRadius(double target);
     void setTargetRotation(double target);
     /** Rotates and translates OpenGL matrix. */
@@ -155,7 +156,7 @@ public:
     void end();
 private:
     // Pos and desired pos
-    vector2p position_, targetPosition_;
+    state2p state_, targetState_;
     // Rad and desired rad
     double radius_, targetRadius_;
     // Rot and desired rot

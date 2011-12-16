@@ -21,13 +21,13 @@
 #include <math.h>
 #include "game_graphics_gl.h"
 
-Camera::Camera(vector2p position, double radius, double rotation) :
-    position_(position), targetPosition_(position), radius_(radius),
-        targetRadius_(radius), rotation_(rotation), targetRotation_(rotation) {
+Camera::Camera(state2p state, double radius, double rotation) :
+    state_(state), targetState_(state), radius_(radius), targetRadius_(radius),
+            rotation_(rotation), targetRotation_(rotation) {
 }
 
-vector2p Camera::getPosition() {
-    return position_;
+state2p Camera::getState() {
+    return state_;
 }
 
 double Camera::getRadius() {
@@ -37,8 +37,8 @@ double Camera::getRadius() {
 double Camera::getRotation() {
     return rotation_;
 }
-void Camera::setTargetPosition(vector2p target) {
-    targetPosition_ = target;
+void Camera::setTargetState(state2p target) {
+    targetState_ = target;
 }
 
 void Camera::setTargetRadius(double target) {
@@ -50,8 +50,9 @@ void Camera::setTargetRotation(double target) {
 }
 
 void Camera::update(double deltaTime) {
-    double decay = pow(.25, deltaTime);
-    position_ = targetPosition_ * (1.0 - decay) + position_ * decay;
+    double decay = pow(.1, deltaTime);
+    state_ = targetState_ * (1.0 - decay) + state_ * decay;
+    state_.p += state_.v * deltaTime;
     radius_ = targetRadius_ * (1.0 - decay) + radius_ * decay;
     double diff = remainder((targetRotation_ - rotation_), 360.0);
     rotation_ += (1.0 - decay) * diff;
@@ -60,7 +61,7 @@ void Camera::update(double deltaTime) {
 void Camera::apply() {
     glRotated(rotation_, 0.0, 0.0, -1.0);
     glScaled(1.0 / radius_, 1.0 / radius_, 0.0);
-    glTranslated(-position_.x, -position_.y, 0.0);
+    glTranslated(-state_.x, -state_.y, 0.0);
 }
 
 void Camera::begin() {

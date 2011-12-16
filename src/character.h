@@ -2,7 +2,6 @@
 #define CHARACTER_H_ value
 
 #include "game_physics.h"
-#include "physics.h"
 #include "game_graphics_gl.h"
 
 class Character {
@@ -21,7 +20,7 @@ public:
     void addToUniverse(GameUniverse* u);
     // Return current velocity (_vel)
     double getVel();
-    vector2p getPosition();
+    state2p getState();
     // Procedures for setting request states
     void crouch(bool state);
     void fire(bool state);

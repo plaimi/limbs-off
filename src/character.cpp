@@ -26,8 +26,8 @@ double Character::getVel() {
     return vel_;
 }
 
-vector2p Character::getPosition() {
-    return body_.getPosition();
+state2p Character::getState() {
+    return body_.getState();
 }
 
 void Character::crouch(bool state) {

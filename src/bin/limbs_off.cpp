@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     bool quit = false;
     Uint32 time = SDL_GetTicks();
     StepTimer timer;
-    Camera camera(character.getPosition(), 0.5, 0.0);
+    Camera camera(character.getState(), 0.5, 0.0);
     StackGraphic foreground, scene;
     foreground.addGraphic(&planetDisk);
     foreground.addGraphic(&characterGraphic);
@@ -98,10 +98,10 @@ int main(int argc, char *argv[]) {
         timer.time(steps / STEPS_PER_SECOND);
         for (int i = 0; i < steps; ++i)
             universe.update(1.0 / STEPS_PER_SECOND);
-        camera.setTargetPosition(character.getPosition());
-        vector2p characterToPlanet = character.getPosition()
+        camera.setTargetState(character.getState());
+        vector2p characterToPlanet = character.getState().p
                 - planet.getPosition();
-        camera.setTargetRadius(sqrt(characterToPlanet.squared()));
+        camera.setTargetRadius(sqrt(characterToPlanet.squared()) / 2);
         camera.setTargetRotation(
                 atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
         camera.update(steps / STEPS_PER_SECOND);
