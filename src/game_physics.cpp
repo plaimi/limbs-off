@@ -146,7 +146,7 @@ state2p FixtureSpring::getTargetState() {
 void FixtureSpring::update(phys_t dt, GameUniverse* u) {
     state2p target = getTargetState();
     state2p d = b_->getState() - target;
-    vector2p n = d.p / sqrt(d.p.squared());
+    vector2p n = d.p.unit();
     vector2p im = (d.p * lStiff_ + n * (d.v * n * lDamp_)) * dt;
     u->applyImpulse(a_, b_, im, target.p - a_->getPosition());
     phys_t da = b_->getOrientation() - a_->getOrientation() + orientation_;

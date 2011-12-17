@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
         camera.setTargetState(character.getState());
         vector2p characterToPlanet = character.getState().p
                 - planet.getPosition();
-        camera.setTargetRadius(sqrt(characterToPlanet.squared()) / 2);
+        camera.setTargetRadius(characterToPlanet.length() / 2);
         camera.setTargetRotation(
                 atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
         camera.update(steps / STEPS_PER_SECOND);

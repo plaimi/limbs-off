@@ -44,8 +44,11 @@ struct vector2 {
     T operator*(const vector2<T>& v) const;
     T operator/(const vector2<T>& v) const;
     T squared() const;
-    const vector2<T> rotate(vector2<T> u);
+    T length() const;
+    const vector2<T> unit() const;
+    const vector2<T>& norm();
     const vector2<T> rotated(vector2<T> u) const;
+    const vector2<T>& rotate(vector2<T> u);
 };
 
 enum ShapeType {

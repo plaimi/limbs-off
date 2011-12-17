@@ -109,14 +109,29 @@ inline T vector2<T>::squared() const {
 }
 
 template<typename T>
-inline const vector2<T> vector2<T>::rotate(vector2<T> u) {
-    (*this)(x * u.x - y * u.y, x * u.y + y * u.x);
-    return *this;
+inline T vector2<T>::length() const {
+    return sqrt<T> (squared());
+}
+
+template<typename T>
+inline const vector2<T> vector2<T>::unit() const {
+    return vector2<T> (*this) / length();
+}
+
+template<typename T>
+inline const vector2<T>& vector2<T>::norm() {
+    return operator/=(length());
 }
 
 template<typename T>
 inline const vector2<T> vector2<T>::rotated(vector2<T> u) const {
     return vector2<T> (*this).rotate(u);
+}
+
+template<typename T>
+inline const vector2<T>& vector2<T>::rotate(vector2<T> u) {
+    (*this)(x * u.x - y * u.y, x * u.y + y * u.x);
+    return *this;
 }
 
 template<typename T>

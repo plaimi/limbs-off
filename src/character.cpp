@@ -120,7 +120,7 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
                     2 * PI);
             phys_t dav = getAngularVelocity();
             impulse -= ~n * (da * 500 + dav * 200) * deltaTime;
-            vector2p na = legA / sqrt(legA.squared());
+            vector2p na = legA.unit();
             phys_t in = na * impulse;
             phys_t ip = clampmag(~na * impulse, 0.5 * in);
             impulse = na * in + ~na * ip;
