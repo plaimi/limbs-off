@@ -28,6 +28,7 @@
 template<typename T>
 struct vector2 {
     T x, y;
+    static vector2<T> fromAngle(T angle);
     T& operator[](unsigned int i);
     const T& operator[](unsigned int i) const;
     const vector2<T> operator()(const T x0, const T y0);
@@ -45,6 +46,7 @@ struct vector2 {
     T operator/(const vector2<T>& v) const;
     T squared() const;
     T length() const;
+    T angle() const;
     const vector2<T> unit() const;
     const vector2<T>& norm();
     const vector2<T> rotated(vector2<T> u) const;

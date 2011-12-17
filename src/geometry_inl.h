@@ -23,6 +23,13 @@
 #include "geometry.h"
 
 template<typename T>
+inline vector2<T> vector2<T>::fromAngle(T angle) {
+    vector2 v;
+    sincos<T> (angle, v.x, v.y);
+    return v;
+}
+
+template<typename T>
 inline T& vector2<T>::operator[](unsigned int i) {
     return *(&x + i);
 }
@@ -111,6 +118,11 @@ inline T vector2<T>::squared() const {
 template<typename T>
 inline T vector2<T>::length() const {
     return sqrt<T> (squared());
+}
+
+template<typename T>
+inline T vector2<T>::angle() const {
+    return atan2<T> (y, x);
 }
 
 template<typename T>

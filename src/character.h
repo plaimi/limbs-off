@@ -13,6 +13,7 @@ public:
                 Shape<phys_t>* shape);
     protected:
         Character* parent_;
+        phys_t walkCycle_;
         bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
     };
     Character(state2p state, phys_t orientation);
@@ -32,10 +33,10 @@ public:
     // Update power meters
     void update(double deltaTime);
 private:
-    Circle<phys_t> shapeBody_, shapeHead_;
+    Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_;
     CharacterBody body_;
-    SmallBody head_;
-    FixtureSpring neck_;
+    SmallBody head_, footBack_, footFront_;
+    FixtureSpring neck_, legBack_, legFront_;
     // Requests
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
     // Power meters
@@ -52,9 +53,10 @@ public:
     CharacterGraphic(Character* c);
 private:
     Character* c_;
-    GraphicFixture bodyFixture_, headFixture_;
+    GraphicFixture bodyFixture_, headFixture_, footBackFixture_,
+            footFrontFixture_;
     ColorModifier bodyColor_;
-    TestDisk body_, head_;
+    TestDisk body_, head_, footBack_, footFront_;
 };
 
 #endif

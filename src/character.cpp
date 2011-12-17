@@ -7,12 +7,19 @@ const float COL_BODY[] = { 0.2, 0.2, 0.8 };
 Character::Character(state2p state, phys_t orientation) :
             shapeBody_(0.2),
             shapeHead_(0.15),
+            shapeFoot_(0.05),
             // Physical object
             body_(this, state, 25, orientation, 0, momentInertia(25, 0.2, 0.4),
                     &shapeBody_),
             head_(getStateAt(vector2p()(0.0, 0.40)), 3, orientation, 0,
-                    momentInertia(2, 0.15, 0.4), &shapeHead_),
+                    momentInertia(3, 0.15, 0.4), &shapeHead_),
+            footBack_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
+                    momentInertia(1, 0.05, 0.4), &shapeFoot_),
+            footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
+                    momentInertia(1, 0.05, 0.4), &shapeFoot_),
             neck_(&body_, &head_, 1000.0, 1000.0, 1.0, 1.0),
+            legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
+            legFront_(&body_, &footFront_, 200.0, 20.0, 1.0, 1.0),
             // Request states
             crouch_(false), fire_(false), jump_(false), leftKick_(false),
             leftPunch_(false), rightKick_(false), rightPunch_(false),
@@ -22,12 +29,18 @@ Character::Character(state2p state, phys_t orientation) :
             // Velocity
             vel_(0) {
     neck_.setPosition(vector2p()(0.0, 0.40));
+    legBack_.setPosition(vector2p()(0.0, -0.40));
+    legFront_.setPosition(vector2p()(0.0, -0.40));
 }
 
 void Character::addToUniverse(GameUniverse* u) {
     u->addBody(&body_);
     u->addBody(&head_);
+    u->addBody(&footBack_);
+    u->addBody(&footFront_);
     u->addLink(&neck_);
+    u->addLink(&legBack_);
+    u->addLink(&legFront_);
 }
 
 double Character::getVel() {
@@ -93,50 +106,65 @@ Character::CharacterBody::CharacterBody(Character* parent, state2p state,
         phys_t mass, phys_t orientation, phys_t angVel, phys_t inertiaMoment,
         Shape<phys_t>* shape) :
     SmallBody(state, mass, orientation, angVel, inertiaMoment, shape),
-            parent_(parent) {
+            parent_(parent), walkCycle_(0.0) {
 }
 
 bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
         vector2p& interactPoint, vector2p& impulse) {
+    // FIXME: Way too much happening here. Move some of the code elsewhere.
     phys_t t1, t2;
     vector2p posCharacter = getPosition(), posBody = body->getPosition();
     vector2p legA = posCharacter - posBody;
-    phys_t angle = atan2(legA.y, legA.x) - PI / 2 - getOrientation();
-    angle = clampmag(remainder(angle, PI * 2) - parent_->vel_ * PI / 7, PI / 2);
+    phys_t hVel = (getVelocity() - body->getVelocityAt(legA)) / legA.unit();
+    phys_t angle = legA.angle() - PI / 2 - getOrientation();
+    phys_t accel = clampmag(hVel / 8.0 - parent_->vel_, 1.0);
+    angle = clampmag(remainder(angle, PI * 2) + accel * PI / 8, PI / 2);
+    walkCycle_ = remainder(walkCycle_ - deltaTime * hVel * 5.0, PI * 2);
+    phys_t leg = 0.25 + 0.15 * (1.0 - parent_->powerJump_);
+    vector2p feetOrigin = -vector2p::fromAngle(-angle) * (leg - 0.05);
+    vector2p feetOffset = vector2p::fromAngle(-walkCycle_) * 0.15;
+    parent_->legBack_.setPosition(feetOrigin + feetOffset);
+    parent_->legFront_.setPosition(feetOrigin - feetOffset);
     angle += PI / 2 + getOrientation();
     vector2p legB = legA - vector2p()(cos(angle), sin(angle));
     phys_t radius = ((Circle<phys_t>*) (body->getShape()))->getRadius();
     phys_t radiusSqr = radius * radius;
-    if (intersectLineCircle<phys_t> (legA, legB, radiusSqr, t1, t2)) {
+    if (intersectLineCircle<phys_t> (legA, legB, radiusSqr, t1, t2) && t1 > 0
+            && t1 < leg) {
         vector2p interactBody = legA * (1 - t1) + legB * t1;
         interactPoint = interactBody + posBody;
         vector2p interactCharacter = interactPoint - posCharacter;
-        phys_t leg = 0.25 + 0.15 * (1.0 - parent_->powerJump_);
-        if (t1 < leg) {
-            vector2p n = interactCharacter / t1;
-            impulse = -n * (8000.0 * (leg - t1) + max(0.0,
-                    getMomentum() * n * 50.0)) * deltaTime;
-            phys_t da = remainder(getOrientation() - atan2(-legA.x, legA.y),
-                    2 * PI);
-            phys_t dav = getAngularVelocity();
-            impulse -= ~n * (da * 500 + dav * 200) * deltaTime;
-            vector2p na = legA.unit();
-            phys_t in = na * impulse;
-            phys_t ip = clampmag(~na * impulse, 0.5 * in);
-            impulse = na * in + ~na * ip;
-            return true;
-        }
+        vector2p n = interactCharacter / t1;
+        impulse = -n * (8000.0 * (leg - t1)
+                + max(0.0, getMomentum() * n * 50.0)) * deltaTime;
+        phys_t da = remainder(getOrientation() - atan2(n.x, -n.y), 2 * PI);
+        phys_t dav = getAngularVelocity() + getVelocity() / legA
+                / legA.squared();
+        vector2p na = legA.unit();
+        phys_t in = na * impulse;
+        phys_t balancing = (da * 500 + dav * 200) * deltaTime;
+        phys_t ip = clampmag(~na * impulse + balancing, 0.8 * in);
+        impulse = na * in + ~na * ip;
+        return true;
     }
     return false;
 }
 
 CharacterGraphic::CharacterGraphic(Character* c) :
     c_(c), bodyFixture_(&c->body_), headFixture_(&c->head_),
-            bodyColor_(COL_BODY), body_(0.2, 16), head_(0.15, 16) {
+            footBackFixture_(&c->footBack_), footFrontFixture_(&c->footFront_),
+            bodyColor_(COL_BODY), body_(0.2, 16), head_(0.15, 16),
+            footBack_(0.05, 8), footFront_(0.05, 8) {
     body_.addModifier(&bodyFixture_);
     body_.getDisk()->addModifier(&bodyColor_);
     head_.addModifier(&headFixture_);
     head_.getDisk()->addModifier(&bodyColor_);
+    footBack_.addModifier(&footBackFixture_);
+    footBack_.getDisk()->addModifier(&bodyColor_);
+    footFront_.addModifier(&footFrontFixture_);
+    footFront_.getDisk()->addModifier(&bodyColor_);
+    addGraphic(&footBack_);
     addGraphic(&body_);
     addGraphic(&head_);
+    addGraphic(&footFront_);
 }

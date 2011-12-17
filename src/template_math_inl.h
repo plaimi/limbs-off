@@ -72,6 +72,16 @@ inline void sincos<double> (double x, double& sinx, double& cosx) {
 
 #endif
 
+template<>
+inline float atan2(float y, float x) {
+    return atan2f(y, x);
+}
+
+template<>
+inline double atan2(double y, double x) {
+    return atan2(y, x);
+}
+
 template<typename T>
 inline T abs(T x) {
     return x < 0 ? -x : x;

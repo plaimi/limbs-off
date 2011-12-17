@@ -36,6 +36,9 @@ template<typename T>
 void sincos(T x, T& sinx, T& cosx);
 
 template<typename T>
+T atan2(T y, T x);
+
+template<typename T>
 T abs(T x);
 
 template<typename T>
