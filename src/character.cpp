@@ -8,6 +8,7 @@ Character::Character(state2p state, phys_t orientation) :
             shapeBody_(0.2),
             shapeHead_(0.15),
             shapeFoot_(0.05),
+            shapeHand_(0.075),
             // Physical object
             body_(this, state, 25, orientation, 0, momentInertia(25, 0.2, 0.4),
                     &shapeBody_),
@@ -17,9 +18,15 @@ Character::Character(state2p state, phys_t orientation) :
                     momentInertia(1, 0.05, 0.4), &shapeFoot_),
             footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
                     momentInertia(1, 0.05, 0.4), &shapeFoot_),
+            handBack_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
+                    &shapeHand_),
+            handFront_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
+                    &shapeHand_),
             neck_(&body_, &head_, 1000.0, 1000.0, 1.0, 1.0),
             legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
             legFront_(&body_, &footFront_, 200.0, 20.0, 1.0, 1.0),
+            armBack_(&body_, &handBack_, 200.0, 20.0, 1.0, 1.0),
+            armFront_(&body_, &handFront_, 200.0, 20.0, 1.0, 1.0),
             // Request states
             crouch_(false), fire_(false), jump_(false), leftKick_(false),
             leftPunch_(false), rightKick_(false), rightPunch_(false),
@@ -38,9 +45,13 @@ void Character::addToUniverse(GameUniverse* u) {
     u->addBody(&head_);
     u->addBody(&footBack_);
     u->addBody(&footFront_);
+    u->addBody(&handBack_);
+    u->addBody(&handFront_);
     u->addLink(&neck_);
     u->addLink(&legBack_);
     u->addLink(&legFront_);
+    u->addLink(&armBack_);
+    u->addLink(&armFront_);
 }
 
 double Character::getVel() {
@@ -153,8 +164,10 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
 CharacterGraphic::CharacterGraphic(Character* c) :
     c_(c), bodyFixture_(&c->body_), headFixture_(&c->head_),
             footBackFixture_(&c->footBack_), footFrontFixture_(&c->footFront_),
+            handBackFixture_(&c->handBack_), handFrontFixture_(&c->handFront_),
             bodyColor_(COL_BODY), body_(0.2, 16), head_(0.15, 16),
-            footBack_(0.05, 8), footFront_(0.05, 8) {
+            footBack_(0.05, 8), footFront_(0.05, 8), handBack_(0.075, 8),
+            handFront_(0.075, 8) {
     body_.addModifier(&bodyFixture_);
     body_.getDisk()->addModifier(&bodyColor_);
     head_.addModifier(&headFixture_);
@@ -163,8 +176,14 @@ CharacterGraphic::CharacterGraphic(Character* c) :
     footBack_.getDisk()->addModifier(&bodyColor_);
     footFront_.addModifier(&footFrontFixture_);
     footFront_.getDisk()->addModifier(&bodyColor_);
+    handBack_.addModifier(&handBackFixture_);
+    handBack_.getDisk()->addModifier(&bodyColor_);
+    handFront_.addModifier(&handFrontFixture_);
+    handFront_.getDisk()->addModifier(&bodyColor_);
+    addGraphic(&handBack_);
     addGraphic(&footBack_);
     addGraphic(&body_);
     addGraphic(&head_);
     addGraphic(&footFront_);
+    addGraphic(&handFront_);
 }

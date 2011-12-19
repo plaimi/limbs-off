@@ -127,12 +127,13 @@ inline T vector2<T>::angle() const {
 
 template<typename T>
 inline const vector2<T> vector2<T>::unit() const {
-    return vector2<T> (*this) / length();
+    T l = length();
+    return l > 0 ? vector2<T> (*this) / l : *this;
 }
 
 template<typename T>
 inline const vector2<T>& vector2<T>::norm() {
-    return operator/=(length());
+    return operator=(unit());
 }
 
 template<typename T>

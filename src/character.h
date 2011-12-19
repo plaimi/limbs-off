@@ -33,10 +33,10 @@ public:
     // Update power meters
     void update(double deltaTime);
 private:
-    Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_;
+    Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
-    SmallBody head_, footBack_, footFront_;
-    FixtureSpring neck_, legBack_, legFront_;
+    SmallBody head_, footBack_, footFront_, handBack_, handFront_;
+    FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
     // Requests
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
     // Power meters
@@ -54,9 +54,9 @@ public:
 private:
     Character* c_;
     GraphicFixture bodyFixture_, headFixture_, footBackFixture_,
-            footFrontFixture_;
+            footFrontFixture_, handBackFixture_, handFrontFixture_;
     ColorModifier bodyColor_;
-    TestDisk body_, head_, footBack_, footFront_;
+    TestDisk body_, head_, footBack_, footFront_, handBack_, handFront_;
 };
 
 #endif
