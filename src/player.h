@@ -32,9 +32,14 @@ public:
     bool handle(const SDL_Event& event);
     // Bind key to action
     void bindKey(SDLKey key, ActionType action);
+    void bindJoyAxis(Uint8 axis, ActionType action);
+    void bindJoyButton(Uint8 button, ActionType action);
 private:
     // All bindindgs
-    ActionType bindings_[SDLK_LAST];
+    ActionType keyBindings_[SDLK_LAST];
+    ActionType joyAxisBindings_[256];
+    ActionType joyButtonBindings_[256];
+    Uint8 joyDevice_;
 };
 
 #endif /* PLAYER_H_ */

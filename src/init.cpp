@@ -26,7 +26,7 @@ using namespace std;
 
 void Init::readBindings(Player* player, const char* file) {
     string tmp;
-    int keyCode, actionType;
+    int code;
     ifstream in;
     in.open(file);
     if (in.fail()) {
@@ -34,10 +34,23 @@ void Init::readBindings(Player* player, const char* file) {
         exit(1);
     }
     while (in) {
-        getline(in, tmp, ':');
-        in >> keyCode;
-        in >> actionType;
-        player->bindKey((SDLKey) keyCode, (ActionType) actionType);
+        getline(in, tmp);
+        if (tmp == "[keyboard]") {
+            for (int i = 1; i < NUM_ACTIONTYPE; ++i) {
+                in >> tmp;
+                in >> tmp;
+                in >> code;
+                player->bindKey((SDLKey) code, (ActionType) i);
+            }
+        }
+        if (tmp == "[gamepad]") {
+            for (int i = 1; i < NUM_ACTIONTYPE; ++i) {
+                in >> tmp;
+                in >> tmp;
+                in >> code;
+                player->bindJoyButton((Uint8) code, (ActionType) i);
+            }
+        }
     }
     in.close();
 }

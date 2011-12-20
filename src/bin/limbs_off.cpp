@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
     backgroundSprite.addModifier(&backgroundModifier);
     scene.addGraphic(&backgroundSprite);
     scene.addGraphic(&foreground);
+    SDL_JoystickOpen(0);
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN

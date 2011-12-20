@@ -24,89 +24,77 @@
 Player::Player(Character* character) :
     Actor(character) {
     // Initialise bindings_ to avoid gibberish
-    for (int i = 0; i < SDLK_LAST; ++i) {
-        bindings_[i] = NOTHING;
+    for (int i = 0; i < SDLK_LAST; ++i)
+        keyBindings_[i] = NOTHING;
+    for (int i = 0; i < 256; ++i)  {
+        joyAxisBindings_[i] = NOTHING;
+        joyButtonBindings_[i] = NOTHING;
     }
 }
 
 bool Player::handle(const SDL_Event& event) {
-    // Check that event is a keyboard event
-    if (event.type != SDL_KEYDOWN && event.type != SDL_KEYUP) {
+    double value;
+    int input;
+    ActionType* bindings;
+    switch (event.type) {
+    case SDL_KEYUP:
+    case SDL_KEYDOWN:
+        value = event.key.state == SDL_PRESSED ? 1.0 : 0.0;
+        input = event.key.keysym.sym;
+        bindings = keyBindings_;
+        break;
+    case SDL_JOYBUTTONUP:
+    case SDL_JOYBUTTONDOWN:
+        value = event.jbutton.state == SDL_PRESSED ? 1.0 : 0.0;
+        input = event.jbutton.button;
+        bindings = joyButtonBindings_;
+        break;
+    case SDL_JOYAXISMOTION:
+        value = event.jaxis.value / 32768.0;
+        input = event.jaxis.which;
+        bindings = joyAxisBindings_;
+        break;
+    default:
         return false;
     }
-    // Check that there is a binding for the key
-    if (!bindings_[event.key.keysym.sym]) {
+    switch (bindings[input]) {
+    case LEFT:
+            character_->moveLeft(value);
+        break;
+    case RIGHT:
+            character_->moveRight(value);
+        break;
+    case JUMP:
+        character_->jump(value);
+        break;
+    case CROUCH:
+        character_->crouch(value);
+        break;
+    case FIRE:
+        character_->fire(value);
+        break;
+    case LPUNCH:
+        character_->leftPunch(value);
+        break;
+    case RPUNCH:
+        character_->rightPunch(value);
+        break;
+    case LKICK:
+        character_->leftKick(value);
+        break;
+    case RKICK:
+        character_->rightKick(value);
+        break;
+    default:
         return false;
-    }
-    if (event.type == SDL_KEYDOWN) {
-        switch (bindings_[event.key.keysym.sym]) {
-        case LEFT:
-            character_->move(-1.0);
-            break;
-        case RIGHT:
-            character_->move(1.0);
-            break;
-        case JUMP:
-            character_->jump(true);
-            break;
-        case CROUCH:
-            character_->crouch(true);
-            break;
-        case FIRE:
-            character_->fire(true);
-            break;
-        case LPUNCH:
-            character_->leftPunch(true);
-            break;
-        case RPUNCH:
-            character_->rightPunch(true);
-            break;
-        case LKICK:
-            character_->leftKick(true);
-            break;
-        case RKICK:
-            character_->rightKick(true);
-            break;
-        default:
-            return false;
-        }
-    }
-    if (event.type == SDL_KEYUP) {
-        switch (bindings_[event.key.keysym.sym]) {
-        case LEFT:
-            character_->move(fmax(character_->getVel(), 0));
-            break;
-        case RIGHT:
-            character_->move(fmin(character_->getVel(), 0));
-            break;
-        case JUMP:
-            character_->jump(false);
-            break;
-        case CROUCH:
-            character_->crouch(false);
-            break;
-        case FIRE:
-            character_->fire(false);
-            break;
-        case LPUNCH:
-            character_->leftPunch(false);
-            break;
-        case RPUNCH:
-            character_->rightPunch(false);
-            break;
-        case LKICK:
-            character_->leftKick(false);
-            break;
-        case RKICK:
-            character_->rightKick(false);
-            break;
-        default:
-            return false;
-        }
     }
     return true;
 }
 
 void Player::bindKey(SDLKey key, ActionType action) {
-    bindings_[key] = action;
+    keyBindings_[key] = action;
+}
+
+void Player::bindJoyButton(Uint8 joyButton, ActionType action) {
+    joyButtonBindings_[joyButton] = action;
 }

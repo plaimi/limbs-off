@@ -27,7 +27,8 @@ public:
     void leftKick(bool state);
     void leftPunch(bool state);
     void jump(bool state);
-    void move(double vel);
+    void moveLeft(double vel);
+    void moveRight(double vel);
     void rightKick(bool state);
     void rightPunch(bool state);
     // Update power meters
@@ -43,7 +44,7 @@ private:
     double powerFire_, powerJump_, powerLeftKick_, powerLeftPunch_,
             powerRightKick_, powerRightPunch_;
     // Velocity and direction
-    double vel_;
+    double vel_, velLeft_, velRight_;
     state2p getStateAt(vector2p p);
     friend class CharacterGraphic;
 };

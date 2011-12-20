@@ -82,8 +82,14 @@ void Character::jump(bool state) {
     jump_ = state;
 }
 
-void Character::move(double vel) {
-    vel_ = vel;
+void Character::moveLeft(double vel) {
+    velLeft_ = vel;
+    vel_ = !velLeft_ ? velRight_ : -velLeft_;
+}
+
+void Character::moveRight(double vel) {
+    velRight_ = vel;
+    vel_ = !velRight_ ? -velLeft_ : velRight_;
 }
 
 void Character::rightKick(bool state) {
