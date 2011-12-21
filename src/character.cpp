@@ -34,7 +34,7 @@ Character::Character(state2p state, phys_t orientation) :
             powerFire_(0.0), powerJump_(0.0), powerLeftKick_(0.0),
             powerLeftPunch_(0.0), powerRightKick_(0.0), powerRightPunch_(0.0),
             // Velocity
-            vel_(0) {
+            vel_(0), velLeft_(0), velRight_(0) {
     neck_.setPosition(vector2p()(0.0, 0.40));
     legBack_.setPosition(vector2p()(0.0, -0.40));
     legFront_.setPosition(vector2p()(0.0, -0.40));
