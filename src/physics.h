@@ -40,14 +40,7 @@ struct state1 {
 
 template<typename T>
 struct state2 {
-    union {
-        struct {
-            vector2<T> p, v;
-        };
-        struct {
-            T x, y, vx, vy;
-        };
-    };
+    vector2<T> p, v;
     vector2<T>& operator[](unsigned int i);
     const vector2<T>& operator[](unsigned int i) const;
     const state2<T> operator()(const vector2<T> p0, const vector2<T> v0);
@@ -68,21 +61,8 @@ typedef state1<phys_t> state1p;
 typedef state2<phys_t> state2p;
 
 struct bodystate {
-    union {
-        state2p l;
-        struct {
-            vector2p p, v;
-        };
-        struct {
-            phys_t x, y, vx, vy;
-        };
-    };
-    union {
-        state1p a;
-        struct {
-            phys_t o, av;
-        };
-    };
+    state2p l;
+    state1p a;
 };
 
 class Particle {
@@ -94,15 +74,7 @@ public:
     void getVelocity(phys_t& vx, phys_t& vy);
     virtual ~Particle();
 protected:
-    union {
-        state2p s_;
-        struct {
-            vector2p p_, v_;
-        };
-        struct {
-            phys_t x_, y_, vx_, vy_;
-        };
-    };
+    state2p s_;
     Particle(state2p s);
     friend class Universe;
 };

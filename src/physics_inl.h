@@ -141,21 +141,21 @@ inline state2p Particle::getState() {
 }
 
 inline vector2p Particle::getPosition() {
-    return p_;
+    return s_.p;
 }
 
 inline void Particle::getPosition(phys_t& x, phys_t& y) {
-    x = x_;
-    y = y_;
+    x = s_.p.x;
+    y = s_.p.y;
 }
 
 inline vector2p Particle::getVelocity() {
-    return v_;
+    return s_.v;
 }
 
 inline void Particle::getVelocity(phys_t& vx, phys_t& vy) {
-    vx = vx_;
-    vy = vy_;
+    vx = s_.v.x;
+    vy = s_.v.y;
 }
 
 inline Mass::Mass(state2p s, phys_t mass) :
@@ -170,11 +170,11 @@ inline phys_t Mass::getMass() {
 }
 
 inline vector2p Mass::getMomentum() {
-    return v_ * mass_;
+    return s_.v * mass_;
 }
 
 inline void Mass::applyImpulse(vector2p i) {
-    v_ += i / mass_;
+    s_.v += i / mass_;
 }
 
 inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av,
@@ -207,13 +207,13 @@ inline phys_t Body::getAngularMomentum() {
 
 inline vector2p Body::getMomentumAt(vector2p p, vector2p vp) {
     phys_t pp = p.squared();
-    vector2p m = (v_ + ~p * av_ - vp) * mass_;
+    vector2p m = (s_.v + ~p * av_ - vp) * mass_;
     m -= ~p * (~p * m * mass_ / (moi_ + mass_ * pp));
     return m;
 }
 
 inline vector2p Body::getVelocityAt(vector2p p) {
-    return v_ + ~p * av_;
+    return s_.v + ~p * av_;
 }
 
 inline void Body::applyAngularImpulse(phys_t i) {
