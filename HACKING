@@ -1,0 +1,82 @@
+/* vim: set textwidth=78 formatoptions=actw2 autoindent: */
+
+Code Style
+==========
+
+-Brackets
+Opening brackets on the same line as the statement, one space. Ending brackets 
+on the line after the last statement. If there is only one statement following 
+a control statement, no brackets.
+
+-Indentation
+Four soft spaces. Indent every line inside a pair of brackets, as well as after 
+a conditional statement without brackets. Outdent afterwards. Cases are on the 
+same level as the switch statement, lines following the cases are indented. 
+Double indentation if forced newline (due to width restrictions).
+
+-Newlines
+Statements following a conditional statement are always on a new line. 
+Variables of the same type are declared (and possibly initialised) on the same 
+line, unless a logical separation is justifiable.
+
+-Spacing
+Space between values and operators in arithmetic operations. Derefencing, 
+address referencing, etc.\ is placed into the variable. Pointer symbols appear 
+into the data type where possible. No spacing opening or closing a pair of 
+paranthesis. Spacing after control statements, but not with procedure calls or 
+declerations. Spaces after commas. No spacing with unary operators, only binary 
+or more. No paranthesis on return statements.
+
+-Width
+Limit the width of all source files to 80 characters.
+
+-Naming
+Class names start with an uppercase letter, and are camelCase. Private 
+variable names end with an underscore. They give indication as to their usage, 
+and are abbreviated if they end up being unreasonably long. How long 
+"unreasonable" actually is, is left up to the programmer. Other variable names 
+are without suffixes. Procedures are verbs and camelCase.
+
+-Comments
+Comments in header files that describe what the procedure, class or data 
+member is for. Comments in cpp-files where complexity dictates a need for 
+them. TODOs and FIXMEs where needed.
+
+-File Naming
+Descriptive header file names. C++ source file names that are depending on a 
+single header are named the same as the header. Headers that are monumental to 
+several C++ sources are put in a directory that has the same name as the 
+header. Exclusively lowercase letters with underscores in place of spaces.
+
+-Other
+Class variables and procedures are declared in this specific order: public, 
+protected and private. Library headers are included prior to project headers, 
+at the top of the file, bar any pre-processor statements. "while"-part of 
+do-whiles are on the same line as '}'.
+
+Submitting Code (Core Team)
+===========================
+
+Before pushing your code to the main repository, please make a temporary local 
+clone of your local repository with your latest commit. Build and compile this 
+version and verify everything is still working as intended before you push. DO 
+NOT PUSH SOMETHING THAT IS BROKEN. EVER. If you have the time and opportunity, 
+review the code together with someone else from the team before you push it.
+
+Submitting Code (You other nice people)
+=======================================
+
+To submit code you need to create your own fork of the project.  Go to the 
+github https://github.com/stiell/limbs-off and click the nice "Fork"-button up 
+in the top right corner. Write your code, and document it fiercely. Test that 
+this thing actually works. Make a temporary local clone of your fork with the 
+latest commit and make sure it builds, compiles and runs as intended. If it 
+does, push to your fork, and send a pull request to us using the aptly titled 
+"Pull Request"-button. DO NOT PUT A BUNCH OF CRAP IN YOUR COMMIT. EVER. Make 
+sure your commit only has the relevant code change and an updated Makefile if 
+necessary. Don't make a commit with thirty changes to the code. We want to be 
+able to cherry pick. Maybe one of your thirty ideas are actually good.
+
+Submitting your code means that it will be distributed under the latest 
+version of the GPL. Make sure the code you want to submit is compatible with 
+the latest version of the GPL.
