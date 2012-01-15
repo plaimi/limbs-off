@@ -1,5 +1,4 @@
-/* vim: set textwidth=78 formatoptions=actw2 autoindent: */
-
+/* vim: set textwidth=78 formatoptions=actw2 autoindent */
 Code Style
 ==========
 
@@ -48,11 +47,34 @@ single header are named the same as the header. Headers that are monumental to
 several C++ sources are put in a directory that has the same name as the 
 header. Exclusively lowercase letters with underscores in place of spaces.
 
--Other
+-Declaration order in classes
 Class variables and procedures are declared in this specific order: public, 
-protected and private. Library headers are included prior to project headers, 
-at the top of the file, bar any pre-processor statements. "while"-part of 
-do-whiles are on the same line as '}'.
+protected and private.
+
+-#include order
+Library headers are included prior to project headers, at the top of the file, 
+bar any pre-processor statements.
+
+-"do while"s
+"while"-part of do-whiles are on the same line as '}'.
+
+
+Commit Log Format
+=================
+
+Use a descriptive but concise capitalised title. Start the title with a 
+capital letter.  Don't use a full stop. Put a blank line between the title and 
+the optional body, in which you further detail your commit if necessary. The 
+title should be no more than fifty characters.
+
+For grammatical tense our rules are basically - don't do it. A commit log is 
+always in the infinitive form. NEVER PAST OR PRESENT.  So, "Add stuff", not 
+"Added stuff" or "Adds stuff". This is because we want to read what a commit 
+will do, and it makes more sense if it is in the infinitive form. This is what 
+generated commit messages (e.g. by git merge) looks like as well.
+
+Cap your width to seventy-two characters.
+
 
 Submitting Code (Core Team)
 ===========================
@@ -62,6 +84,7 @@ clone of your local repository with your latest commit. Build and compile this
 version and verify everything is still working as intended before you push. DO 
 NOT PUSH SOMETHING THAT IS BROKEN. EVER. If you have the time and opportunity, 
 review the code together with someone else from the team before you push it.
+
 
 Submitting Code (You other nice people)
 =======================================
