@@ -70,4 +70,4 @@ check_PROGRAMS =
 
 limbs_off_datadir = $(datadir)/limbs-off
 
-dist_limbs_off_data_DATA = src/controllers.conf
+dist_limbs_off_data_DATA = src/controllers1.conf src/controllers2.conf

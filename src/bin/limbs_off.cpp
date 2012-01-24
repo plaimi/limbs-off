@@ -45,12 +45,16 @@ int main(int argc, char *argv[]) {
     TextureLoader* texLoader = TextureLoader::getInstance();
     Circle<phys_t> planetCircle = Circle<phys_t> (PR);
     AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
-    Character character(state2p()(R, 0.0, 0.0, S), 0.0);
-    Player player(&character);
+    Character character1(state2p()(R, 0.0, 0.0, S), 0.0);
+    Character character2(state2p()(R, 0.0, 0.0, S), 0.0);
+    Player player1(&character1);
+    Player player2(&character2);
     GameUniverse universe(&planet);
-    character.addToUniverse(&universe);
+    character1.addToUniverse(&universe);
+    character2.addToUniverse(&universe);
     TestDisk planetDisk(PR, 64);
-    CharacterGraphic characterGraphic(&character);
+    CharacterGraphic character1Graphic(&character1);
+    CharacterGraphic character2Graphic(&character2);
     GraphicFixture planetFixture(&planet);
     ColorModifier planetColor(COL_PLANET);
     planetDisk.addModifier(&planetFixture);
@@ -58,14 +62,16 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
     GLuint tex = texLoader->loadTexture("background.png", true);
     Sprite backgroundSprite(tex, 1, 1);
-    Init::readBindings(&player, "src/controllers.conf");
+    Init::readBindings(&player1, "src/controllers1.conf");
+    Init::readBindings(&player2, "src/controllers2.conf");
     bool quit = false;
     Uint32 time = SDL_GetTicks();
     StepTimer timer;
-    Camera camera(character.getState(), 0.5, 0.0);
+    Camera camera(character1.getState(), 0.5, 0.0);
     StackGraphic foreground, scene;
     foreground.addGraphic(&planetDisk);
-    foreground.addGraphic(&characterGraphic);
+    foreground.addGraphic(&character1Graphic);
+    foreground.addGraphic(&character2Graphic);
     foreground.addModifier(&camera);
     BackgroundModifier backgroundModifier(&camera);
     backgroundSprite.addModifier(&backgroundModifier);
@@ -90,20 +96,22 @@ int main(int argc, char *argv[]) {
             }
             if (screen->handle(event))
                 continue;
-            player.handle(event);
+            player1.handle(event);
+            player2.handle(event);
         }
         int steps = timer.getStepTime() * STEPS_PER_SECOND;
         timer.time(steps / STEPS_PER_SECOND);
         for (int i = 0; i < steps; ++i)
             universe.update(1.0 / STEPS_PER_SECOND);
-        camera.setTargetState(character.getState());
-        vector2p characterToPlanet = character.getState().p
+        camera.setTargetState(character1.getState());
+        vector2p characterToPlanet = character1.getState().p
                 - planet.getPosition();
         camera.setTargetRadius(characterToPlanet.length() / 2);
         camera.setTargetRotation(
                 atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
         camera.update(steps / STEPS_PER_SECOND);
-        character.update(steps / STEPS_PER_SECOND);
+        character1.update(steps / STEPS_PER_SECOND);
+        character2.update(steps / STEPS_PER_SECOND);
 
         glClear(GL_COLOR_BUFFER_BIT);
         scene.draw();
