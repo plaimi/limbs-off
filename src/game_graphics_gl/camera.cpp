@@ -23,7 +23,7 @@
 
 Camera::Camera(state2p state, double radius, double rotation) :
     state_(state), targetState_(state), radius_(radius), targetRadius_(radius),
-            rotation_(rotation), targetRotation_(rotation) {
+            rotation_(rotation), targetRotation_(rotation), rotationSpeed_(0) {
 }
 
 state2p Camera::getState() {
@@ -45,8 +45,9 @@ void Camera::setTargetRadius(double target) {
     targetRadius_ = target;
 }
 
-void Camera::setTargetRotation(double target) {
+void Camera::setTargetRotation(double target, double speed) {
     targetRotation_ = target;
+    rotationSpeed_ = speed;
 }
 
 void Camera::update(double deltaTime) {
@@ -55,7 +56,7 @@ void Camera::update(double deltaTime) {
     state_.p += state_.v * deltaTime;
     radius_ = targetRadius_ * (1.0 - decay) + radius_ * decay;
     double diff = remainder((targetRotation_ - rotation_), 360.0);
-    rotation_ += (1.0 - decay) * diff;
+    rotation_ += (1.0 - pow(.1, rotationSpeed_ * deltaTime)) * diff;
 }
 
 void Camera::apply() {
