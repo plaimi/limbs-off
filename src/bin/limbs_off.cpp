@@ -103,12 +103,15 @@ int main(int argc, char *argv[]) {
         timer.time(steps / STEPS_PER_SECOND);
         for (int i = 0; i < steps; ++i)
             universe.update(1.0 / STEPS_PER_SECOND);
-        camera.setTargetState(character1.getState());
-        vector2p characterToPlanet = character1.getState().p
-                - planet.getPosition();
-        camera.setTargetRadius(characterToPlanet.length() / 2);
-        camera.setTargetRotation(
-                atan2(characterToPlanet.y, characterToPlanet.x) * IN_DEG - 90.0);
+        state2p s1 = character1.getState(), s2 = character2.getState();
+        state2p sc = (s1 + s2) / 2;
+        phys_t r = (s2.p - s1.p).length() / 2;
+        camera.setTargetState(sc);
+        vector2p pp = planet.getPosition();
+        vector2p camToPlanet = sc.p - pp;
+        vector2p up = ((s1.p - pp).unit() + (s2.p - pp).unit()) / 2;
+        camera.setTargetRadius(r + 2);
+        camera.setTargetRotation(up.angle() * IN_DEG - 90.0, up.squared());
         camera.update(steps / STEPS_PER_SECOND);
         character1.update(steps / STEPS_PER_SECOND);
         character2.update(steps / STEPS_PER_SECOND);

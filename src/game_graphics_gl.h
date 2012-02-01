@@ -149,7 +149,7 @@ public:
     // Set desired pos/rad/rot
     void setTargetState(state2p target);
     void setTargetRadius(double target);
-    void setTargetRotation(double target);
+    void setTargetRotation(double target, double speed = 1);
     /** Rotates and translates OpenGL matrix. */
     void apply();
     void begin();
@@ -160,7 +160,7 @@ private:
     // Rad and desired rad
     double radius_, targetRadius_;
     // Rot and desired rot
-    double rotation_, targetRotation_;
+    double rotation_, targetRotation_, rotationSpeed_;
 };
 
 #endif /* GAME_GRAPHICS_GL_H_ */
