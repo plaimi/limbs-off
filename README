@@ -1,4 +1,8 @@
-/* vim: set textwidth=78 formatoptions=actw2 autoindent: */
+About Limbs Off
+===============
+
+Limbs Off is a gratis free software computer fighting game.
+
 Licensing and Legalese
 =======================
 
@@ -13,3 +17,5 @@ If you want to discuss some more general things regarding the game, use
 https://plaimi.net/forum. If you want to contribute code, see HACKING. If you 
 have questions regarding this or anything else, use 
 https://plaimi.net/contact.php.
+
+/* vim: set textwidth=78 formatoptions=actw2 autoindent: */
