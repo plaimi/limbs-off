@@ -1,8 +1,8 @@
 #ifndef CHARACTER_H_
-#define CHARACTER_H_ value
+#define CHARACTER_H_
 
-#include "game_physics.h"
-#include "game_graphics_gl.h"
+#include "physics/game_physics.h"
+#include "graphics/game_graphics_gl.h"
 
 class Character {
 public:
@@ -18,10 +18,10 @@ public:
     };
     Character(state2p state, phys_t orientation);
     void addToUniverse(GameUniverse* u);
-    // Return current velocity (_vel)
+    /** Return current velocity (_vel). */
     double getVel();
     state2p getState();
-    // Procedures for setting request states
+    /** Procedures for setting request states. */
     void crouch(bool state);
     void fire(bool state);
     void leftKick(bool state);
@@ -31,19 +31,19 @@ public:
     void moveRight(double vel);
     void rightKick(bool state);
     void rightPunch(bool state);
-    // Update power meters
+    /** Update power meters. */
     void update(double deltaTime);
 private:
     Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
     SmallBody head_, footBack_, footFront_, handBack_, handFront_;
     FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
-    // Requests
+    /** Requests. */
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
-    // Power meters
+    /** Power meters. */
     double powerFire_, powerJump_, powerLeftKick_, powerLeftPunch_,
             powerRightKick_, powerRightPunch_;
-    // Velocity and direction
+    /** Velocity and direction. */
     double vel_, velLeft_, velRight_;
     state2p getStateAt(vector2p p);
     friend class CharacterGraphic;
@@ -60,4 +60,4 @@ private:
     TestDisk body_, head_, footBack_, footFront_, handBack_, handFront_;
 };
 
-#endif
+#endif /* CHARACTER_H_ */

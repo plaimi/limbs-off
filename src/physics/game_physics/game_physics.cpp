@@ -19,7 +19,7 @@
 
 #include <math.h>
 #include "geometry.h"
-#include "game_physics.h"
+#include "physics/game_physics.h"
 
 SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
         phys_t moi, Shape<phys_t>* shape) :

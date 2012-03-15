@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "game_graphics_gl.h"
+#include "graphics/game_graphics_gl.h"
 
 Camera::Camera(state2p state, double radius, double rotation) :
     state_(state), targetState_(state), radius_(radius), targetRadius_(radius),

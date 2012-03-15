@@ -18,9 +18,9 @@
  */
 
 #include <math.h>
+#include <fontconfig/fontconfig.h>
+#include "graphics/game_graphics_gl.h"
 #include "geometry.h"
-#include "physics.h"
-#include "game_graphics_gl.h"
 
 GraphicFixture::GraphicFixture(Body* body) :
     body_(body) {

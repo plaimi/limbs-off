@@ -17,14 +17,14 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INIT_H_
-#define INIT_H_
+#ifndef CONFIG_PARSER_H_
+#define CONFIG_PARSER_H_
 
 #include "player.h"
 
-namespace Init {
-// Opens the config and reads the keys.
+namespace ConfigParser {
+/** Opens the config and reads the keys. */
 void readBindings(Player* player, const char* file);
 }
 
-#endif /* INIT_H_ */
+#endif /*CONFIG_PARSER_H_*/

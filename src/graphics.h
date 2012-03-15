@@ -21,7 +21,9 @@ public:
     /** Appends a modifier to the list of modifiers. */
     void addModifier(GraphicModifier* modifier);
 protected:
+    /** Add modifiers to a graphic. */
     void beginModifiers();
+    /** Remove modifiers from a graphic. */
     void endModifiers();
     std::vector<GraphicModifier*> modifiers_;
 };

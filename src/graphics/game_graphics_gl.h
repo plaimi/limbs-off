@@ -22,10 +22,15 @@
 
 #include <vector>
 #include <GL/gl.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
+#include "event_handler.h"
 #include "graphics.h"
 #include "physics.h"
-#include "event_handler.h"
 
+// We should make prototypes for all the classes or solve the problems that
+// cause the need for them in the first place. This looks a bit silly
+// Quickfix McLulzy (tm).
 class Camera;
 
 class GraphicFixture: public GraphicModifier {
@@ -57,7 +62,7 @@ private:
 
 class StackGraphic: public Graphic {
 public:
-    /** Adds a graphic to the top of the stack. */
+    /** Add a graphic to the top of the stack. */
     void addGraphic(Graphic* g);
     void doDraw();
 private:
@@ -106,6 +111,7 @@ private:
 class Screen: EventHandler {
 public:
     static const int DM_FRONT_TO_BACK = 1, DM_PREMUL = 2, DM_SMOOTH = 4;
+    /** Create or return a singleton. */
     static Screen* getInstance();
     static void setVideoMode(int width, int height, int depth,
             bool fullscreen = false);
@@ -124,14 +130,14 @@ protected:
     Screen();
     static void initGl();
 private:
-    // Video mode
+    /** Video mode. */
     static bool fullscreen_;
-    // Screen & window dimensions, & depth info
+    /** Screen & window dimensions, & depth info. */
     static int screenWidth_, screenHeight_, depth_, surfaceWidth_,
             surfaceHeight_;
-    // The singleton
+    /** The singleton. */
     static Screen* instance_;
-    // The surface pointer for SetVideoMode
+    /** The surface pointer for SetVideoMode. */
     static SDL_Surface* surface_;
     int drawingMode_;
     static bool initialize();
@@ -140,26 +146,24 @@ private:
 class Camera: public GraphicModifier {
 public:
     Camera(state2p state, double radius, double rotation);
-    // Update pos/rad/rot
+    /** Update pos/rad/rot. */
     void update(double deltaTime);
-    // Get pos/rad/rot
     state2p getState();
     double getRadius();
     double getRotation();
-    // Set desired pos/rad/rot
     void setTargetState(state2p target);
     void setTargetRadius(double target);
     void setTargetRotation(double target, double speed = 1);
-    /** Rotates and translates OpenGL matrix. */
+    /** Rotate and translate OpenGL matrix. */
     void apply();
     void begin();
     void end();
 private:
-    // Pos and desired pos
+    /** Pos and desired pos. */
     state2p state_, targetState_;
-    // Rad and desired rad
+    /** Rad and desired rad. */
     double radius_, targetRadius_;
-    // Rot and desired rot
+    /** Rot and desired rot. */
     double rotation_, targetRotation_, rotationSpeed_;
 };
 

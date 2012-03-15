@@ -19,12 +19,12 @@
 
 #include <fstream>
 #include <string>
-#include "init.h"
+#include "config_parser.h"
 #include "player.h"
 
 using namespace std;
 
-void Init::readBindings(Player* player, const char* file) {
+void ConfigParser::readBindings(Player* player, const char* file) {
     string tmp;
     int code;
     ifstream in;

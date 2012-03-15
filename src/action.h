@@ -25,7 +25,7 @@ public:
     Action();
 };
 
-// NUM_ACTIONTYPE is a length
+/** NUM_ACTIONTYPE is a length. */
 enum ActionType {
     NOTHING,
     LEFT,

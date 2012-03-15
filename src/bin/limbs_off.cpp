@@ -17,117 +17,49 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <GL/gl.h>
 #include <SDL/SDL.h>
-#include "step_timer.h"
-#include "game_graphics_gl.h"
-#include "game_physics.h"
-#include "init.h"
-#include "event_handler.h"
-#include "player.h"
-
-const double MAX_FPS = 150;
-const double STEPS_PER_SECOND = 600;
-
-const phys_t GM = 628;
-const phys_t R = 9.0;
-const phys_t S = sqrt<phys_t> (GM / R) * 0.5;
-const phys_t PR = 7.0;
-
-const float COL_PLANET[] = { 0.4, 0.8, 0.4 };
+#include "game.h"
 
 int main(int argc, char *argv[]) {
     Screen::setVideoMode(1024, 768, 32);
     Screen* screen = Screen::getInstance();
-    screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1,
-            false);
-    // Keep track of window size when entering fullscreen mode
-    int prevWidth, prevHeight;
-    TextureLoader* texLoader = TextureLoader::getInstance();
-    Circle<phys_t> planetCircle = Circle<phys_t> (PR);
-    AstroBody planet(GM, 2 * GM * PR * PR / 5, -0.05, &planetCircle);
-    Character character1(state2p()(R, 0.0, 0.0, S), 0.0);
-    Character character2(state2p()(R, 0.0, 0.0, S), 0.0);
-    Player player1(&character1);
-    Player player2(&character2);
-    GameUniverse universe(&planet);
-    character1.addToUniverse(&universe);
-    character2.addToUniverse(&universe);
-    TestDisk planetDisk(PR, 64);
-    CharacterGraphic character1Graphic(&character1);
-    CharacterGraphic character2Graphic(&character2);
-    GraphicFixture planetFixture(&planet);
-    ColorModifier planetColor(COL_PLANET);
-    planetDisk.addModifier(&planetFixture);
-    planetDisk.getDisk()->addModifier(&planetColor);
+    screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
     SDL_Event event;
-    GLuint tex = texLoader->loadTexture("background.png", true);
-    Sprite backgroundSprite(tex, 1, 1);
-    Init::readBindings(&player1, "src/controllers1.conf");
-    Init::readBindings(&player2, "src/controllers2.conf");
-    bool quit = false;
-    Uint32 time = SDL_GetTicks();
-    StepTimer timer;
-    Camera camera(character1.getState(), 0.5, 0.0);
-    StackGraphic foreground, scene;
-    foreground.addGraphic(&planetDisk);
-    foreground.addGraphic(&character1Graphic);
-    foreground.addGraphic(&character2Graphic);
-    foreground.addModifier(&camera);
-    BackgroundModifier backgroundModifier(&camera);
-    backgroundSprite.addModifier(&backgroundModifier);
-    scene.addGraphic(&backgroundSprite);
-    scene.addGraphic(&foreground);
-    SDL_JoystickOpen(0);
-    while (!quit) {
+    Game limbsOff(screen);
+    bool running = true;
+    int prevWidth_, prevHeight_;
+    while (running) {
+        // Events
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN
-                    && event.key.keysym.sym == SDLK_ESCAPE) {
-                quit = true;
-                break;
+            // Quit
+            if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN &&
+                    event.key.keysym.sym == SDLK_ESCAPE) {
+                    running = false;
+                    limbsOff.cease();
+                    break;
             }
-            if (event.type == SDL_KEYDOWN && event.key.keysym.sym
-                    == SDLK_RETURN) {
+            // Screen
+            if (event.type == SDL_KEYDOWN &&
+                    event.key.keysym.sym == SDLK_RETURN) {
+                // Enter/leave fullscreen
                 if (!screen->getFullscreen()) {
-                    prevWidth = screen->getSurfaceWidth();
-                    prevHeight = screen->getSurfaceHeight();
+                    prevWidth_ = screen->getSurfaceWidth();
+                    prevHeight_ = screen->getSurfaceHeight();
                     screen->setVideoMode(0, 0, 32, true);
                 } else
-                    screen->setVideoMode(prevWidth, prevHeight, 32, false);
+                    screen->setVideoMode(prevWidth_, prevHeight_, 32, false);
             }
             if (screen->handle(event))
                 continue;
-            player1.handle(event);
-            player2.handle(event);
+            limbsOff.handle(event);
         }
-        int steps = timer.getStepTime() * STEPS_PER_SECOND;
-        timer.time(steps / STEPS_PER_SECOND);
-        for (int i = 0; i < steps; ++i)
-            universe.update(1.0 / STEPS_PER_SECOND);
-        state2p s1 = character1.getState(), s2 = character2.getState();
-        state2p sc = (s1 + s2) / 2;
-        phys_t r = (s2.p - s1.p).length() / 2;
-        camera.setTargetState(sc);
-        vector2p pp = planet.getPosition();
-        vector2p camToPlanet = sc.p - pp;
-        vector2p up = ((s1.p - pp).unit() + (s2.p - pp).unit()) / 2;
-        camera.setTargetRadius(r + 2);
-        camera.setTargetRotation(up.angle() * IN_DEG - 90.0, up.squared());
-        camera.update(steps / STEPS_PER_SECOND);
-        character1.update(steps / STEPS_PER_SECOND);
-        character2.update(steps / STEPS_PER_SECOND);
-
+        // Draw
         glClear(GL_COLOR_BUFFER_BIT);
-        scene.draw();
+        // Game
+        limbsOff.main();
+        // Swap buffers
         SDL_GL_SwapBuffers();
-
-        Uint32 d = SDL_GetTicks() - time;
-        int w = 1000 / MAX_FPS - d;
-        if (w > 0) {
-            SDL_Delay(w);
-            d = SDL_GetTicks() - time;
-        }
-        time += d;
-        timer.targetTime(d / 1000.0);
     }
     return 0;
 }

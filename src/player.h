@@ -28,14 +28,14 @@
 class Player: public Actor, public EventHandler {
 public:
     Player(Character* character);
-    // Handle keyboard event
+    /** Handle keyboard event. */
     bool handle(const SDL_Event& event);
-    // Bind key to action
+    /** Bind key to action. */
     void bindKey(SDLKey key, ActionType action);
     void bindJoyAxis(Uint8 axis, ActionType action);
     void bindJoyButton(Uint8 button, ActionType action);
 private:
-    // All bindindgs
+    /** All bindindgs. */
     ActionType keyBindings_[SDLK_LAST];
     ActionType joyAxisBindings_[256];
     ActionType joyButtonBindings_[256];

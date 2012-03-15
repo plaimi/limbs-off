@@ -17,57 +17,69 @@ clean-local:
 	$(nogit) || (test ChangeLog -nt .git-timestamp && \
 		mv -f ChangeLog ChangeLog~ || rm -f ChangeLog);
 
+limbs_off_datadir = $(datadir)/limbs-off
+
+
 AM_CPPFLAGS = \
-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	$(GL_CFLAGS) $(SDL_CFLAGS) $(PNG_CFLAGS) \
+	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale/"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)/"\" \
+	-DPACKAGE_DATA_DIR=\""${limbs_off_datadir}/"\" \
+	-DPACKAGE_GFX_DIR=\""$(limbs_off_datadir)/data/graphics/"\" \
+	-DPACKAGE_SFX_DIR=\""$(limbs_off_datadir)/data/sounds/"\" \
+	-DPACKAGE_CFG_DIR=\""$(limbs_off_datadir)/config/"\" \
+	$(GL_CFLAGS) \
+	$(PNG_CFLAGS) \
+	$(SDL_CFLAGS) \
 	-I$(srcdir)/src
 
 AM_CFLAGS =\
-	 -Wall\
-	 -g
+	-Wall\
+	-g
 
 bin_PROGRAMS = limbs_off
 
 limbs_off_SOURCES = \
-	src/actor.h \
-	src/actor.cpp \
-	src/character.h \
-	src/character.cpp \
-	src/graphics.h \
-	src/graphics.cpp \
-	src/init.h \
-	src/init.cpp \
-	src/event_handler.h \
-	src/physics.h \
-	src/physics_inl.h \
-	src/physics.cpp \
-	src/player.h \
-	src/player.cpp \
-	src/geometry.h \
-	src/geometry_inl.h \
-	src/template_math.h \
-	src/template_math_inl.h \
+	src/config_parser.h \
+	src/config_parser.cpp \
 	src/step_timer.h \
 	src/step_timer.cpp \
-	src/game_graphics_gl.h \
-	src/game_graphics_gl/camera.cpp \
-	src/game_graphics_gl/graphic.cpp \
-	src/game_graphics_gl/screen.cpp \
-	src/game_graphics_gl/texture_loader.cpp \
-	src/game_physics.h \
-	src/game_physics.cpp \
+	src/template_math.h \
+	src/template_math_inl.h \
+	src/geometry.h \
+	src/geometry_inl.h \
+	src/physics.h \
+	src/physics_inl.h \
+	src/physics/physics.cpp \
+	src/physics/game_physics.h \
+	src/physics/game_physics/game_physics.cpp \
+	src/graphics.h \
+	src/graphics/graphics.cpp \
+	src/graphics/game_graphics_gl.h \
+	src/graphics/game_graphics_gl/camera.cpp \
+	src/graphics/game_graphics_gl/graphic.cpp \
+	src/graphics/game_graphics_gl/screen.cpp \
+	src/graphics/game_graphics_gl/texture_loader.cpp \
+	src/character.h \
+	src/character.cpp \
+	src/actor.h \
+	src/actor.cpp \
+	src/player.h \
+	src/player.cpp \
+	src/game.h \
+	src/game/game.cpp \
 	src/bin/limbs_off.cpp
 
 limbs_off_LDFLAGS = 
 
-limbs_off_LDADD = $(GL_LIBS) $(SDL_LIBS) $(PNG_LIBS)
-
+limbs_off_LDADD = \
+	$(GL_LIBS) \
+	$(PNG_LIBS) \
+	$(SDL_LIBS)
 TESTS = 
 
 check_PROGRAMS = 
 
-limbs_off_datadir = $(datadir)/limbs-off
-
-dist_limbs_off_data_DATA = src/controllers1.conf src/controllers2.conf
+nobase_dist_limbs_off_data_DATA = \
+	config/controllers1.conf \
+	config/controllers2.conf \
+	config/controllers3.conf
