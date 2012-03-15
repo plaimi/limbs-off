@@ -68,6 +68,21 @@ void BackgroundModifier::end() {
     glPopMatrix();
 }
 
+PositionModifier::PositionModifier(int position, int num) :
+    position_(position),
+    num_(num) {
+}
+
+void PositionModifier::begin() {
+    glPushMatrix();
+    double f = 2. / num_ * ((1. + num_) / 2. - position_);
+    glTranslated(.0, f, .0);
+}
+
+void PositionModifier::end() {
+    glPopMatrix();
+}
+
 void StackGraphic::addGraphic(Graphic* g) {
     graphics_.push_back(g);
 }
@@ -106,6 +121,106 @@ void Sprite::doDraw() {
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
+}
+
+double GuiGraphic::getHeight() {
+    return height_;
+}
+
+double GuiGraphic::getWidth() {
+    return width_;
+}
+
+GuiElement* GuiGraphic::getLogic() {
+    return logic_;
+}
+
+void GuiGraphic::setSize(double w, double h) {
+    width_ = w;
+    height_ = h;
+}
+
+Label::Label(const char* face, const char* text, int size, double width, 
+        double height) :
+    size_(size),
+    width_(width),
+    height_(height) {
+        face_ = (char*) malloc(strlen(face) + 1);
+        strcpy(face_, face);
+        text_ = (char*) malloc(strlen(text) + 1);
+        strcpy(text_, text);
+        make();
+}
+
+Label::~Label() {
+    free(face_);
+    free(text_);
+}
+
+char* Label::getText() {
+    return text_;
+}
+
+double Label::getHeight() {
+    return height_;
+}
+
+double Label::getWidth() {
+    return width_;
+}
+
+void Label::doDraw() {
+    Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
+    glColor3d(.0, .0, .0);
+    glBindTexture(GL_TEXTURE_2D, texture_);
+    glBegin(GL_QUADS);
+    glTexCoord2d(.0, 1.);
+    glVertex2d(-width_, -height_);
+    glTexCoord2d(1., 1.);
+    glVertex2d(width_, -height_);
+    glTexCoord2d(1., .0);
+    glVertex2d(width_, height_);
+    glTexCoord2d(.0, .0);
+    glVertex2d(-width_, height_);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glColor3d(1.0, 1.0, 1.0);
+}
+
+void Label::make() {
+    TTF_Init();
+    font_ = TTF_OpenFont(face_, size_);
+    if (!font_)
+        printf("error opening font: %s\n", TTF_GetError());
+    // Doesn't matter
+    SDL_Color bg = {0, 0, 0};
+    surface_ = TTF_RenderText_Shaded(font_, text_, bg, bg);
+    glGenTextures(1, &texture_);
+    glBindTexture(GL_TEXTURE_2D, texture_);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA8, surface_->w, surface_->h, 0, 
+            GL_ALPHA, GL_UNSIGNED_BYTE, surface_->pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Label::setFace(const char* face) {
+    free(face_);
+    face_ = (char*) malloc(strlen(face) + 1);
+    strcpy(face_, face);
+    make();
+}
+
+void Label::setSize(int size) {
+    size_ = size;
+    make();
+}
+
+void Label::setText(const char* text) {
+    free(text_);
+    text_ = (char*) malloc(strlen(text) + 1);
+    strcpy(text_, text);
+    make();
 }
 
 Disk::Disk(GLfloat r, int n) :
@@ -152,4 +267,103 @@ Disk* TestDisk::getDisk() {
 
 Disk* TestDisk::getSquare() {
     return &square_;
+}
+
+ButtonGraphic::ButtonGraphic(double width, double height, GuiElement* logic, 
+        Label* label, bool selected) :
+    label(label) {
+        setSize(width, height);
+        logic_ = logic;
+}
+
+ButtonGraphic::~ButtonGraphic() {
+}
+
+void ButtonGraphic::doDraw() {
+    // This draws front to back
+    if (label) {
+        label->draw();
+    }
+    if (logic_->isSelected())
+        glColor4f(0.f, 1.f, 0.f, 1.f);
+    else
+        glColor4f(1.f, 0.f, 0.f, 1.f);
+    glBegin(GL_QUADS);
+    glVertex2d(width_, -height_);
+    glVertex2d(-width_, -height_);
+    glVertex2d(-width_, height_);
+    glVertex2d(width_, height_);
+    glEnd();
+    glColor4f(1.f, 1.f, 1.f, 1.f);
+}
+
+SubmenuGraphic::SubmenuGraphic(Submenu* submenu) :
+    submenu_(submenu) {
+}
+
+SubmenuGraphic::~SubmenuGraphic() {
+    for (std::vector<ButtonGraphic*>::iterator i = buttonGraphics_.begin(); 
+            i < buttonGraphics_.end(); delete (*i), ++i);
+    for (std::vector<PositionModifier*>::iterator i = 
+            positionModifiers_.begin(); i < positionModifiers_.end(); 
+            delete (*i), ++i);
+}
+
+void SubmenuGraphic::addButton(GuiElement* logic, Label* label, bool selected) {
+    // Create a ButtonGraphic
+    buttonGraphics_.push_back(new ButtonGraphic(label->getWidth(), 
+                label->getHeight(), logic, label, selected));
+    // Create a PositionModifier
+    positionModifiers_.push_back(new PositionModifier(
+                buttonGraphics_.back()->getLogic()->getPosition(), 
+                submenu_->buttons.size()));
+    // Add the ButtonGraphic to graphics_
+    addGraphic(buttonGraphics_.back());
+    // Pair up the ButtonGraphic with the PositionModifier
+    buttonGraphics_.back()->addModifier(positionModifiers_.back());
+}
+
+MenuGraphic::MenuGraphic(Menu* menu) :
+    menu_(menu) {
+        const char* fontFamily = "Anonymous Pro";
+        const char* fontStyle = "Bold";
+        const char* fontSpacing = "Monospace";
+        char* font;
+        FcPattern* fontPattern = FcPatternCreate();
+        FcResult fontResult = FcResultMatch;
+        int fontSize = 74;
+        FcPatternAddString(fontPattern, FC_FAMILY, 
+                (const FcChar8*) fontFamily);
+        FcPatternAddDouble(fontPattern, FC_SIZE, fontSize);
+        FcPatternAddString(fontPattern, FC_SPACING, 
+                (const FcChar8*) fontSpacing);
+        FcPatternAddString(fontPattern, FC_STYLE, 
+                (const FcChar8*) fontStyle);
+        FcDefaultSubstitute(fontPattern);
+        FcPattern* fontMatch = FcFontMatch(NULL, fontPattern, &fontResult);
+        FcPatternGetString(fontMatch, FC_FILE, 0, (FcChar8**) &font);
+        for (int i = 0; i < Menu::NUM_MENU; ++i) {
+            // Create a new SubmenuGraphic for each Submenu
+            menuGraphics_[i] = new SubmenuGraphic(menu->getMenu(i));
+            Submenu* submenu = menu->getMenu(i);
+            // Add buttons and labels
+            for (std::vector<GuiElement*>::iterator j = 
+                    submenu->buttons.begin(); j < submenu->buttons.end(); ++j) {
+                labels_.push_back(new Label(font, ((Button*) (*j))->getText(), 
+                            fontSize, .5, .1));
+                menuGraphics_[i]->addButton((*j), labels_.back(), 
+                        (*j)->isSelected());
+            }
+        }
+}
+
+MenuGraphic::~MenuGraphic() {
+    for (int i = 0; i < Menu::NUM_MENU; delete menuGraphics_[i++]);
+    for (std::vector<Label*>::iterator i = 
+            labels_.begin(); i < labels_.end(); delete (*i), ++i);
+}
+
+void MenuGraphic::doDraw() {
+    // Draw the active menu
+    menuGraphics_[menu_->getActiveMenu()]->draw();
 }

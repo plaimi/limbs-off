@@ -27,6 +27,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_GFX_DIR=\""$(limbs_off_datadir)/data/graphics/"\" \
 	-DPACKAGE_SFX_DIR=\""$(limbs_off_datadir)/data/sounds/"\" \
 	-DPACKAGE_CFG_DIR=\""$(limbs_off_datadir)/config/"\" \
+	$(FONTCONFIG_CFLAGS) \
 	$(GL_CFLAGS) \
 	$(PNG_CFLAGS) \
 	$(SDL_CFLAGS) \
@@ -59,6 +60,10 @@ limbs_off_SOURCES = \
 	src/graphics/game_graphics_gl/graphic.cpp \
 	src/graphics/game_graphics_gl/screen.cpp \
 	src/graphics/game_graphics_gl/texture_loader.cpp \
+	src/menu.h \
+	src/menu/menu.cpp \
+	src/menu/submenu.cpp \
+	src/menu/gui_element.cpp \
 	src/character.h \
 	src/character.cpp \
 	src/actor.h \
@@ -72,6 +77,7 @@ limbs_off_SOURCES = \
 limbs_off_LDFLAGS = 
 
 limbs_off_LDADD = \
+	$(FONTCONFIG_LIBS) \
 	$(GL_LIBS) \
 	$(PNG_LIBS) \
 	$(SDL_LIBS)

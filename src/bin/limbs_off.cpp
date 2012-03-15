@@ -20,6 +20,7 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include "game.h"
+#include "menu.h"
 
 int main(int argc, char *argv[]) {
     Screen::setVideoMode(1024, 768, 32);
@@ -27,17 +28,18 @@ int main(int argc, char *argv[]) {
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
     SDL_Event event;
     Game limbsOff(screen);
+    Menu menu;
+    MenuGraphic menugraphic(&menu);
     bool running = true;
+    bool menuP = false;
     int prevWidth_, prevHeight_;
     while (running) {
         // Events
         while (SDL_PollEvent(&event)) {
-            // Quit
-            if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN &&
-                    event.key.keysym.sym == SDLK_ESCAPE) {
+            //Quit
+            if (event.type == SDL_QUIT) {
                     running = false;
                     limbsOff.cease();
-                    break;
             }
             // Screen
             if (event.type == SDL_KEYDOWN &&
@@ -52,10 +54,21 @@ int main(int argc, char *argv[]) {
             }
             if (screen->handle(event))
                 continue;
-            limbsOff.handle(event);
+            // Menu
+            if (event.type == SDL_KEYDOWN &&
+                    event.key.keysym.sym == SDLK_ESCAPE)
+                menuP = !menuP;
+            if (menuP)
+                menuP = menu.handle(event);
+            // Game
+            else
+                limbsOff.handle(event);
         }
         // Draw
         glClear(GL_COLOR_BUFFER_BIT);
+        // Menu
+        if (menuP)
+            menugraphic.draw();
         // Game
         limbsOff.main();
         // Swap buffers

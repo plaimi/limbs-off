@@ -24,14 +24,15 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include "event_handler.h"
 #include "graphics.h"
+#include "menu.h"
 #include "physics.h"
 
 // We should make prototypes for all the classes or solve the problems that
-// cause the need for them in the first place. This looks a bit silly
-// Quickfix McLulzy (tm).
+// cause the need for them in the first place. This looks a bit silly Lulzy
+// McQuickfix (tm).
 class Camera;
+class GuiGraphic;
 
 class GraphicFixture: public GraphicModifier {
 public:
@@ -60,6 +61,15 @@ private:
     Camera* camera_;
 };
 
+class PositionModifier: public GraphicModifier {
+public:
+    PositionModifier(int position, int num);
+    void begin();
+    void end();
+private:
+    int position_, num_;
+};
+
 class StackGraphic: public Graphic {
 public:
     /** Add a graphic to the top of the stack. */
@@ -76,6 +86,50 @@ public:
 private:
     GLuint texture_;
     GLfloat w_, h_;
+};
+
+class GuiGraphic: public Graphic {
+public:
+    double getHeight();
+    double getWidth();
+    GuiElement* getLogic();
+    void setSize(double w, double h);
+protected:
+    double width_, height_;
+    /** The logic of the graphic. */
+    GuiElement* logic_;
+};
+
+class Label: public Graphic {
+public:
+    Label(const char* face, const char* text, int size, double width, 
+            double height);
+    ~Label();
+    char* getText();
+    double getHeight();
+    double getWidth();
+    void doDraw();
+    void setFace(const char* face);
+    void setSize(int size);
+    void setText(const char* text);
+private:
+    void make();
+    /** The font name. */
+    char* face_;
+    /** The actual text printed. */
+    char* text_;
+    /** The size of the label. */
+    double width_, height_;
+    /* The texture created from surface_. */
+    GLuint texture_;
+    /** The font size. */
+    int size_;
+    /** The font colour. */
+    SDL_Color colour_;
+    /** The surface the text is rendered to. */
+    SDL_Surface* surface_;
+    /** The actual TTF_Font. */
+    TTF_Font* font_;
 };
 
 class Disk: public Graphic {
@@ -96,6 +150,47 @@ public:
     Disk* getSquare();
 private:
     Disk disk_, square_;
+};
+
+class ButtonGraphic: public GuiGraphic {
+public:
+    ButtonGraphic(double width, double height, GuiElement* logic, 
+            Label* label = NULL, bool selected = false);
+    ~ButtonGraphic();
+    /** The button's label if any. */
+    Label* const label;
+    void doDraw();
+private:
+};
+
+class SubmenuGraphic: public StackGraphic {
+public:
+    SubmenuGraphic(Submenu* submenu);
+    ~SubmenuGraphic();
+    /** Add a button to buttonGraphics_ and to graphics_. */
+    void addButton(GuiElement* logic, Label* label = NULL, 
+            bool selected = false);
+private:
+    /** The logic. */
+    Submenu* submenu_;
+    /** The buttons to draw. */
+    std::vector<ButtonGraphic*> buttonGraphics_;
+    /** The position modifiers for the buttons. */
+    std::vector<PositionModifier*> positionModifiers_;
+};
+
+class MenuGraphic: public Graphic {
+public:
+    MenuGraphic(Menu* menu);
+    ~MenuGraphic();
+    void doDraw();
+private:
+    /** The logic. */
+    Menu* menu_;
+    /** The menus to draw. */
+    SubmenuGraphic* menuGraphics_[Menu::NUM_MENU];
+    /** The labels. */
+    std::vector<Label*> labels_;
 };
 
 class TextureLoader {
