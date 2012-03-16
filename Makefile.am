@@ -80,7 +80,7 @@ limbs_off_LDADD = \
 	$(FONTCONFIG_LIBS) \
 	$(GL_LIBS) \
 	$(PNG_LIBS) \
-	$(SDL_LIBS)
+	$(SDL_LIBS) -lSDL_ttf
 TESTS = 
 
 check_PROGRAMS = 
