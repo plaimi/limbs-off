@@ -3,6 +3,20 @@ About Limbs Off
 
 Limbs Off is a gratis free software computer fighting game.
 
+
+Installing and running
+======================
+
+Limbs Off uses the GNU build system. It can be successfully installed on most 
+systems with:
+
+$ autoreconf -i && ./configure && make && sudo make install
+
+See INSTALL for more detailed instructions. Run the game with:
+
+$ limbs_off
+
+
 Licensing and Legalese
 =======================
 
@@ -17,5 +31,6 @@ If you want to discuss some more general things regarding the game, use
 https://plaimi.net/forum. If you want to contribute code, see HACKING. If you 
 have questions regarding this or anything else, use 
 https://plaimi.net/contact.php.
+
 
 /* vim: set textwidth=78 formatoptions=actw2 autoindent: */
