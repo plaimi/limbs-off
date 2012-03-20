@@ -51,20 +51,28 @@ bool Menu::handle(const SDL_Event &event) {
         case SDLK_RETURN:
             // Resume game
             if (activeElement_->getPosition() == 1)
-                return false;
+                ;
             // Exit game
             else {
-                SDL_Event quit;
-                quit.type = SDL_QUIT;
-                SDL_PushEvent(&quit);
+                raiseEvent(QUIT_EVENT);
             }
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 Submenu* Menu::getMenu(int menu) {
     return menus_[menu];
+}
+
+void Menu::raiseEvent(EVENT_ID id) {
+    SDL_Event event;
+    switch(id) {
+    case QUIT_EVENT:
+        event.type = SDL_QUIT;
+    }
+    SDL_PushEvent(&event);
 }
 
 void Menu::setSelected(GuiElement* selected) {

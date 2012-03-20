@@ -48,13 +48,17 @@ public:
     enum {
         MAINMENU, NUM_MENU
     };
+    enum EVENT_ID {
+        QUIT_EVENT
+    };
     bool handle(const SDL_Event &event);
-    GuiElement* getGuiElement(std::vector<GuiElement*> vector, int position);
-    GuiElement* getSelected();
     int getActiveMenu();
     Submenu* getMenu(int menu);
-    void setSelected(GuiElement* selected);
 private:
+    GuiElement* getGuiElement(std::vector<GuiElement*> vector, int position);
+    GuiElement* getSelected();
+    void raiseEvent(EVENT_ID id);
+    void setSelected(GuiElement* selected);
     GuiElement* activeElement_;
     int activeMenu_;
     /** Menus are hardcoded. */

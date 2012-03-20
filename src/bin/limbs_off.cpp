@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
                     event.key.keysym.sym == SDLK_ESCAPE)
                 menuP = !menuP;
             if (menuP)
-                menuP = menu.handle(event);
+                menuP = !menu.handle(event);
             // Game
             else
                 limbsOff.handle(event);
