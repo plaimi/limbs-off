@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stiell@stiell.org>
+ * Copyright (C) 2012 Stian Ellingsen <stiell@stiell.org>
  *
  * This file is part of Limbs Off.
  *
@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
     bool running = true;
     bool menuP = false;
     int prevWidth_, prevHeight_;
+    Uint8 *keystate = SDL_GetKeyState(NULL);
     while (running) {
         // Events
         while (SDL_PollEvent(&event)) {
@@ -42,8 +43,7 @@ int main(int argc, char *argv[]) {
                     limbsOff.cease();
             }
             // Screen
-            if (event.type == SDL_KEYDOWN &&
-                    event.key.keysym.sym == SDLK_RETURN) {
+            if (keystate[SDLK_LALT] && event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
                 // Enter/leave fullscreen
                 if (!screen->getFullscreen()) {
                     prevWidth_ = screen->getSurfaceWidth();
