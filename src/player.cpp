@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stiell@stiell.org>
+ * Copyright (C) 2011 Alexander Berntsen <alexanderberntsen@plaimi.net>
  *
  * This file is part of Limbs Off.
  *

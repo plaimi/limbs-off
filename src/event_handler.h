@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stiell@stiell.org>
+ * Copyright (C) 2011 Alexander Berntsen <alexander@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -24,7 +24,7 @@
 
 class EventHandler {
 public:
-    // Treat input event.
+    /** Treat input event. */
     virtual bool handle(const SDL_Event& event) = 0;
 };
 
