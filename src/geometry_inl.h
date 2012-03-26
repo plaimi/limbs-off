@@ -25,7 +25,7 @@
 template<typename T>
 inline vector2<T> vector2<T>::fromAngle(T angle) {
     vector2 v;
-    sincos<T> (angle, v.x, v.y);
+    sincos<T> (angle, v.y, v.x);
     return v;
 }
 

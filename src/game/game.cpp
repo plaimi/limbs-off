@@ -101,10 +101,14 @@ void Game::cease() {
 void Game::conceive(GLuint tex) {
     // Characters
     // TODO: We have hard coded three players. We should not do that...
+    phys_t angle = 2 * PI / 3;
+    vector2p pos = { R, 0 }, vel = { 0, S }, a = vector2p::fromAngle(angle);
     for (int i = 0; i < 3; ++i) {
-        characters_.push_back(new Character(state2p()(R, 0.0, 0.0, S), 0.0));
+        characters_.push_back(new Character(state2p()(pos, vel), i * angle));
         players_.push_back(new Player(characters_[i]));
         characterGraphics_.push_back(new CharacterGraphic(characters_[i]));
+        pos.rotate(a);
+        vel.rotate(a);
     }
     // Planets
     planetCircle_ = new Circle<phys_t> (PR);
@@ -145,15 +149,15 @@ void Game::main() {
     }
     camState /= characters_.size();
     up /= characters_.size();
-    /*
-     * THIS IS UGLY.
-     */
-    state2p s1 = characters_[0]->getState(), s2 = characters_[1]->getState();
-    phys_t camRadius = (s2.p - s1.p).length() / 2;
+    phys_t camRadius = 0.0;
+    for (std::vector<Character*>::const_iterator i = characters_.begin(); 
+            i != characters_.end(); ++i) {
+        phys_t r = (camState.p - (*i)->getState().p).squared();
+        if (r > camRadius)
+            camRadius = r;
+    }
+    camRadius = sqrt(camRadius);
     camera_->setTargetRadius(camRadius + 2);
-    /*
-     * TODO: *Anything* but ^.
-     */
     camera_->setTargetState(camState);
     vector2p camToPlanet = camState.p - planetPos;
     camera_->setTargetRotation(up.angle() * IN_DEG - 90.0, up.squared());

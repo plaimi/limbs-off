@@ -138,8 +138,8 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     angle = clampmag(remainder(angle, PI * 2) + accel * PI / 8, PI / 2);
     walkCycle_ = remainder(walkCycle_ - deltaTime * hVel * 5.0, PI * 2);
     phys_t leg = 0.25 + 0.15 * (1.0 - parent_->powerJump_);
-    vector2p feetOrigin = -vector2p::fromAngle(-angle) * (leg - 0.05);
-    vector2p feetOffset = vector2p::fromAngle(-walkCycle_) * 0.15;
+    vector2p feetOrigin = vector2p::fromAngle(angle - PI / 2) * (leg - 0.05);
+    vector2p feetOffset = vector2p::fromAngle(walkCycle_) * 0.15;
     parent_->legBack_.setPosition(feetOrigin + feetOffset);
     parent_->legFront_.setPosition(feetOrigin - feetOffset);
     angle += PI / 2 + getOrientation();
