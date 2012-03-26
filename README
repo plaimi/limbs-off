@@ -4,7 +4,7 @@ About Limbs Off
 Limbs Off is a gratis free software computer fighting game.
 
 
-Installing and running
+Installing and Running
 ======================
 
 Limbs Off uses the GNU build system. It can be successfully installed on most 
@@ -15,6 +15,19 @@ $ autoreconf -i && ./configure && make && sudo make install
 See INSTALL for more detailed instructions. Run the game with:
 
 $ limbs_off
+
+If you are on a Gentoo system you can install the game via the Sunrise overlay 
+with:
+
+# emerge limbs-off
+
+If you don't use Sunrise, you may use the ebuild locally:
+
+# mkdir -p /usr/local/portage/games-misc/limbs-off
+# cd /usr/local/portage/games-misc/limbs-off
+# wget https://secure.plaimi.net/limbs-off/limbs-off-9999.ebuild
+# ebuild limbs-off-9999.ebuild digest
+# emerge limbs-off
 
 
 Licensing and Legalese
@@ -37,11 +50,11 @@ along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
 Contributing To the Project
 ===========================
 
-If you want to suggest a feature or report a bug, use https://plaimi.net/bugs. 
-If you want to discuss some more general things regarding the game, use 
-https://plaimi.net/forum. If you want to contribute code, see HACKING. If you 
-have questions regarding this or anything else, use 
-https://plaimi.net/contact.php.
+If you want to suggest a feature or report a bug, use 
+<https://plaimi.net/bugs>. If you want to discuss some more general things 
+regarding the game, use <https://plaimi.net/forum>. If you want to contribute 
+code, see HACKING. If you have questions regarding this or anything else, see 
+AUTHORS.
 
 
 /* vim: set textwidth=78 formatoptions=actw2 autoindent: */
