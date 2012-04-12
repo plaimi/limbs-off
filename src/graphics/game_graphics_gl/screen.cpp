@@ -103,6 +103,7 @@ void Screen::initGl() {
     glDisable(GL_LIGHTING);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
 }
 
 Screen::Screen() :

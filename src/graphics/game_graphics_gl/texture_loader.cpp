@@ -109,7 +109,6 @@ GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {
     }
     GLuint texture;
     glGenTextures(1, &texture);
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -121,7 +120,7 @@ GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexImage2D(GL_TEXTURE_2D, 0, ct, w, h, 0, ct, dt, data);
     glBindTexture(GL_TEXTURE_2D, 0);
-    png_destroy_read_struct(&rsp, &isp, 0);
     png_free(rsp, data);
+    png_destroy_read_struct(&rsp, &isp, 0);
     return texture;
 }
