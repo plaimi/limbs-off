@@ -47,10 +47,12 @@ public:
     Menu();
     ~Menu();
     enum {
-        MAINMENU, NUM_MENU
+        MAINMENU,
+        NUM_MENU
     };
     enum EVENT_ID {
-        QUIT_EVENT
+        QUIT_EVENT,
+        NEW_GAME_EVENT
     };
     bool handle(const SDL_Event &event);
     int getActiveMenu();

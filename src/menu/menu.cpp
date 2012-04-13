@@ -19,12 +19,13 @@
 
 #include <GL/gl.h>
 #include <SDL/SDL_ttf.h>
+#include "event_code.h"
 #include "menu.h"
 
 Menu::Menu() {
     menus_[MAINMENU] = new Submenu();
     Submenu** mainmenu = menus_ + MAINMENU;
-    (*mainmenu)->addButton("RESUME", 1, true);
+    (*mainmenu)->addButton("NEW GAME", 1, true);
     (*mainmenu)->addButton("EXIT GAME", 2, false);
     activeMenu_ = 0;
     activeElement_ = (*mainmenu)->buttons[0];
@@ -58,9 +59,9 @@ bool Menu::handle(const SDL_Event &event) {
         case SDLK_SPACE:
             ; // Fall through
         case SDLK_RETURN:
-            // Resume game
+            // New game
             if (activeElement_->getPosition() == 1)
-                ;
+                raiseEvent(NEW_GAME_EVENT);
             // Exit game
             else {
                 raiseEvent(QUIT_EVENT);
@@ -78,6 +79,10 @@ Submenu* Menu::getMenu(int menu) {
 void Menu::raiseEvent(EVENT_ID id) {
     SDL_Event event;
     switch(id) {
+    case NEW_GAME_EVENT:
+        event.type = SDL_USEREVENT;
+        event.user.code = NEW_GAME;
+        break;
     case QUIT_EVENT:
         event.type = SDL_QUIT;
     }

@@ -20,6 +20,7 @@
 
 #include <GL/gl.h>
 #include <SDL/SDL.h>
+#include "event_code.h"
 #include "game.h"
 #include "menu.h"
 
@@ -28,11 +29,11 @@ int main(int argc, char *argv[]) {
     Screen* screen = Screen::getInstance();
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
     SDL_Event event;
-    Game limbsOff(screen);
+    Game* limbsOff = NULL;
     Menu menu;
     MenuGraphic menugraphic(&menu);
     bool running = true;
-    bool menuP = false;
+    bool menuP = true;
     int prevWidth_, prevHeight_;
     Uint8 *keystate = SDL_GetKeyState(NULL);
     while (running) {
@@ -41,10 +42,12 @@ int main(int argc, char *argv[]) {
             //Quit
             if (event.type == SDL_QUIT) {
                     running = false;
-                    limbsOff.cease();
+                    if (limbsOff)
+                        limbsOff->cease();
             }
             // Screen
-            if (keystate[SDLK_LALT] && event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+            if (keystate[SDLK_LALT] && event.type == SDL_KEYDOWN && 
+                    event.key.keysym.sym == SDLK_RETURN) {
                 // Enter/leave fullscreen
                 if (!screen->getFullscreen()) {
                     prevWidth_ = screen->getSurfaceWidth();
@@ -63,7 +66,14 @@ int main(int argc, char *argv[]) {
                 menuP = !menu.handle(event);
             // Game
             else
-                limbsOff.handle(event);
+                if (limbsOff)
+                    limbsOff->handle(event);
+            if (event.type == SDL_USEREVENT) {
+                if (event.user.code == NEW_GAME)
+                    if (limbsOff)
+                        delete limbsOff;
+                    limbsOff = new Game(screen);
+            }
         }
         // Draw
         glClear(GL_COLOR_BUFFER_BIT);
@@ -71,7 +81,8 @@ int main(int argc, char *argv[]) {
         if (menuP)
             menugraphic.draw();
         // Game
-        limbsOff.main();
+        if (limbsOff)
+            limbsOff->main();
         // Swap buffers
         SDL_GL_SwapBuffers();
     }
