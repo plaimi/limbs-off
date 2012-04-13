@@ -99,6 +99,7 @@ Game::~Game() {
     delete camera_;
     delete backgroundModifier_;
     delete timer_;
+    glDeleteTextures(1, &tex_);
 }
 
 void Game::cease() {
