@@ -45,6 +45,7 @@ public:
 class Menu: public EventHandler {
 public:
     Menu();
+    ~Menu();
     enum {
         MAINMENU, NUM_MENU
     };

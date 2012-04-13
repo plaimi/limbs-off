@@ -30,6 +30,15 @@ Menu::Menu() {
     activeElement_ = (*mainmenu)->buttons[0];
 }
 
+Menu::~Menu() {
+    for (int i = 0; i < NUM_MENU; ++i) {
+        for (std::vector<GuiElement*>::const_iterator j =
+                menus_[i]->buttons.begin(); j != menus_[i]->buttons.end(); ++j)
+            delete (*j);
+        delete menus_[i];
+    }
+}
+
 int Menu::getActiveMenu() {
     return activeMenu_;
 }

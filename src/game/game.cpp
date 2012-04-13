@@ -79,6 +79,12 @@ Game::~Game() {
     for (std::vector<Character*>::const_iterator i = characters_.begin();
             i != characters_.end(); ++i)
         delete (*i);
+    for (std::vector<Player*>::const_iterator i = players_.begin();
+            i != players_.end(); ++i)
+        delete (*i);
+    for (std::vector<CharacterGraphic*>::const_iterator i =
+            characterGraphics_.begin(); i != characterGraphics_.end(); ++i)
+        delete (*i);
     delete planetCircle_;
     for (std::vector<AstroBody*>::const_iterator i = planets_.begin();
             i != planets_.end(); ++i)
