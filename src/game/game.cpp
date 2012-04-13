@@ -44,9 +44,9 @@ bool Game::handle(const SDL_Event& event) {
 Game::Game(Screen* screen) :
     screen_(screen) {
         TextureLoader* texLoader = TextureLoader::getInstance();
-        GLuint tex = texLoader->loadTexture(PACKAGE_GFX_DIR "background.png",
+        tex_ = texLoader->loadTexture(PACKAGE_GFX_DIR "background.png",
                 true);
-        conceive(tex);
+        conceive();
         for (std::vector<Character*>::const_iterator i = characters_.begin();
                 i != characters_.end(); ++i)
             (*i)->addToUniverse(universe_);
@@ -99,7 +99,7 @@ void Game::cease() {
     existing_ = false;
 }
 
-void Game::conceive(GLuint tex) {
+void Game::conceive() {
     // Characters
     // TODO: We have hard coded three players. We should not do that...
     phys_t angle = 2 * PI / 3;
@@ -117,7 +117,7 @@ void Game::conceive(GLuint tex) {
                 planetCircle_));
     universe_ = new GameUniverse(planets_[0]);
     // Graphics
-    backgroundSprite_ = new Sprite(tex, 1, 1);
+    backgroundSprite_ = new Sprite(tex_, 1, 1);
     foreground_ = new StackGraphic();
     planetColour_ = new ColorModifier(COL_PLANET);
     planetDisk_ = new TestDisk(PR, 64);

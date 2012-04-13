@@ -36,7 +36,7 @@ public:
     /** Set existing_ to false. */
     void cease();
     /** Create objects. */
-    void conceive(GLuint tex);
+    void conceive();
     /** Main game loop. */
     void main();
     void pause();
@@ -71,6 +71,7 @@ private:
     std::vector<CharacterGraphic*> characterGraphics_;
     ColorModifier* planetColour_;
     GameUniverse* universe_;
+    GLuint tex_;
     GraphicFixture* planetFixture_;
     Circle<phys_t>* planetCircle_;
     std::vector<Player*> players_;
