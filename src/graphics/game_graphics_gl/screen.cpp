@@ -78,6 +78,7 @@ double Screen::getGlHeight() {
 bool Screen::initialize() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         return false;
+    SDL_ShowCursor(SDL_DISABLE);
     atexit(SDL_Quit);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     const SDL_VideoInfo* screenSize = SDL_GetVideoInfo();
