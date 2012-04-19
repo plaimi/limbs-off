@@ -17,6 +17,10 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <GL/gl.h>
 #include <SDL/SDL_ttf.h>
 #include "event_code.h"
@@ -29,6 +33,10 @@ Menu::Menu() {
     (*mainmenu)->addButton("EXIT GAME", 2, false);
     activeMenu_ = 0;
     activeElement_ = (*mainmenu)->buttons[0];
+#if VERBOSE
+    printf("use arrow keys to navigate the menu.\n"
+            "make your choice with return or space.\n\n");
+#endif
 }
 
 Menu::~Menu() {

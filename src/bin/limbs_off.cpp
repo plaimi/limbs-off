@@ -18,6 +18,10 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include "event_code.h"
@@ -25,6 +29,21 @@
 #include "menu.h"
 
 int main(int argc, char *argv[]) {
+#if VERBOSE
+    printf("LIMBS OFF - verbose version\n\n"
+            "feel free to explore our little world.\n"
+            "as you will learn, it's not very big.\n"
+            "it's supposed to be a fighting/platform\n"
+            "game, with a focus on manipulating physics.\n"
+            "right now we don't even have interaction.\n"
+            "we are trying to fix that. you can help!\n\n"
+            "we need programmers, artists, everything.\n"
+            "see TODO for what needs to be done, and\n"
+            "HACKING for coding style and best practices.\n"
+            "check out https://github.com/stiell/limbs-off\n"
+            "and https://plaimi.net for more information.\n\n");
+    printf("hit alt+enter to enter and leave fullscreen.\n\n");
+#endif
     Screen::setVideoMode(1024, 768, 32);
     Screen* screen = Screen::getInstance();
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
@@ -86,5 +105,8 @@ int main(int argc, char *argv[]) {
         // Swap buffers
         SDL_GL_SwapBuffers();
     }
+#if VERBOSE
+    printf("thank you for playing LIMBS OFF.\n");
+#endif
     return 0;
 }

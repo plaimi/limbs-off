@@ -18,6 +18,10 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <SDL/SDL.h>
 #include "game.h"
 #include "menu.h"
@@ -59,6 +63,24 @@ Game::Game(Screen* screen) :
                 PACKAGE_CFG_DIR "controllers2.conf");
         ConfigParser::readBindings(players_[2], 
                 PACKAGE_CFG_DIR "controllers3.conf");
+#if VERBOSE
+        printf("controllers player 1:\n"
+                "\t left:\tleft arrow\n"
+                "\t right:\tright arrow\n"
+                "\t jump:\tup arrow\n"
+                "\n"
+                "controllers player 2:\n"
+                "\t left:\ta\n"
+                "\t right:\te\n"
+                "\t jump:\t,\n"
+                "\n"
+                "controllers player 3:\n"
+                "\t left:\tgamepad left\n"
+                "\t right:\tgamepad right\n"
+                "\t jump:\tgamepad up\n\n");
+        printf("press escape to bring up the menu again.\n"
+                "press escape again to close it.\n\n");
+#endif
         // TODO: When the game is abstracted for more players, fix ^
         backgroundSprite_->addModifier(backgroundModifier_);
         scene_->addGraphic(backgroundSprite_);
