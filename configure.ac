@@ -48,4 +48,20 @@ PKG_CHECK_MODULES(PNG, [libpng >= 1.2])
 
 AC_CONFIG_FILES([Makefile])
 
+# Verbose mode. Default is *on*.
+AC_DEFINE(VERBOSE, 1, verbose mode)
+AC_MSG_CHECKING([whether we are enabling verbose mode])
+  AC_ARG_ENABLE(verbose,
+     AC_HELP_STRING([--enable-verbose], [verbose game output]),
+     [if test "${enable_verbose}" = "yes" ; then
+             AC_DEFINE(VERBOSE, 1, verbose mode)
+             AC_MSG_RESULT([yes])
+     else
+	     # Turn off by invoking with --enable-verbose=no.
+             AC_DEFINE(VERBOSE, 0, verbose mode)
+             AC_MSG_RESULT([no])
+     fi],
+     AC_MSG_RESULT([no])
+  )
+
 AC_OUTPUT
