@@ -56,6 +56,13 @@ protected and private.
 Library headers are included prior to project headers, at the top of the file, 
 bar any pre-processor statements.
 
+-Directory structure
+If several files rely on the same header, it might be time to create a 
+directory for those files. It should rarely be necessary, but see the 
+directory style that's already there for some clues. The best thing to do is 
+probably to e-mail a core developer from AUTHORS to discuss it properly. 
+Either one should be able to help you decide.
+
 -"do while"s
 "while"-part of do-whiles are on the same line as '}'. Try to avoid "do 
 while"s altogether. We don't like them, and they aren't necessary.
