@@ -34,7 +34,8 @@ Class names start with an uppercase letter, and are camelCase. Private
 variable names end with an underscore. They give indication as to their usage, 
 and are abbreviated if they end up being unreasonably long. How long 
 "unreasonable" actually is, is left up to the programmer. Other variable names 
-are without suffixes. Procedures are verbs and camelCase.
+are without suffixes. Procedures are verbs and camelCase, starting with a 
+lowercase letter.
 
 -Comments
 Comments in header files that describe what the procedure, class or data 
@@ -56,7 +57,10 @@ Library headers are included prior to project headers, at the top of the file,
 bar any pre-processor statements.
 
 -"do while"s
-"while"-part of do-whiles are on the same line as '}'.
+"while"-part of do-whiles are on the same line as '}'. Try to avoid "do 
+while"s altogether. We don't like them, and they aren't necessary.
+
+WHEN IN DOUBT, FOLLOW THE STYLE OF THE OTHER CODE IN THE PROJECT!
 
 
 Commit Log Format
