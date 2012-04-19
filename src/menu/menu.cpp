@@ -46,6 +46,10 @@ int Menu::getActiveMenu() {
 
 bool Menu::handle(const SDL_Event &event) {
     if (event.type == SDL_KEYDOWN) {
+        Uint8 *keystate = SDL_GetKeyState(NULL);
+        // Leave left alt alone
+        if (keystate[SDLK_LALT])
+            return false;
         switch (event.key.keysym.sym) {
         case SDLK_DOWN:
             setSelected(menus_[activeMenu_]->buttons[std::min(
