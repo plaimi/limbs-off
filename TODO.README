@@ -1,0 +1,45 @@
+Info
+====
+
+Items are prefixed by '!'s. The amount of '!'s signify how important an item 
+is. Please keep them in alphabetical order.
+
+To assign yourself to a task, put a * in front of it, and add your name and 
+e-mail address on a new line, indented once.
+
+Replies are on their own lines, indented once and prefixed with '>'s. The 
+amount of '>'s dictate the level of nesting. If necessary, add your name, 
+prefixed '>'.
+
+Full example:
+
+*! Fix something
+	alexander alexander@plaimi.net
+
+	> This is a comment. -John Doe
+	>> This is a reply to that comment. -alexander
+	>> This is another reply to John's comment. -Jane Doe
+	>>> This is a reply to the above comment. -alexander
+	> This is a different comment altogether.
+
+Given the messy nature of comments, lets try to not spam too much.
+
+This file should be parse-friendly. Examples,
+
+list all items:
+
+$ grep '!' TODO
+
+list all major items
+
+$ grep '!!!' TODO
+
+list items without assignees:
+
+$ grep '!' TODO | grep -v '*'
+
+list items with assignees:
+
+$ grep '*!' TODO -1
+
+/* vim: set textwidth=78 formatoptions=actw2 autoindent: */

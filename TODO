@@ -1,0 +1,49 @@
+Major TODOs
+===========
+
+!!! Artificial intelligence
+
+!!! More planets
+
+*!!! Networking
+	ole ole@plaimi.net
+
+!!! Objects
+
+*!!! Player interaction
+	stian stian@plaimi.net
+
+*!!! Sound system
+	alexander alexander@plaimi.net
+
+
+Minor TODOs
+===========
+
+! Add/remove players via menu
+
+! Characters & character creation
+
+! Character models
+
+! Clean up controller handling
+
+! Debug options in menu
+
+! Planet models
+
+! Sliders for menus
+
+! Skirmish mode
+
+! Sounds
+
+! Story mode
+
+
+Bugs
+====
+
+Report bugs at <https://secure.plaimi.net/bugs/>.
+
+/* vim: set textwidth=78 formatoptions=actw2 autoindent: */
