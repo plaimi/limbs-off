@@ -4,6 +4,22 @@ About Limbs Off
 Limbs Off is a gratis free software computer fighting game.
 
 
+Dependencies
+============
+
+The game is built using GNU AutoTools, libtool, pkg-config and gcc.
+
+The dependencies below are listed with the oldest versions that are confirmed 
+to work. Older versions *might* work. If they do, please report it to 
+<alexander@plaimi.net>, so that we can update this file.
+
+-fontconfig >= 2.8
+-libpng >= 1.2
+-libsdl >= 1.2
+-opengl >= 7
+-sdl-ttf >= 2.0.10
+
+
 Installing and Running
 ======================
 
