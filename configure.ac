@@ -8,60 +8,67 @@
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(limbs_off, 0.1)
+AC_INIT([limbs-off], [0.1], [https://secure.plaimi.net/bugs])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 
+# Check for programs
 AC_PROG_CXX
-
 AM_PROG_LIBTOOL
+AC_ARG_WITH(
+    [sdl-config],
+    [AS_HELP_STRING([--with-sdl-config=FILE], [Use the given path to 
+        sdl-config when determining SDL configuration])],
+    [SDLCONFIG="$withval"]
+    [AC_SUBST([SDLCONFIG])],
+    [AC_PATH_PROG([SDLCONFIG], sdl-config)]
+)
 
-SDLCONFIG="sdl-config"
-AC_ARG_WITH(sdl-config,
-[[  --with-sdl-config=FILE
-    Use the given path to sdl-config when determining
-    SDL configuration; defaults to "sdl-config"]],
-[
-    if test "$withval" != "yes" -a "$withval" != ""; then
-        SDLCONFIG=$withval
-    fi
-])
+# Check whether we actually have SDLCONFIG
+AS_IF(
+    [test "x$SDLCONFIG" = "x"],
+    [AC_MSG_ERROR([sdl-config not found and not defined!])]
+)
 
-if test -z "$with_sdl"; then
-	if $SDLCONFIG --version >/dev/null 2>&1; then
-		with_sdl=yes
-		SDL_CFLAGS=`$SDLCONFIG --cflags`
-		SDL_LIBS=`$SDLCONFIG --libs`
-	else
-		with_sdl=no
-	fi
-fi
-AM_CONDITIONAL(HAVE_LIBSDL, test "x$with_sdl" = "xyes")
-AC_SUBST(SDL_CFLAGS)
-AC_SUBST(SDL_LIBS)
+# Set SDL flags
+SDL_CFLAGS="`$SDLCONFIG --cflags`"
+SDL_LIBS="$($SDLCONFIG --libs)"
+AC_SUBST([SDL_CFLAGS])
+AC_SUBST([SDL_LIBS])
 
+# Check other dependencies
 PKG_CHECK_MODULES(FONTCONFIG, [fontconfig >= 2.8])
 PKG_CHECK_MODULES(GL, [gl >= 7])
 PKG_CHECK_MODULES(PNG, [libpng >= 1.2])
 
+# Makefile
 AC_CONFIG_FILES([Makefile])
 
-# Verbose mode. Default is *on*.
-AC_DEFINE(VERBOSE, 1, verbose mode)
-AC_MSG_CHECKING([whether we are enabling verbose mode])
-  AC_ARG_ENABLE(verbose,
-     AC_HELP_STRING([--enable-verbose], [verbose game output]),
-     [if test "${enable_verbose}" = "yes" ; then
-             AC_DEFINE(VERBOSE, 1, verbose mode)
-             AC_MSG_RESULT([yes])
-     else
-	     # Turn off by invoking with --enable-verbose=no.
-             AC_DEFINE(VERBOSE, 0, verbose mode)
-             AC_MSG_RESULT([no])
-     fi],
-     AC_MSG_RESULT([no])
-  )
+# Configure-switch for verbose game output
+AC_ARG_ENABLE(
+    [verbose],
+    [AC_HELP_STRING([--enable-verbose], [verbose game output])],
+    [enable_verbose=$enableval],
+    [enable_verbose="yes"]
+)
+
+# Set VERBOSE var now
+AS_IF(
+    [test "x$enable_verbose" = "xyes"],
+    [AC_DEFINE(VERBOSE, 1, verbose mode)],
+    [AC_DEFINE(VERBOSE, 0, verbose mode)]
+)
 
 AC_OUTPUT
+
+echo
+echo
+echo Limbs Off.................................... : Version $VERSION
+echo Prefix....................................... : $prefix
+if test "x$enable_verbose" = "xyes"; then
+    echo Verbose...................................... : Yes
+else
+    echo Verbose...................................... : No
+fi
