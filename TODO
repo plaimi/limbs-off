@@ -3,42 +3,91 @@ Major TODOs
 
 !!! Artificial intelligence
 
+!!! Character life (hit points/damage meter/something)
+
+!!! HUD with damage indication
+
+!!! Inter-planetary travel via cannons
+
 !!! More planets
 
-*!!! Networking
-	ole ole@plaimi.net
+!!! Networking
 
 !!! Objects
 
 *!!! Player interaction
 	stian stian@plaimi.net
 
+!!! Shooting and weapons
+
+!!! Smooth character movement
+
 *!!! Sound system
 	alexander alexander@plaimi.net
+
+!!! Skirmish mode
 
 
 Minor TODOs
 ===========
 
+! 3D Sound
+
 ! Add/remove players via menu
+
+! Arcade version
+
+! Camera is a bit borked, so fix camera
 
 ! Characters & character creation
 
 ! Character models
 
+! Character types with different strengths to encourage different gameplay
+
 ! Clean up controller handling
+
+! Day/night cycle effect - something to signify time moving forward
+
+! debian software package
 
 ! Debug options in menu
 
+! Factory pattern
+
+! Functional generation of planets
+
+! Light - stars/suns/fire/explosions should produce diffuse & specular light
+
+! Mac OS X build
+
+! Mobile devices version
+
+! Music
+
+! On-line game lobby
+
+! On-line match making
+
+! On-line user accounts with player statistics
+
+! Picture in picture effect for multi-player camera
+
 ! Planet models
+
+! RPM package
+
+! Shadows
 
 ! Sliders for menus
 
-! Skirmish mode
-
 ! Sounds
 
+! Split screen that dynamically splits depending on the location of players
+
 ! Story mode
+
+! Weather
 
 
 Bugs
