@@ -39,7 +39,7 @@ PKG_CHECK_MODULES(FONTCONFIG, [fontconfig >= 2.8])
 PKG_CHECK_MODULES(GL, [gl >= 7])
 PKG_CHECK_MODULES(PNG, [libpng >= 1.2])
 
-AC_CONFIG_FILES([Makefile src/Makefile config/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile config/Makefile desktop/Makefile])
 
 # configure-switch for verbose game output
 AC_ARG_ENABLE([verbose],

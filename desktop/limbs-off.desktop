@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+GenericName=limbs-off
+Name=Limbs Off
+Icon=limbs-off
+Exec=limbs_off
+Terminal=false
+Categories=Game;

@@ -10,7 +10,8 @@
 
 SUBDIRS = \
 	  src \
-	  config
+	  config \
+	  desktop
 
 nogit = test ! -d $(srcdir)/.git
 git = git --work-tree=$(srcdir)
