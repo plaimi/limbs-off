@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Comment=Fighting game... in space!
+GenericName=Limbs Off
+Name=Limbs Off
+Icon=limbs-off
+Exec=limbs_off
+Terminal=false
+Categories=Game;

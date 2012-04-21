@@ -89,6 +89,7 @@ limbs_off_LDADD = \
 	$(GL_LIBS) \
 	$(PNG_LIBS) \
 	$(SDL_LIBS) -lSDL_ttf
+
 TESTS = 
 
 check_PROGRAMS = 
@@ -97,3 +98,9 @@ nobase_dist_limbs_off_data_DATA = \
 	config/controllers1.conf \
 	config/controllers2.conf \
 	config/controllers3.conf
+
+icondir = $(datadir)/pixmaps
+icon_DATA = desktop/limbs-off.svg
+
+desktopdir = $(datadir)/applications
+desktop_DATA = desktop/limbs-off.desktop
