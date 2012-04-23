@@ -23,6 +23,12 @@ to work. Older versions *might* work. If they do, please report it to
 Installing and Running
 ======================
 
+NOTE: This repository is for developers. If you are a regular user, you should 
+refer to <https://plaimi.net/games/limbs-off/>.
+
+General instructions
+--------------------
+
 Limbs Off uses the GNU build system. It can be successfully installed on most 
 systems with:
 
@@ -32,18 +38,38 @@ See INSTALL for more detailed instructions. Run the game with:
 
 $ limbs_off
 
-If you are on a Gentoo system you can install the game via the Sunrise overlay 
-with:
+Gentoo
+------
 
-# emerge limbs-off
+If you are on a Gentoo system you can install the game via the Sunrise 
+overlay, or by downloading our ebuild, and using a local overlay.
 
-If you don't use Sunrise, you may use the ebuild locally:
+To use Sunrise (recommended), refer to 
+<http://www.gentoo.org/proj/en/overlays/userguide.xml> to add the overlay.
+
+Next are the instructions for using our ebuild in a local overlay (not 
+recommended). (Skip this section if you are using Sunrise.) Skip steps where 
+appropriate.
 
 # mkdir -p /usr/local/portage/games-misc/limbs-off
 # cd /usr/local/portage/games-misc/limbs-off
-# wget https://secure.plaimi.net/limbs-off/limbs-off-9999.ebuild
+# wget https://secure.plaimi.net/games/limbs-off/limbs-off-9999.ebuild
 # ebuild limbs-off-9999.ebuild digest
+# echo 'PORTDIR_OVERLAY=/usr/local/portage $PORTDIR_OVERLAY' >> /etc/make.conf
+
+Limbs Off will likely be masked on your Gentoo system (if not, skip this 
+section). This is because live ebuilds are considered dangerous. You need to 
+unmask it. Refer to 
+<http://www.gentoo.org/doc/en/handbook/handbook-x86.xml?part=3&chap=3>. When 
+you have done this, you can install Limbs Off.
+
 # emerge limbs-off
+
+
+You may then run the game via your desktop environment's menu, in the games 
+section - or via a terminal emulator.
+
+# limbs_off
 
 
 Licensing and Legalese
