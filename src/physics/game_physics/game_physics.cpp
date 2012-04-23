@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -18,16 +18,30 @@
  */
 
 #include <math.h>
+#include <list>
 #include "geometry.h"
 #include "physics/game_physics.h"
 
 SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
-        phys_t moi, Shape<phys_t>* shape) :
-    Body(s, mass, orientation, av, moi, shape) {
+        phys_t moi, Shape<phys_t>* shape, int collisionGroup) :
+    Body(s, mass, orientation, av, moi, shape), collisionGroup_(collisionGroup) {
 }
 
 bool SmallBody::interact(AstroBody* b, double dt, vector2p& p, vector2p& im) {
     return false;
+}
+
+void SmallBody::applyImpulseAndRewind(vector2p impulse, vector2p pos, phys_t dt,
+        phys_t fraction) {
+    applyImpulseAt(impulse, pos);
+    updateState(dt * (1 - fraction));
+    nextState_ = getBodyState();
+    updateState(-dt);
+}
+
+void SmallBody::updateState(phys_t dt) {
+    s_.p += s_.v * dt;
+    orientation_ += av_ * dt;
 }
 
 void SmallBody::setDeltaState(int i, vector2p a) {
@@ -44,18 +58,70 @@ bodystate SmallBody::getNextState(phys_t dt) {
 }
 
 AstroBody::AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape) :
-    Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av, moi, shape), gm(gm) {
+    Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av, moi, shape, true),
+        gm(gm) {
 }
 
 GameUniverse::GameUniverse(AstroBody* planet) :
     planet_(planet) {
 }
 
+struct Collision {
+public:
+    phys_t time;
+    Body* body[2];
+    bodystate state[2];
+    vector2p position, normal;
+    bool operator<(const Collision& b) const {
+        return time < b.time;
+    }
+};
+
+class CollisionQueue {
+public:
+    void add(Collision c);
+    Collision pop();
+    bool empty();
+private:
+    std::list<Collision> collisions_;
+};
+
+void CollisionQueue::add(Collision c) {
+    std::list<Collision>::iterator other, end = collisions_.end();
+    for (other = collisions_.begin(); other != end; other++) {
+        if (c.time < other->time)
+            break;
+        if (c.body[0]->getInvMass() != 0 &&
+                (c.body[0] == other->body[1] || c.body[0] == other->body[0]))
+            return;
+        if (c.body[1] == other->body[1] || c.body[1] == other->body[0])
+            return;
+    }
+    collisions_.insert(other, c);
+    for (; other != end; other++) {
+        if ((c.body[0]->getInvMass() != 0 &&
+                (c.body[0] == other->body[1] || c.body[0] == other->body[0])) ||
+                (c.body[1] == other->body[1] || c.body[1] == other->body[0]))
+            other = collisions_.erase(other);
+    }
+}
+
+Collision CollisionQueue::pop() {
+    Collision c = collisions_.front();
+    collisions_.pop_front();
+    return c;
+}
+
+bool CollisionQueue::empty() {
+    return collisions_.empty();
+}
+
 void GameUniverse::update(phys_t dt) {
     planet_->orientation_ = remainder<phys_t> (
             planet_->orientation_ + dt * planet_->av_, 2 * PI);
     const phys_t dts[] = { 0.5 * dt, 0.5 * dt, dt };
-    std::vector<SmallBody*>::iterator ib;
+    std::vector<SmallBody*>::iterator ib, ib2;
+    CollisionQueue collisions;
     for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
         SmallBody* b = *ib;
         for (int i = 0; i < 4; i++) {
@@ -74,23 +140,51 @@ void GameUniverse::update(phys_t dt) {
         }
         bodystate np = { planet_->s_, state1p()(planet_->orientation_,
                 planet_->getAngularVelocity()) };
-        bodystate bs = b->getNextState(dt);
+        bodystate bs = b->getNextState(dt), ns = bs;
+        b->nextState_ = ns;
         phys_t t;
         vector2p p, n;
         if (collide(planet_, b, np, bs, t, p, n)) {
-            b->s_ = bs.l;
-            vector2p pg = p + planet_->getPosition(), pc = pg
-                    - b->getPosition();
-            vector2p im = bounce1(b, planet_, pc, p, -n, 0.8, 0.2, 0.02);
-            b->applyImpulseAt(im, pc);
-            // TODO: Recalculate gravity.
-            b->s_.p += b->getVelocity() * (dt * (1 - t));
-        } else
-            b->s_ = bs.l;
+            Collision c = { t, planet_, b, np, bs, p, n };
+            collisions.add(c);
+        }
+        for (ib2 = smallBodies_.begin(); ib2 < ib; ib2++) {
+            SmallBody* b2 = *ib2;
+            if (b->collisionGroup_ == b2->collisionGroup_)
+                continue;
+            bs = ns;
+            bodystate b2s = b2->getNextState(dt);
+            if (collide(b2, b, b2s, bs, t, p, n)) {
+                Collision c = { t, b2, b, b2s, bs, p, n };
+                collisions.add(c);
+            }
+        }
+    }
+    while (!collisions.empty()) {
+        Collision c = collisions.pop();
+        SmallBody* body1 = (SmallBody*) c.body[1];
+        body1->setBodyState(c.state[1]);
+        vector2p pos1 = c.position + c.state[0].l.p - c.state[1].l.p;
+        vector2p impulse;
+        if (c.body[0]->getInvMass() == 0) {
+            impulse = -bounce1(body1, c.body[0], pos1, c.position, -c.normal,
+                    0.8, 0.2, 0.02);
+        } else {
+            SmallBody* body0 = (SmallBody*) c.body[0];
+            body0->setBodyState(c.state[0]);
+            impulse = bounce2(body0, body1, c.position, pos1, c.normal,
+                    1.5, 0.2, 0.02);
+            body0->applyImpulseAndRewind(impulse, c.position, dt, c.time);
+        }
+        body1->applyImpulseAndRewind(-impulse, pos1, dt, c.time);
+        // TODO: Update collision queue
+    }
+    for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
+        SmallBody* b = *ib;
+        b->setBodyState(b->nextState_);
         vector2p pg, im;
         if (b->interact(planet_, dt, pg, im))
             b->applyImpulseAt(im, pg - b->getPosition());
-        b->orientation_ += dt * b->av_;
     }
     std::vector<Link*>::iterator il;
     for (il = links_.begin(); il < links_.end(); il++)

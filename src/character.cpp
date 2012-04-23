@@ -24,6 +24,8 @@ namespace {
 const float COL_BODY[] = { 0.2, 0.2, 0.8 };
 }
 
+int Character::collisionGroup_ = 0;
+
 Character::Character(state2p state, phys_t orientation) :
             shapeBody_(0.2),
             shapeHead_(0.15),
@@ -31,17 +33,17 @@ Character::Character(state2p state, phys_t orientation) :
             shapeHand_(0.075),
             // Physical object
             body_(this, state, 25, orientation, 0, momentInertia(25, 0.2, 0.4),
-                    &shapeBody_),
+                    &shapeBody_, collisionGroup_),
             head_(getStateAt(vector2p()(0.0, 0.40)), 3, orientation, 0,
-                    momentInertia(3, 0.15, 0.4), &shapeHead_),
+                    momentInertia(3, 0.15, 0.4), &shapeHead_, collisionGroup_),
             footBack_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                    momentInertia(1, 0.05, 0.4), &shapeFoot_),
+                    momentInertia(1, 0.05, 0.4), &shapeFoot_, collisionGroup_),
             footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                    momentInertia(1, 0.05, 0.4), &shapeFoot_),
+                    momentInertia(1, 0.05, 0.4), &shapeFoot_, collisionGroup_),
             handBack_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
-                    &shapeHand_),
+                    &shapeHand_, collisionGroup_),
             handFront_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
-                    &shapeHand_),
+                    &shapeHand_, collisionGroup_),
             neck_(&body_, &head_, 1000.0, 1000.0, 1.0, 1.0),
             legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
             legFront_(&body_, &footFront_, 200.0, 20.0, 1.0, 1.0),
@@ -58,6 +60,7 @@ Character::Character(state2p state, phys_t orientation) :
     neck_.setPosition(vector2p()(0.0, 0.40));
     legBack_.setPosition(vector2p()(0.0, -0.40));
     legFront_.setPosition(vector2p()(0.0, -0.40));
+    ++collisionGroup_;
 }
 
 void Character::addToUniverse(GameUniverse* u) {
@@ -141,9 +144,9 @@ state2p Character::getStateAt(vector2p p) {
 
 Character::CharacterBody::CharacterBody(Character* parent, state2p state,
         phys_t mass, phys_t orientation, phys_t angVel, phys_t inertiaMoment,
-        Shape<phys_t>* shape) :
-    SmallBody(state, mass, orientation, angVel, inertiaMoment, shape),
-            parent_(parent), walkCycle_(0.0) {
+        Shape<phys_t>* shape, int collisionGroup) :
+    SmallBody(state, mass, orientation, angVel, inertiaMoment, shape,
+            collisionGroup), parent_(parent), walkCycle_(0.0) {
 }
 
 bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,

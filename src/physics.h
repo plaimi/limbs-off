@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -63,6 +63,8 @@ typedef state2<phys_t> state2p;
 struct bodystate {
     state2p l;
     state1p a;
+    const bodystate operator+(const bodystate& s) const;
+    const bodystate operator*(const phys_t f) const;
 };
 
 class Particle {
@@ -82,11 +84,12 @@ protected:
 class Mass: public Particle {
 public:
     phys_t getMass();
+    phys_t getInvMass();
     vector2p getMomentum();
     virtual ~Mass();
 protected:
-    phys_t mass_;
-    Mass(state2p s, phys_t mass);
+    phys_t mass_, invMass_;
+    Mass(state2p s, phys_t mass, bool immovable = false);
     void applyImpulse(vector2p i);
     friend class Universe;
 };
@@ -100,6 +103,7 @@ public:
     phys_t getAngularMomentum();
     vector2p getMomentumAt(vector2p p, vector2p vp);
     vector2p getVelocityAt(vector2p p);
+    bodystate getBodyState();
     virtual ~Body();
 protected:
     phys_t orientation_;
@@ -107,9 +111,10 @@ protected:
     phys_t moi_;
     Shape<phys_t>* shape_;
     Body(state2p s, phys_t mass, phys_t orientation, phys_t av, phys_t moi,
-            Shape<phys_t>* shape);
+            Shape<phys_t>* shape, bool immovable = false);
     void applyAngularImpulse(phys_t i);
     void applyImpulseAt(vector2p i, vector2p p);
+    void setBodyState(bodystate s);
     friend class Universe;
 };
 
@@ -124,6 +129,9 @@ bool collide(Body* a, Body* b, bodystate& na, bodystate& nb, phys_t& t,
         vector2p& p, vector2p& n);
 
 vector2p bounce1(Body* a, Body* b, vector2p& pa, vector2p pb, vector2p n,
+        phys_t restitution, phys_t friction, phys_t rr);
+
+vector2p bounce2(Body* a, Body* b, vector2p& pa, vector2p& pb, vector2p n,
         phys_t restitution, phys_t friction, phys_t rr);
 
 #include "physics_inl.h"

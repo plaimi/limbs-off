@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -29,14 +29,19 @@ class Universe;
 class SmallBody: public Body {
 public:
     SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
-            phys_t moi, Shape<phys_t>* shape);
+            phys_t moi, Shape<phys_t>* shape, int collisionGroup);
 protected:
     virtual bool interact(class AstroBody* bvz, double dt, vector2p& p,
             vector2p& im);
 private:
+    void applyImpulseAndRewind(vector2p impulse, vector2p pos, phys_t dt,
+            phys_t fraction);
+    void updateState(phys_t dt);
     void setDeltaState(int i, vector2p a);
     bodystate getNextState(phys_t dt);
     state2p ds_[4];
+    bodystate nextState_;
+    int collisionGroup_;
     friend class GameUniverse;
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -68,6 +68,24 @@ vector2p bounce1(Body* a, Body* b, vector2p& pa, vector2p pb, vector2p n,
         phys_t avd = b->getAngularVelocity() - a->getAngularVelocity();
         phys_t am = avd * a->getMomentOfInertia();
         pa += ~n * clampmag<phys_t> ((~pa * i - am) / rb, rr);
+    }
+    return i;
+}
+
+vector2p bounce2(Body* a, Body* b, vector2p& pa, vector2p& pb, vector2p n,
+        phys_t restitution, phys_t friction, phys_t rr) {
+    vector2p va = a->getVelocityAt(pa);
+    vector2p vb = b->getVelocityAt(pb);
+    vector2p v = va - vb;
+    phys_t vn = v * n;
+    // TODO: Impulse for non-circular bodies
+    vector2p m = n * vn / (a->getInvMass() + b->getInvMass());
+    vector2p mr = m * (-1 - restitution);
+    phys_t rb = n * mr;
+    vector2p i = { 0.0, 0.0 };
+    if (rb < 0) {
+        i = n * rb + ~n * clampmag<phys_t> (~n * mr, -rb * friction);
+        // TODO: Rolling resistance
     }
     return i;
 }

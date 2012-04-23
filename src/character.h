@@ -30,7 +30,7 @@ public:
     public:
         CharacterBody(Character* parent, state2p state, phys_t mass,
                 phys_t orientation, phys_t angVel, phys_t inertiaMoment,
-                Shape<phys_t>* shape);
+                Shape<phys_t>* shape, int collisionGroup);
     protected:
         Character* parent_;
         phys_t walkCycle_;
@@ -54,6 +54,7 @@ public:
     /** Update power meters. */
     void update(double deltaTime);
 private:
+    static int collisionGroup_;
     Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
     SmallBody head_, footBack_, footFront_, handBack_, handFront_;

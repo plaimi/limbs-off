@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -129,6 +129,16 @@ inline const state2<T>& state2<T>::operator/=(const T d) {
     return *this;
 }
 
+inline const bodystate bodystate::operator+(const bodystate& s) const {
+    bodystate r = { l + s.l, a + s.a };
+    return r;
+}
+
+inline const bodystate bodystate::operator*(const phys_t f) const {
+    bodystate r = { l * f, a * f };
+    return r;
+}
+
 inline Particle::Particle(state2p s) :
     s_(s) {
 }
@@ -158,8 +168,8 @@ inline void Particle::getVelocity(phys_t& vx, phys_t& vy) {
     vy = s_.v.y;
 }
 
-inline Mass::Mass(state2p s, phys_t mass) :
-    Particle(s), mass_(mass) {
+inline Mass::Mass(state2p s, phys_t mass, bool immovable) :
+        Particle(s), mass_(mass), invMass_(immovable ? 0 : 1 / mass) {
 }
 
 inline Mass::~Mass() {
@@ -169,17 +179,22 @@ inline phys_t Mass::getMass() {
     return mass_;
 }
 
+inline phys_t Mass::getInvMass() {
+    return invMass_;
+}
+
 inline vector2p Mass::getMomentum() {
     return s_.v * mass_;
 }
 
 inline void Mass::applyImpulse(vector2p i) {
-    s_.v += i / mass_;
+    s_.v += i * invMass_;
 }
 
-inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av,
-        phys_t moi, Shape<phys_t>* shape) :
-    Mass(s, mass), orientation_(orientation), av_(av), moi_(moi), shape_(shape) {
+inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av, phys_t
+        moi, Shape<phys_t>* shape, bool immovable) :
+        Mass(s, mass, immovable), orientation_(orientation), av_(av), moi_(moi),
+        shape_(shape) {
 }
 
 inline Body::~Body() {
@@ -216,6 +231,11 @@ inline vector2p Body::getVelocityAt(vector2p p) {
     return s_.v + ~p * av_;
 }
 
+inline bodystate Body::getBodyState() {
+    bodystate r = { s_, { orientation_, av_ } };
+    return r;
+}
+
 inline void Body::applyAngularImpulse(phys_t i) {
     av_ += i / moi_;
 }
@@ -223,6 +243,12 @@ inline void Body::applyAngularImpulse(phys_t i) {
 inline void Body::applyImpulseAt(vector2p i, vector2p p) {
     applyImpulse(i);
     applyAngularImpulse(p / i);
+}
+
+inline void Body::setBodyState(bodystate s) {
+    s_ = s.l;
+    orientation_ = s.a.p;
+    av_ = s.a.v;
 }
 
 inline phys_t momentInertia(phys_t mass, phys_t radius, phys_t dist) {
