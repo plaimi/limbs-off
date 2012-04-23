@@ -99,8 +99,8 @@ nobase_dist_limbs_off_data_DATA = \
 	config/controllers2.conf \
 	config/controllers3.conf
 
-icondir = $(datadir)/pixmaps
+icondir = @ICONDIR@
 icon_DATA = desktop/limbs-off.svg
 
-desktopdir = $(datadir)/applications
+desktopdir = @DESKTOPDIR@
 desktop_DATA = desktop/limbs-off.desktop

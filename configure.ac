@@ -61,14 +61,33 @@ AS_IF(
     [AC_DEFINE(VERBOSE, 0, verbose mode)]
 )
 
+# let user specify icondir
+AC_ARG_WITH([icondir],
+	    [AS_HELP_STRING([--with-icondir=DIR],
+			    [path to TMP directory (default: $datadir/pixmaps)])],
+	    [ICONDIR="$withval"],
+	    [ICONDIR="$datadir/pixmaps"])
+
+# let user specify desktopdir
+AC_ARG_WITH([desktopdir],
+	    [AS_HELP_STRING([--with-desktopdir=DIR],
+			    [path to TMP directory (default: $datadir/applications)])],
+	    [DESKTOPDIR="$withval"],
+	    [DESKTOPDIR="$datadir/applications"])
+
+AC_SUBST([DESKTOPDIR])
+AC_SUBST([ICONDIR])
+
 AC_OUTPUT
 
 echo
 echo
-echo Limbs Off.................................... : Version $VERSION
+echo limbs-off.................................... : Version $VERSION
 echo Prefix....................................... : $prefix
+echo Icondir...................................... : $ICONDIR
+echo Desktopdir................................... : $DESKTOPDIR
 if test "x$enable_verbose" = "xyes"; then
-    echo Verbose...................................... : Yes
+echo Verbose...................................... : Yes
 else
-    echo Verbose...................................... : No
+echo Verbose...................................... : No
 fi
