@@ -64,14 +64,14 @@ AS_IF(
 # let user specify icondir
 AC_ARG_WITH([icondir],
 	    [AS_HELP_STRING([--with-icondir=DIR],
-			    [path to TMP directory (default: $datadir/pixmaps)])],
+			    [path to icon directory (default: $datadir/pixmaps)])],
 	    [ICONDIR="$withval"],
 	    [ICONDIR="$datadir/pixmaps"])
 
 # let user specify desktopdir
 AC_ARG_WITH([desktopdir],
 	    [AS_HELP_STRING([--with-desktopdir=DIR],
-			    [path to TMP directory (default: $datadir/applications)])],
+			    [path to desktop directory (default: $datadir/applications)])],
 	    [DESKTOPDIR="$withval"],
 	    [DESKTOPDIR="$datadir/applications"])
 
