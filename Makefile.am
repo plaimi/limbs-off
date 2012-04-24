@@ -45,7 +45,7 @@ AM_CFLAGS =\
 	-Wall\
 	-g
 
-bin_PROGRAMS = limbs_off
+bin_PROGRAMS = limbs-off
 
 limbs_off_SOURCES = \
 	src/config_parser.h \

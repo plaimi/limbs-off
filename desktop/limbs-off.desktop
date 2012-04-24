@@ -4,6 +4,6 @@ Comment=Fighting game... in space!
 GenericName=Limbs Off
 Name=Limbs Off
 Icon=limbs-off
-Exec=limbs_off
+Exec=limbs-off
 Terminal=false
 Categories=Game;

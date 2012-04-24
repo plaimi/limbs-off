@@ -36,7 +36,7 @@ $ autoreconf -i && ./configure && make && sudo make install
 
 See INSTALL for more detailed instructions. Run the game with:
 
-$ limbs_off
+$ limbs-off
 
 Gentoo
 ------
@@ -69,7 +69,7 @@ you have done this, you can install Limbs Off.
 You may then run the game via your desktop environment's menu, in the games 
 section - or via a terminal emulator.
 
-# limbs_off
+# limbs-off
 
 
 Licensing and Legalese
