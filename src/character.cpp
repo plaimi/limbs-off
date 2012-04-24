@@ -20,10 +20,6 @@
 
 #include "character.h"
 
-namespace {
-const float COL_BODY[] = { 0.2, 0.2, 0.8 };
-}
-
 int Character::collisionGroup_ = 0;
 
 Character::Character(state2p state, phys_t orientation) :
@@ -194,9 +190,17 @@ CharacterGraphic::CharacterGraphic(Character* c) :
     c_(c), bodyFixture_(&c->body_), headFixture_(&c->head_),
             footBackFixture_(&c->footBack_), footFrontFixture_(&c->footFront_),
             handBackFixture_(&c->handBack_), handFrontFixture_(&c->handFront_),
-            bodyColor_(COL_BODY), body_(0.2, 16), head_(0.15, 16),
+            bodyColor_(colour_), body_(0.2, 16), head_(0.15, 16),
             footBack_(0.05, 8), footFront_(0.05, 8), handBack_(0.075, 8),
             handFront_(0.075, 8) {
+    // Temporary differentiation of characters.
+    // TODO: Use sprites.
+    static int n = 0;
+    int m = n % 3, d = n / 3, mm = d / 2 % 4, dd = d / 8;
+    for (int i = 0; i < 3; i++)
+        colour_[i] = (3 * ((m == i) ^ d & 1) ^ ((mm == i + 1) ^ dd & 1)) / 4.0;
+    ++n;
+
     body_.addModifier(&bodyFixture_);
     body_.getDisk()->addModifier(&bodyColor_);
     head_.addModifier(&headFixture_);

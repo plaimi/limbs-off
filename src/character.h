@@ -78,6 +78,7 @@ private:
     GraphicFixture bodyFixture_, headFixture_, footBackFixture_,
             footFrontFixture_, handBackFixture_, handFrontFixture_;
     ColorModifier bodyColor_;
+    float colour_[3];
     TestDisk body_, head_, footBack_, footFront_, handBack_, handFront_;
 };
 
