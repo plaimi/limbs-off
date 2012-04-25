@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Alexander Berntsen <alexander@plaimi.net>
+ * Copyright (C) 2011, 2012 Alexander Berntsen <alexander@plaimi.net>
  * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
@@ -122,14 +122,12 @@ void Character::rightPunch(bool state) {
 void Character::update(double deltaTime) {
     double decay = pow(.2, deltaTime);
     if (jump_) {
-        if (powerJump_ >= 1.0) {
+        if (powerJump_ >= 1.0)
             jump_ = false;
-        }
         powerJump_ = 1.5 * (1.0 - decay) + powerJump_ * decay;
     }
-    if (!jump_) {
+    if (!jump_)
         powerJump_ = 0.0;
-    }
 }
 
 state2p Character::getStateAt(vector2p p) {
@@ -154,7 +152,7 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     phys_t hVel = (getVelocity() - body->getVelocityAt(legA)) / legA.unit();
     phys_t angle = legA.angle() - PI / 2 - getOrientation();
     phys_t accel = clampmag(hVel / 8.0 - parent_->vel_, 1.0);
-    angle = clampmag(remainder(angle, PI * 2) + accel * PI / 8, PI / 2);
+    angle = clampmag(remainder(angle, PI * 2) + accel * PI / 4, PI / 2);
     walkCycle_ = remainder(walkCycle_ - deltaTime * hVel * 5.0, PI * 2);
     phys_t leg = 0.25 + 0.15 * (1.0 - parent_->powerJump_);
     vector2p feetOrigin = vector2p::fromAngle(angle - PI / 2) * (leg - 0.05);
@@ -171,15 +169,15 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
         interactPoint = interactBody + posBody;
         vector2p interactCharacter = interactPoint - posCharacter;
         vector2p n = interactCharacter / t1;
-        impulse = -n * (8000.0 * (leg - t1)
-                + max(0.0, getMomentum() * n * 50.0)) * deltaTime;
+        impulse = - n * pow(.75, abs(hVel) - 8.) * (8000. * (leg - t1) + max(.0,
+                    getMomentum() * n * 50.)) * deltaTime;
         phys_t da = remainder(getOrientation() - atan2(n.x, -n.y), 2 * PI);
         phys_t dav = getAngularVelocity() + getVelocity() / legA
                 / legA.squared();
         vector2p na = legA.unit();
         phys_t in = na * impulse;
         phys_t balancing = (da * 500 + dav * 200) * deltaTime;
-        phys_t ip = clampmag(~na * impulse + balancing, 0.8 * in);
+        phys_t ip = clampmag(~na * impulse + balancing, 1.8 * in);
         impulse = na * in + ~na * ip;
         return true;
     }
