@@ -21,6 +21,7 @@
 #define PHYSICS_H_
 
 #include <math.h>
+#include <list>
 #include "geometry.h"
 
 typedef double phys_t;
@@ -123,16 +124,35 @@ public:
     virtual void update(phys_t dt) = 0;
 };
 
+struct Collision {
+public:
+    phys_t time;
+    Body* body[2];
+    bodystate state[2];
+    vector2p position, normal;
+    bool operator<(const Collision& b) const;
+    bool conflicts(const Collision& c) const;
+};
+
+class CollisionQueue {
+public:
+    void add(Collision c);
+    Collision pop();
+    bool empty();
+private:
+    std::list<Collision> collisions_;
+};
+
 phys_t momentInertia(phys_t mass, phys_t radius, phys_t dist = 1.0);
 
 bool collide(Body* a, Body* b, bodystate& na, bodystate& nb, phys_t& t,
         vector2p& p, vector2p& n);
 
 vector2p bounce1(Body* a, Body* b, vector2p& pa, vector2p pb, vector2p n,
-        phys_t restitution, phys_t friction, phys_t rr);
+        phys_t restitution, phys_t friction, phys_t rr, phys_t addVel);
 
 vector2p bounce2(Body* a, Body* b, vector2p& pa, vector2p& pb, vector2p n,
-        phys_t restitution, phys_t friction, phys_t rr);
+        phys_t restitution, phys_t friction, phys_t rr, phys_t addVel);
 
 #include "physics_inl.h"
 

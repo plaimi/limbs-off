@@ -251,6 +251,27 @@ inline void Body::setBodyState(bodystate s) {
     av_ = s.a.v;
 }
 
+inline bool Collision::operator<(const Collision& b) const {
+    return time < b.time;
+}
+
+inline bool Collision::conflicts(const Collision& c) const {
+    if (body[0]->getInvMass() != 0)
+        return body[0] == c.body[1] || body[0] == c.body[0] ||
+                body[1] == c.body[1] || body[1] == c.body[0];
+    return body[1] == c.body[1];
+}
+
+inline Collision CollisionQueue::pop() {
+    Collision c = collisions_.front();
+    collisions_.pop_front();
+    return c;
+}
+
+inline bool CollisionQueue::empty() {
+    return collisions_.empty();
+}
+
 inline phys_t momentInertia(phys_t mass, phys_t radius, phys_t dist) {
     return radius * radius * dist * mass;
 }

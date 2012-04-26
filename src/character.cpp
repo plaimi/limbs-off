@@ -124,8 +124,9 @@ void Character::update(double deltaTime) {
     double decay = pow(.2, deltaTime);
     // If crouching, raise the crouching power to a max of 0.75.
     // If not crouching, easily uncrouch without jumping.
-    powerCrouch_ = crouch_ ? min(0.75, 1.5 * (1.0 - decay) + powerCrouch_ * decay)
-        : max(0.0, powerCrouch_ - 3.0 * deltaTime );
+    powerCrouch_ = crouch_ ?
+            min(0.7, 1.5 * (1.0 - decay) + powerCrouch_ * decay) :
+            max(0.0, powerCrouch_ - 3.0 * deltaTime );
     // Cap jump power to 1.0 by forcejumping.
     if (powerJump_ >= 1.0)
         jump_ = false;
@@ -158,7 +159,7 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     angle = clampmag(remainder(angle, PI * 2) + accel * PI / 4, PI / 2);
     walkCycle_ = remainder(walkCycle_ - deltaTime * hVel * 5.0, PI * 2);
     // Calculate the leg length. Depends on jump/crouch power if any.
-    phys_t leg = 0.25 + 0.15 * (1.0 - max(parent_->powerCrouch_, parent_->powerJump_));
+    phys_t leg = 0.40 - 0.15 * max(parent_->powerCrouch_, parent_->powerJump_);
     vector2p feetOrigin = vector2p::fromAngle(angle - PI / 2) * (leg - 0.05);
     vector2p feetOffset = vector2p::fromAngle(walkCycle_) * 0.15;
     parent_->legBack_.setPosition(feetOrigin + feetOffset);

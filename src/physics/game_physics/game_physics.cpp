@@ -18,7 +18,6 @@
  */
 
 #include <math.h>
-#include <list>
 #include "geometry.h"
 #include "physics/game_physics.h"
 
@@ -66,56 +65,6 @@ GameUniverse::GameUniverse(AstroBody* planet) :
     planet_(planet) {
 }
 
-struct Collision {
-public:
-    phys_t time;
-    Body* body[2];
-    bodystate state[2];
-    vector2p position, normal;
-    bool operator<(const Collision& b) const {
-        return time < b.time;
-    }
-};
-
-class CollisionQueue {
-public:
-    void add(Collision c);
-    Collision pop();
-    bool empty();
-private:
-    std::list<Collision> collisions_;
-};
-
-void CollisionQueue::add(Collision c) {
-    std::list<Collision>::iterator other, end = collisions_.end();
-    for (other = collisions_.begin(); other != end; other++) {
-        if (c.time < other->time)
-            break;
-        if (c.body[0]->getInvMass() != 0 &&
-                (c.body[0] == other->body[1] || c.body[0] == other->body[0]))
-            return;
-        if (c.body[1] == other->body[1] || c.body[1] == other->body[0])
-            return;
-    }
-    collisions_.insert(other, c);
-    for (; other != end; other++) {
-        if ((c.body[0]->getInvMass() != 0 &&
-                (c.body[0] == other->body[1] || c.body[0] == other->body[0])) ||
-                (c.body[1] == other->body[1] || c.body[1] == other->body[0]))
-            other = collisions_.erase(other);
-    }
-}
-
-Collision CollisionQueue::pop() {
-    Collision c = collisions_.front();
-    collisions_.pop_front();
-    return c;
-}
-
-bool CollisionQueue::empty() {
-    return collisions_.empty();
-}
-
 void GameUniverse::update(phys_t dt) {
     planet_->orientation_ = remainder<phys_t> (
             planet_->orientation_ + dt * planet_->av_, 2 * PI);
@@ -153,7 +102,7 @@ void GameUniverse::update(phys_t dt) {
             if (b->collisionGroup_ == b2->collisionGroup_)
                 continue;
             bs = ns;
-            bodystate b2s = b2->getNextState(dt);
+            bodystate b2s = b2->nextState_;
             if (collide(b2, b, b2s, bs, t, p, n)) {
                 Collision c = { t, b2, b, b2s, bs, p, n };
                 collisions.add(c);
@@ -168,12 +117,12 @@ void GameUniverse::update(phys_t dt) {
         vector2p impulse;
         if (c.body[0]->getInvMass() == 0) {
             impulse = -bounce1(body1, c.body[0], pos1, c.position, -c.normal,
-                    0.8, 0.2, 0.02);
+                    0.8, 0.2, 0.02, 0.05);
         } else {
             SmallBody* body0 = (SmallBody*) c.body[0];
             body0->setBodyState(c.state[0]);
             impulse = bounce2(body0, body1, c.position, pos1, c.normal,
-                    1.5, 0.2, 0.02);
+                    1.5, 0.2, 0.02, 0.05);
             body0->applyImpulseAndRewind(impulse, c.position, dt, c.time);
         }
         body1->applyImpulseAndRewind(-impulse, pos1, dt, c.time);
