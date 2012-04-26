@@ -62,7 +62,7 @@ private:
     /** Requests. */
     bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
     /** Power meters. */
-    double powerFire_, powerJump_, powerLeftKick_, powerLeftPunch_,
+    double powerCrouch_, powerFire_, powerJump_, powerLeftKick_, powerLeftPunch_,
             powerRightKick_, powerRightPunch_;
     /** Velocity and direction. */
     double vel_, velLeft_, velRight_;

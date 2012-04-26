@@ -23,36 +23,37 @@
 int Character::collisionGroup_ = 0;
 
 Character::Character(state2p state, phys_t orientation) :
-            shapeBody_(0.2),
-            shapeHead_(0.15),
-            shapeFoot_(0.05),
-            shapeHand_(0.075),
-            // Physical object
-            body_(this, state, 25, orientation, 0, momentInertia(25, 0.2, 0.4),
-                    &shapeBody_, collisionGroup_),
-            head_(getStateAt(vector2p()(0.0, 0.40)), 3, orientation, 0,
-                    momentInertia(3, 0.15, 0.4), &shapeHead_, collisionGroup_),
-            footBack_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                    momentInertia(1, 0.05, 0.4), &shapeFoot_, collisionGroup_),
-            footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                    momentInertia(1, 0.05, 0.4), &shapeFoot_, collisionGroup_),
-            handBack_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
-                    &shapeHand_, collisionGroup_),
-            handFront_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
-                    &shapeHand_, collisionGroup_),
-            neck_(&body_, &head_, 1000.0, 1000.0, 1.0, 1.0),
-            legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
-            legFront_(&body_, &footFront_, 200.0, 20.0, 1.0, 1.0),
-            armBack_(&body_, &handBack_, 200.0, 20.0, 1.0, 1.0),
-            armFront_(&body_, &handFront_, 200.0, 20.0, 1.0, 1.0),
-            // Request states
-            crouch_(false), fire_(false), jump_(false), leftKick_(false),
-            leftPunch_(false), rightKick_(false), rightPunch_(false),
-            // Power meters
-            powerFire_(0.0), powerJump_(0.0), powerLeftKick_(0.0),
-            powerLeftPunch_(0.0), powerRightKick_(0.0), powerRightPunch_(0.0),
-            // Velocity
-            vel_(0), velLeft_(0), velRight_(0) {
+        shapeBody_(0.2),
+        shapeHead_(0.15),
+        shapeFoot_(0.05),
+        shapeHand_(0.075),
+        // Physical object
+        body_(this, state, 25, orientation, 0, momentInertia(25, 0.2, 0.4),
+                &shapeBody_, collisionGroup_),
+        head_(getStateAt(vector2p()(0.0, 0.40)), 3, orientation, 0,
+                momentInertia(3, 0.15, 0.4), &shapeHead_, collisionGroup_),
+        footBack_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
+                momentInertia(1, 0.05, 0.4), &shapeFoot_, collisionGroup_),
+        footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
+                momentInertia(1, 0.05, 0.4), &shapeFoot_, collisionGroup_),
+        handBack_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
+                &shapeHand_, collisionGroup_),
+        handFront_(state, 2, orientation, 0, momentInertia(2, 0.075, 0.4),
+                &shapeHand_, collisionGroup_),
+        neck_(&body_, &head_, 1000.0, 1000.0, 1.0, 1.0),
+        legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
+        legFront_(&body_, &footFront_, 200.0, 20.0, 1.0, 1.0),
+        armBack_(&body_, &handBack_, 200.0, 20.0, 1.0, 1.0),
+        armFront_(&body_, &handFront_, 200.0, 20.0, 1.0, 1.0),
+        // Request states
+        crouch_(false), fire_(false), jump_(false), leftKick_(false),
+        leftPunch_(false), rightKick_(false), rightPunch_(false),
+        // Power meters
+        powerCrouch_(0.0), powerFire_(0.0), powerJump_(0.0),
+        powerLeftKick_(0.0), powerLeftPunch_(0.0), powerRightKick_(0.0),
+        powerRightPunch_(0.0),
+        // Velocity
+        vel_(0), velLeft_(0), velRight_(0) {
     neck_.setPosition(vector2p()(0.0, 0.40));
     legBack_.setPosition(vector2p()(0.0, -0.40));
     legFront_.setPosition(vector2p()(0.0, -0.40));
@@ -121,13 +122,15 @@ void Character::rightPunch(bool state) {
 
 void Character::update(double deltaTime) {
     double decay = pow(.2, deltaTime);
-    if (jump_) {
-        if (powerJump_ >= 1.0)
-            jump_ = false;
-        powerJump_ = 1.5 * (1.0 - decay) + powerJump_ * decay;
-    }
-    if (!jump_)
-        powerJump_ = 0.0;
+    // If crouching, raise the crouching power to a max of 0.75.
+    // If not crouching, easily uncrouch without jumping.
+    powerCrouch_ = crouch_ ? min(0.75, 1.5 * (1.0 - decay) + powerCrouch_ * decay)
+        : max(0.0, powerCrouch_ - 3.0 * deltaTime );
+    // Cap jump power to 1.0 by forcejumping.
+    if (powerJump_ >= 1.0)
+        jump_ = false;
+    // If jumping, raise jump power. If not, set jump power to 0.
+    powerJump_ = jump_ ? 1.5 * (1.0 - decay) + powerJump_ * decay : 0.0;
 }
 
 state2p Character::getStateAt(vector2p p) {
@@ -154,7 +157,8 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     phys_t accel = clampmag(hVel / 8.0 - parent_->vel_, 1.0);
     angle = clampmag(remainder(angle, PI * 2) + accel * PI / 4, PI / 2);
     walkCycle_ = remainder(walkCycle_ - deltaTime * hVel * 5.0, PI * 2);
-    phys_t leg = 0.25 + 0.15 * (1.0 - parent_->powerJump_);
+    // Calculate the leg length. Depends on jump/crouch power if any.
+    phys_t leg = 0.25 + 0.15 * (1.0 - max(parent_->powerCrouch_, parent_->powerJump_));
     vector2p feetOrigin = vector2p::fromAngle(angle - PI / 2) * (leg - 0.05);
     vector2p feetOffset = vector2p::fromAngle(walkCycle_) * 0.15;
     parent_->legBack_.setPosition(feetOrigin + feetOffset);
