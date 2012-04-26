@@ -68,12 +68,15 @@ limbs_off_SOURCES = \
 	src/graphics/game_graphics_gl/graphic.cpp \
 	src/graphics/game_graphics_gl/screen.cpp \
 	src/graphics/game_graphics_gl/texture_loader.cpp \
+	src/event_code.h \
 	src/menu.h \
 	src/menu/menu.cpp \
 	src/menu/submenu.cpp \
 	src/menu/gui_element.cpp \
+	src/event_handler.h \
 	src/character.h \
 	src/character.cpp \
+	src/action.h \
 	src/actor.h \
 	src/actor.cpp \
 	src/player.h \
@@ -99,8 +102,8 @@ nobase_dist_limbs_off_data_DATA = \
 	config/controllers2.conf \
 	config/controllers3.conf
 
-icondir = @ICONDIR@
-icon_DATA = desktop/limbs-off.svg
+limbs_off_icondir = @ICONDIR@
+dist_limbs_off_icon_DATA = desktop/limbs-off.svg
 
-desktopdir = @DESKTOPDIR@
-desktop_DATA = desktop/limbs-off.desktop
+limbs_off_desktopdir = @DESKTOPDIR@
+dist_limbs_off_desktop_DATA = desktop/limbs-off.desktop
