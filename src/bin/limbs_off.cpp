@@ -88,10 +88,11 @@ int main(int argc, char *argv[]) {
                 if (limbsOff)
                     limbsOff->handle(event);
             if (event.type == SDL_USEREVENT) {
-                if (event.user.code == NEW_GAME)
+                if (event.user.code == NEW_GAME) {
                     if (limbsOff)
                         delete limbsOff;
                     limbsOff = new Game(screen);
+                }
             }
         }
         // Draw
