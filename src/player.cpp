@@ -85,6 +85,9 @@ bool Player::handle(const SDL_Event& event) {
     case RKICK:
         character_->rightKick(value);
         break;
+    case SUICIDE:
+        character_->die();
+        break;
     default:
         return false;
     }

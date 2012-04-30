@@ -29,6 +29,7 @@
 #include "menu.h"
 
 int main(int argc, char *argv[]) {
+
 #if VERBOSE
     printf("LIMBS OFF - verbose version\n\n"
             "feel free to explore our little world.\n"
@@ -49,6 +50,9 @@ int main(int argc, char *argv[]) {
     screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
     SDL_Event event;
     Game* limbsOff = NULL;
+    int j = SDL_NumJoysticks();
+    for (int i = 0; i < j; ++i)
+        SDL_JoystickOpen(i);
     Menu menu;
     MenuGraphic menugraphic(&menu);
     bool running = true;

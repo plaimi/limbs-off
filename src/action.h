@@ -37,6 +37,7 @@ enum ActionType {
     RPUNCH,
     LKICK,
     RKICK,
+    SUICIDE,
     NUM_ACTIONTYPE
 };
 

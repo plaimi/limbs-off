@@ -90,9 +90,6 @@ Game::Game(Screen* screen) :
             foreground_->addGraphic(*i);
         foreground_->addModifier(camera_);
         scene_->addGraphic(foreground_);
-        int j = SDL_NumJoysticks();
-        for (int i = 0; i < j; ++i)
-            SDL_JoystickOpen(i);
         time_ = SDL_GetTicks();
         pause_ = false;
 }
