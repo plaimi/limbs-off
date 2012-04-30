@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2012 Alexander Berntsen <alexander@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -79,11 +80,13 @@ class FixtureSpring: public Link {
 public:
     FixtureSpring(SmallBody* a, SmallBody* b, phys_t lStiff, phys_t lDamp,
             phys_t aStiff, phys_t aDamp);
+    void setEnabled(bool stats);
     void setPosition(vector2p position);
     void setOrientation(phys_t orientation);
     state2p getTargetState();
     void update(phys_t dt, GameUniverse* u);
 protected:
+    bool enabled_;
     phys_t lStiff_, lDamp_, aStiff_, aDamp_;
     vector2p position_;
     phys_t orientation_;

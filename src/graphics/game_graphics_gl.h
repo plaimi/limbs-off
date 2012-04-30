@@ -71,6 +71,16 @@ private:
     int position_, num_;
 };
 
+class SizeModifier: public GraphicModifier {
+public:
+    SizeModifier(Shape<phys_t>* shape);
+    void begin();
+    void end();
+    void scale();
+private:
+    Circle<phys_t>* shape_;
+};
+
 class StackGraphic: public Graphic {
 public:
     /** Add a graphic to the top of the stack. */

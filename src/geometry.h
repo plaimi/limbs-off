@@ -77,6 +77,9 @@ public:
     T getRadius() {
         return radius_;
     }
+    void setRadius(T radius) {
+        radius_ = radius;
+    }
 protected:
     T radius_;
 };

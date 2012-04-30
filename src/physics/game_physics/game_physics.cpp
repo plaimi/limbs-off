@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2012 Alexander Berntsen <alexander@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -18,6 +19,7 @@
  */
 
 #include <math.h>
+#include "collision_handler.h"
 #include "geometry.h"
 #include "physics/game_physics.h"
 
@@ -111,14 +113,17 @@ void GameUniverse::update(phys_t dt) {
     }
     while (!collisions.empty()) {
         Collision c = collisions.pop();
+        CollisionHandler* collisionHandler = CollisionHandler::getInstance();
         SmallBody* body1 = (SmallBody*) c.body[1];
         body1->setBodyState(c.state[1]);
         vector2p pos1 = c.position + c.state[0].l.p - c.state[1].l.p;
         vector2p impulse;
         if (c.body[0]->getInvMass() == 0) {
             impulse = -bounce1(body1, c.body[0], pos1, c.position, -c.normal,
-                    0.8, 0.2, 0.02, 0.05);
-        } else {
+                    0.8, 0.2, 0.1 / (1.0 / pos1.length() + 1.0 /
+                    c.position.length()), 0.05);
+        }
+        else {
             SmallBody* body0 = (SmallBody*) c.body[0];
             body0->setBodyState(c.state[0]);
             impulse = bounce2(body0, body1, c.position, pos1, c.normal,
@@ -126,6 +131,7 @@ void GameUniverse::update(phys_t dt) {
             body0->applyImpulseAndRewind(impulse, c.position, dt, c.time);
         }
         body1->applyImpulseAndRewind(-impulse, pos1, dt, c.time);
+        collisionHandler->collide(c.body[0], body1, impulse.squared());
         // TODO: Update collision queue
     }
     for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
@@ -166,7 +172,11 @@ Link::Link(SmallBody* a, SmallBody* b) :
 FixtureSpring::FixtureSpring(SmallBody* a, SmallBody* b, phys_t lStiff,
         phys_t lDamp, phys_t aStiff, phys_t aDamp) :
     Link(a, b), lStiff_(lStiff), lDamp_(lDamp), aStiff_(aStiff), aDamp_(aDamp),
-            position_(vector2p()(0, 0)), orientation_(0.0) {
+            position_(vector2p()(0, 0)), orientation_(0.0), enabled_(true) {
+}
+
+void FixtureSpring::setEnabled(bool status) {
+    enabled_ = status;
 }
 
 void FixtureSpring::setPosition(vector2p position) {
@@ -188,6 +198,8 @@ state2p FixtureSpring::getTargetState() {
 }
 
 void FixtureSpring::update(phys_t dt, GameUniverse* u) {
+    if (!enabled_)
+        return;
     state2p target = getTargetState();
     state2p d = b_->getState() - target;
     vector2p n = d.p.unit();

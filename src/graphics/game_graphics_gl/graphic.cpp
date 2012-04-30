@@ -84,6 +84,20 @@ void PositionModifier::end() {
     glPopMatrix();
 }
 
+SizeModifier::SizeModifier(Shape<phys_t>* shape) :
+    shape_((Circle<phys_t>*) shape)  {
+}
+
+void SizeModifier::begin() {
+    glPushMatrix();
+    GLfloat f = shape_->getRadius();
+    glScalef(f, f, 1.0);
+}
+
+void SizeModifier::end() {
+    glPopMatrix();
+}
+
 void StackGraphic::addGraphic(Graphic* g) {
     graphics_.push_back(g);
 }

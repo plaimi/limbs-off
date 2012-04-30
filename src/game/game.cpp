@@ -170,19 +170,30 @@ void Game::main() {
     vector2p planetPos = planets_[0]->getPosition(), up = vector2p()(0, 0);
     state2p camState = state2p()(0, 0, 0, 0);
     // Characters
-    for (std::vector<Character*>::const_iterator i = characters_.begin(); 
-            i != characters_.end(); ++i) {
-        (*i)->update(steps / STEPS_PER_SECOND);
+    int i = 0;
+    for (std::vector<Character*>::const_iterator it = characters_.begin();
+            it != characters_.end(); ++it) {
+        (*it)->update(steps / STEPS_PER_SECOND);
         // Camera
-        camState += (*i)->getState();
-        up += ((*i)->getState().p - planetPos).unit();
+        if ((*it)->isDead())
+            continue;
+        camState += (*it)->getState();
+        up += ((*it)->getState().p - planetPos).unit();
+        ++i;
     }
-    camState /= characters_.size();
-    up /= characters_.size();
     phys_t camRadius = 0.0;
-    for (std::vector<Character*>::const_iterator i = characters_.begin(); 
-            i != characters_.end(); ++i) {
-        phys_t r = (camState.p - (*i)->getState().p).squared();
+    // End if players are dead.
+    if (i == 0) {
+        ++i;
+        camRadius = 100.0;
+    }
+    camState /= i;
+    up /= i;
+    for (std::vector<Character*>::const_iterator it = characters_.begin();
+            it != characters_.end(); ++it) {
+        if ((*it)->isDead())
+            continue;
+        phys_t r = (camState.p - (*it)->getState().p).squared();
         if (r > camRadius)
             camRadius = r;
     }

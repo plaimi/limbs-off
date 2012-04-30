@@ -21,8 +21,8 @@
 #ifndef CHARACTER_H_
 #define CHARACTER_H_
 
-#include "physics/game_physics.h"
 #include "graphics/game_graphics_gl.h"
+#include "physics/game_physics.h"
 
 class Character {
 public:
@@ -31,6 +31,7 @@ public:
         CharacterBody(Character* parent, state2p state, phys_t mass,
                 phys_t orientation, phys_t angVel, phys_t inertiaMoment,
                 Shape<phys_t>* shape, int collisionGroup);
+        void changeMass(phys_t delta);
     protected:
         Character* parent_;
         phys_t walkCycle_;
@@ -38,12 +39,15 @@ public:
     };
     Character(state2p state, phys_t orientation);
     void addToUniverse(GameUniverse* u);
-    /** Return current velocity (_vel). */
+    bool isDead();
     double getVel();
     state2p getState();
-    /** Procedures for setting request states. */
     void crouch(bool state);
+    /** Dismantle character upon death. */
+    void die();
     void fire(bool state);
+    /** Process collisions. */
+    void hit(Body* part, phys_t impulse);
     void leftKick(bool state);
     void leftPunch(bool state);
     void jump(bool state);
@@ -54,18 +58,15 @@ public:
     /** Update power meters. */
     void update(double deltaTime);
 private:
-    static int collisionGroup_;
+    bool crouch_, dead_, fire_, jump_, leftKick_, leftPunch_, rightKick_,
+            rightPunch_;
     Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
-    SmallBody head_, footBack_, footFront_, handBack_, handFront_;
-    FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
-    /** Requests. */
-    bool crouch_, fire_, jump_, leftKick_, leftPunch_, rightKick_, rightPunch_;
-    /** Power meters. */
     double powerCrouch_, powerFire_, powerJump_, powerLeftKick_, powerLeftPunch_,
-            powerRightKick_, powerRightPunch_;
-    /** Velocity and direction. */
-    double vel_, velLeft_, velRight_;
+            powerRightKick_, powerRightPunch_, vel_, velLeft_, velRight_;
+    FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
+    static int collisionGroup_;
+    SmallBody head_, footBack_, footFront_, handBack_, handFront_;
     state2p getStateAt(vector2p p);
     friend class CharacterGraphic;
 };
@@ -79,6 +80,7 @@ private:
             footFrontFixture_, handBackFixture_, handFrontFixture_;
     ColorModifier bodyColor_;
     float colour_[3];
+    SizeModifier scaler_;
     TestDisk body_, head_, footBack_, footFront_, handBack_, handFront_;
 };
 

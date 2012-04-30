@@ -74,6 +74,8 @@ limbs_off_SOURCES = \
 	src/menu/submenu.cpp \
 	src/menu/gui_element.cpp \
 	src/event_handler.h \
+	src/collision_handler.h \
+	src/collision_handler.cpp \
 	src/character.h \
 	src/character.cpp \
 	src/action.h \
