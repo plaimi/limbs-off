@@ -67,11 +67,11 @@ void Screen::updateVideoMode() {
     initGl();
 }
 
-double Screen::getGlWidth() {
+GLfloat Screen::getGlWidth() {
     return 1.0 * surfaceWidth_ / surfaceHeight_;
 }
 
-double Screen::getGlHeight() {
+GLfloat Screen::getGlHeight() {
     return 1.0;
 }
 
@@ -96,7 +96,7 @@ void Screen::initGl() {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    double w = getGlWidth(), h = getGlHeight();
+    GLfloat w = getGlWidth(), h = getGlHeight();
     glOrtho(-w, w, -h, h, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

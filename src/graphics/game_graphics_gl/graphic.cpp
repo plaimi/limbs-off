@@ -58,8 +58,8 @@ BackgroundModifier::BackgroundModifier(Camera* camera) :
 
 void BackgroundModifier::begin() {
     Screen* s = Screen::getInstance();
-    double w = s->getGlWidth(), h = s->getGlHeight();
-    double r = sqrt(w * w + h * h);
+    GLfloat w = s->getGlWidth(), h = s->getGlHeight();
+    GLfloat r = sqrt(w * w + h * h);
     glPushMatrix();
     glScaled(r, r, 1.0);
     glRotated(camera_->getRotation(), 0.0, 0.0, -1.0);
@@ -76,7 +76,7 @@ PositionModifier::PositionModifier(int position, int num) :
 
 void PositionModifier::begin() {
     glPushMatrix();
-    double f = 2. / num_ * ((1. + num_) / 2. - position_);
+    GLfloat f = 2. / num_ * ((1. + num_) / 2. - position_);
     glTranslated(.0, f, .0);
 }
 
@@ -138,11 +138,11 @@ void Sprite::doDraw() {
     glPopMatrix();
 }
 
-double GuiGraphic::getHeight() {
+GLfloat GuiGraphic::getHeight() {
     return height_;
 }
 
-double GuiGraphic::getWidth() {
+GLfloat GuiGraphic::getWidth() {
     return width_;
 }
 
@@ -150,13 +150,13 @@ GuiElement* GuiGraphic::getLogic() {
     return logic_;
 }
 
-void GuiGraphic::setSize(double w, double h) {
+void GuiGraphic::setSize(GLfloat w, GLfloat h) {
     width_ = w;
     height_ = h;
 }
 
-Label::Label(const char* face, const char* text, int size, double width, 
-        double height) :
+Label::Label(const char* face, const char* text, int size, GLfloat width,
+        GLfloat height) :
     size_(size),
     width_(width),
     height_(height) {
@@ -176,11 +176,11 @@ char* Label::getText() {
     return text_;
 }
 
-double Label::getHeight() {
+GLfloat Label::getHeight() {
     return height_;
 }
 
-double Label::getWidth() {
+GLfloat Label::getWidth() {
     return width_;
 }
 
@@ -284,7 +284,7 @@ Disk* TestDisk::getSquare() {
     return &square_;
 }
 
-ButtonGraphic::ButtonGraphic(double width, double height, GuiElement* logic, 
+ButtonGraphic::ButtonGraphic(GLfloat width, GLfloat height, GuiElement* logic,
         Label* label, bool selected) :
     label(label) {
         setSize(width, height);

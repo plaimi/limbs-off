@@ -101,24 +101,24 @@ private:
 
 class GuiGraphic: public Graphic {
 public:
-    double getHeight();
-    double getWidth();
+    GLfloat getHeight();
+    GLfloat getWidth();
     GuiElement* getLogic();
-    void setSize(double w, double h);
+    void setSize(GLfloat w, GLfloat h);
 protected:
-    double width_, height_;
+    GLfloat width_, height_;
     /** The logic of the graphic. */
     GuiElement* logic_;
 };
 
 class Label: public Graphic {
 public:
-    Label(const char* face, const char* text, int size, double width, 
-            double height);
+    Label(const char* face, const char* text, int size, GLfloat width,
+            GLfloat height);
     ~Label();
     char* getText();
-    double getHeight();
-    double getWidth();
+    GLfloat getHeight();
+    GLfloat getWidth();
     void doDraw();
     void setFace(const char* face);
     void setSize(int size);
@@ -130,7 +130,7 @@ private:
     /** The actual text printed. */
     char* text_;
     /** The size of the label. */
-    double width_, height_;
+    GLfloat width_, height_;
     /* The texture created from surface_. */
     GLuint texture_;
     /** The font size. */
@@ -165,7 +165,7 @@ private:
 
 class ButtonGraphic: public GuiGraphic {
 public:
-    ButtonGraphic(double width, double height, GuiElement* logic, 
+    ButtonGraphic(GLfloat width, GLfloat height, GuiElement* logic,
             Label* label = NULL, bool selected = false);
     ~ButtonGraphic();
     /** The button's label if any. */
@@ -225,8 +225,8 @@ public:
     static int getSurfaceWidth();
     static int getSurfaceHeight();
     static int getDepth();
-    static double getGlWidth();
-    static double getGlHeight();
+    static GLfloat getGlWidth();
+    static GLfloat getGlHeight();
     static void updateVideoMode();
     void setDrawingMode(int mode, int mask = -1, bool update = true);
     int getDrawingMode();
@@ -251,15 +251,15 @@ private:
 
 class Camera: public GraphicModifier {
 public:
-    Camera(state2p state, double radius, double rotation);
+    Camera(state2p state, GLfloat radius, GLfloat rotation);
     /** Update pos/rad/rot. */
-    void update(double deltaTime);
+    void update(GLfloat deltaTime);
     state2p getState();
-    double getRadius();
-    double getRotation();
+    GLfloat getRadius();
+    GLfloat getRotation();
     void setTargetState(state2p target);
-    void setTargetRadius(double target);
-    void setTargetRotation(double target, double speed = 1);
+    void setTargetRadius(GLfloat target);
+    void setTargetRotation(GLfloat target, GLfloat speed = 1);
     /** Rotate and translate OpenGL matrix. */
     void apply();
     void begin();
@@ -268,9 +268,9 @@ private:
     /** Pos and desired pos. */
     state2p state_, targetState_;
     /** Rad and desired rad. */
-    double radius_, targetRadius_;
+    GLfloat radius_, targetRadius_;
     /** Rot and desired rot. */
-    double rotation_, targetRotation_, rotationSpeed_;
+    GLfloat rotation_, targetRotation_, rotationSpeed_;
 };
 
 #endif /* GAME_GRAPHICS_GL_H_ */

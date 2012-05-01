@@ -22,7 +22,7 @@
 #include <math.h>
 #include "graphics/game_graphics_gl.h"
 
-Camera::Camera(state2p state, double radius, double rotation) :
+Camera::Camera(state2p state, GLfloat radius, GLfloat rotation) :
     state_(state), targetState_(state), radius_(radius), targetRadius_(radius),
             rotation_(rotation), targetRotation_(rotation), rotationSpeed_(0) {
 }
@@ -31,32 +31,32 @@ state2p Camera::getState() {
     return state_;
 }
 
-double Camera::getRadius() {
+GLfloat Camera::getRadius() {
     return radius_;
 }
 
-double Camera::getRotation() {
+GLfloat Camera::getRotation() {
     return rotation_;
 }
 void Camera::setTargetState(state2p target) {
     targetState_ = target;
 }
 
-void Camera::setTargetRadius(double target) {
+void Camera::setTargetRadius(GLfloat target) {
     targetRadius_ = target;
 }
 
-void Camera::setTargetRotation(double target, double speed) {
+void Camera::setTargetRotation(GLfloat target, GLfloat speed) {
     targetRotation_ = target;
     rotationSpeed_ = speed;
 }
 
-void Camera::update(double deltaTime) {
-    double decay = pow(.1, deltaTime);
+void Camera::update(GLfloat deltaTime) {
+    GLfloat decay = pow(.1, deltaTime);
     state_ = targetState_ * (1.0 - decay) + state_ * decay;
     state_.p += state_.v * deltaTime;
     radius_ = targetRadius_ * (1.0 - decay) + radius_ * decay;
-    double diff = remainder((targetRotation_ - rotation_), 360.0);
+    GLfloat diff = remainder((targetRotation_ - rotation_), 360.0);
     rotation_ += (1.0 - pow(.1, rotationSpeed_ * deltaTime)) * diff;
 }
 
