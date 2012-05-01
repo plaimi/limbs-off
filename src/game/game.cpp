@@ -63,25 +63,33 @@ Game::Game(Screen* screen) :
                 PACKAGE_CFG_DIR "controllers2.conf");
         ConfigParser::readBindings(players_[2], 
                 PACKAGE_CFG_DIR "controllers3.conf");
+        // TODO: When the game is abstracted for more players, fix ^
 #if VERBOSE
         printf("controllers player 1:\n"
-                "\t left:\tleft arrow\n"
-                "\t right:\tright arrow\n"
-                "\t jump:\tup arrow\n"
+                "\t left:       \t\t        left arrow\n"
+                "\t right:      \t\t        right arrow\n"
+                "\t jump:       \t\t        up arrow\n"
+                "\t crouch:     \t\t        down arrow\n"
+                "\t suicide:    \t\t        end\n"
                 "\n"
                 "controllers player 2:\n"
-                "\t left:\ta\n"
-                "\t right:\te\n"
-                "\t jump:\t,\n"
+                "\t left:       \t\t        a\n"
+                "\t right:      \t\t        e\n"
+                "\t jump:       \t\t        ,\n"
+                "\t crouch:     \t\t        o\n"
+                "\t suicide:    \t\t        delete\n"
                 "\n"
                 "controllers player 3:\n"
-                "\t left:\tgamepad left\n"
-                "\t right:\tgamepad right\n"
-                "\t jump:\tgamepad up\n\n");
+                "\t left:       \t\t        left button\n"
+                "\t right:      \t\t        right button\n"
+                "\t jump:       \t\t        up button\n"
+                "\t crouch:     \t\t        down button\n"
+                "\t suicide:    \t\t        triangle\n\n"
+                "\t note: these buttons are for the Sony Sixaxis\n"
+                "\t and are not guaranteed to work with other gamepads.\n\n");
         printf("press escape to bring up the menu again.\n"
-                "press escape again to close it.\n\n");
+                "press escape again to close it.\n\n\n\n");
 #endif
-        // TODO: When the game is abstracted for more players, fix ^
         backgroundSprite_->addModifier(backgroundModifier_);
         scene_->addGraphic(backgroundSprite_);
         foreground_->addGraphic(planetDisk_);
