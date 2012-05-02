@@ -69,10 +69,11 @@ limbs_off_SOURCES = \
 	src/graphics/game_graphics_gl/screen.cpp \
 	src/graphics/game_graphics_gl/texture_loader.cpp \
 	src/event_code.h \
+	src/screen_element.h \
+	src/screen_element.cpp \
 	src/menu.h \
 	src/menu/menu.cpp \
 	src/menu/submenu.cpp \
-	src/menu/gui_element.cpp \
 	src/event_handler.h \
 	src/collision_handler.h \
 	src/collision_handler.cpp \

@@ -28,6 +28,7 @@
 #include "graphics.h"
 #include "menu.h"
 #include "physics.h"
+#include "screen_element.h"
 
 // We should make prototypes for all the classes or solve the problems that
 // cause the need for them in the first place. This looks a bit silly Lulzy
@@ -99,16 +100,16 @@ private:
     GLfloat w_, h_;
 };
 
-class GuiGraphic: public Graphic {
+class ScreenGraphic: public Graphic {
 public:
     GLfloat getHeight();
     GLfloat getWidth();
-    GuiElement* getLogic();
+    ScreenElement* getLogic();
     void setSize(GLfloat w, GLfloat h);
 protected:
     GLfloat width_, height_;
     /** The logic of the graphic. */
-    GuiElement* logic_;
+    ScreenElement* logic_;
 };
 
 class Label: public Graphic {
@@ -163,9 +164,9 @@ private:
     Disk disk_, square_;
 };
 
-class ButtonGraphic: public GuiGraphic {
+class ButtonGraphic: public ScreenGraphic {
 public:
-    ButtonGraphic(GLfloat width, GLfloat height, GuiElement* logic,
+    ButtonGraphic(GLfloat width, GLfloat height, ScreenElement* logic,
             Label* label = NULL, bool selected = false);
     ~ButtonGraphic();
     /** The button's label if any. */
@@ -179,7 +180,7 @@ public:
     SubmenuGraphic(Submenu* submenu);
     ~SubmenuGraphic();
     /** Add a button to buttonGraphics_ and to graphics_. */
-    void addButton(GuiElement* logic, Label* label = NULL, 
+    void addButton(ScreenElement* logic, Label* label = NULL,
             bool selected = false);
 private:
     /** The logic. */

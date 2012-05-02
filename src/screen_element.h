@@ -17,39 +17,30 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "menu.h"
+#ifndef SCREEN_ELEMENT_H_
+#define SCREEN_ELEMENT_H_
 
-bool GuiElement::isSelected() {
-    return selected_;
-}
+class ScreenElement {
+public:
+    bool isSelected();
+    int getPosition();
+    void setPosition(int pos);
+    void setSelected(bool selected);
+protected:
+    bool selected_;
+    int position_;
+};
 
-int GuiElement::getPosition() {
-    return position_;
-}
+class Button: public ScreenElement {
+public:
+    Button(const char* text, int position, bool selected = false);
+    ~Button();
+    char* getText();
+    int getPosition();
+private:
+    bool selected_;
+    char* text_;
+    int position_;
+};
 
-void GuiElement::setPosition(int pos) {
-    position_ = pos;
-}
-
-void GuiElement::setSelected(bool selected) {
-    selected_ = selected;
-}
-
-Button::Button(const char* text, int position, bool selected) {
-    text_ = (char*) malloc(strlen(text) + 1);
-    strcpy(text_, text);
-    setSelected(selected);
-    setPosition(position);
-}
-
-Button::~Button() {
-    free(text_);
-}
-
-char* Button::getText() {
-    return text_;
-}
-
-int Button::getPosition() {
-    return position_;
-}
+#endif /*SCREEN_ELEMENT_H_*/

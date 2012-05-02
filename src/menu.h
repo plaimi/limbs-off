@@ -22,24 +22,14 @@
 
 #include <vector>
 #include "event_handler.h"
-
-class GuiElement {
-public:
-    bool isSelected();
-    int getPosition();
-    void setPosition(int pos);
-    void setSelected(bool selected);
-protected:
-    bool selected_;
-    int position_;
-};
+#include "screen_element.h"
 
 class Submenu {
 public:
     Submenu();
     void addButton(const char* text, int position, bool selected);
     /** Buttons are hardcoded. */
-    std::vector<GuiElement*> buttons;
+    std::vector<ScreenElement*> buttons;
 };
 
 class Menu: public EventHandler {
@@ -58,26 +48,15 @@ public:
     int getActiveMenu();
     Submenu* getMenu(int menu);
 private:
-    GuiElement* getGuiElement(std::vector<GuiElement*> vector, int position);
-    GuiElement* getSelected();
+    ScreenElement* getScreenElement(std::vector<ScreenElement*> vector,
+            int position);
+    ScreenElement* getSelected();
     void raiseEvent(EVENT_ID id);
-    void setSelected(GuiElement* selected);
-    GuiElement* activeElement_;
+    void setSelected(ScreenElement* selected);
+    ScreenElement* activeElement_;
     int activeMenu_;
     /** Menus are hardcoded. */
     Submenu* menus_[NUM_MENU];
-};
-
-class Button: public GuiElement {
-public:
-    Button(const char* text, int position, bool selected = false);
-    ~Button();
-    char* getText();
-    int getPosition();
-private:
-    bool selected_;
-    char* text_;
-    int position_;
 };
 
 #endif /* MENU_H_ */

@@ -138,19 +138,19 @@ void Sprite::doDraw() {
     glPopMatrix();
 }
 
-GLfloat GuiGraphic::getHeight() {
+GLfloat ScreenGraphic::getHeight() {
     return height_;
 }
 
-GLfloat GuiGraphic::getWidth() {
+GLfloat ScreenGraphic::getWidth() {
     return width_;
 }
 
-GuiElement* GuiGraphic::getLogic() {
+ScreenElement* ScreenGraphic::getLogic() {
     return logic_;
 }
 
-void GuiGraphic::setSize(GLfloat w, GLfloat h) {
+void ScreenGraphic::setSize(GLfloat w, GLfloat h) {
     width_ = w;
     height_ = h;
 }
@@ -284,8 +284,8 @@ Disk* TestDisk::getSquare() {
     return &square_;
 }
 
-ButtonGraphic::ButtonGraphic(GLfloat width, GLfloat height, GuiElement* logic,
-        Label* label, bool selected) :
+ButtonGraphic::ButtonGraphic(GLfloat width, GLfloat height,
+        ScreenElement* logic, Label* label, bool selected) :
     label(label) {
         setSize(width, height);
         logic_ = logic;
@@ -324,7 +324,8 @@ SubmenuGraphic::~SubmenuGraphic() {
             delete (*i), ++i);
 }
 
-void SubmenuGraphic::addButton(GuiElement* logic, Label* label, bool selected) {
+void SubmenuGraphic::addButton(ScreenElement* logic, Label* label,
+        bool selected) {
     // Create a ButtonGraphic
     buttonGraphics_.push_back(new ButtonGraphic(label->getWidth(), 
                 label->getHeight(), logic, label, selected));
@@ -362,7 +363,7 @@ MenuGraphic::MenuGraphic(Menu* menu) :
             menuGraphics_[i] = new SubmenuGraphic(menu->getMenu(i));
             Submenu* submenu = menu->getMenu(i);
             // Add buttons and labels
-            for (std::vector<GuiElement*>::iterator j = 
+            for (std::vector<ScreenElement*>::iterator j =
                     submenu->buttons.begin(); j < submenu->buttons.end(); ++j) {
                 labels_.push_back(new Label(font, ((Button*) (*j))->getText(), 
                             fontSize, .5, .1));

@@ -41,7 +41,7 @@ Menu::Menu() {
 
 Menu::~Menu() {
     for (int i = 0; i < NUM_MENU; ++i) {
-        for (std::vector<GuiElement*>::const_iterator j =
+        for (std::vector<ScreenElement*>::const_iterator j =
                 menus_[i]->buttons.begin(); j != menus_[i]->buttons.end(); ++j)
             delete (*j);
         delete menus_[i];
@@ -101,7 +101,7 @@ void Menu::raiseEvent(EVENT_ID id) {
     SDL_PushEvent(&event);
 }
 
-void Menu::setSelected(GuiElement* selected) {
+void Menu::setSelected(ScreenElement* selected) {
     activeElement_->setSelected(false);
     activeElement_ = selected;
     activeElement_->setSelected(true);
