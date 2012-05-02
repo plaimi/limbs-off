@@ -39,14 +39,16 @@ lowercase letter.
 
 -Comments
 Comments in header files that describe what the procedure, class or data 
-member is for. Comments in cpp-files where complexity dictates a need for 
+member is for. Comments in source files where complexity dictates a need for 
 them. TODOs and FIXMEs where needed.
 
 -File Naming
 Descriptive header file names. C++ source file names that are depending on a 
 single header are named the same as the header. Headers that are monumental to 
 several C++ sources are put in a directory that has the same name as the 
-header. Exclusively lowercase letters with underscores in place of spaces.
+header. Exclusively lowercase letters with underscores in place of spaces. 
+Suffix for source code files should be ".cxx". Header files are suffixed 
+".hxx".
 
 -Declaration order in classes
 Class variables and procedures are declared in this specific order: public, 
