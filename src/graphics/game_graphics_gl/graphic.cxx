@@ -61,8 +61,8 @@ void BackgroundModifier::begin() {
     GLfloat w = s->getGlWidth(), h = s->getGlHeight();
     GLfloat r = sqrt(w * w + h * h);
     glPushMatrix();
-    glScaled(r, r, 1.0);
-    glRotated(camera_->getRotation(), 0.0, 0.0, -1.0);
+    glScalef(r, r, 1.0);
+    glRotatef(camera_->getRotation(), 0.0, 0.0, -1.0);
 }
 
 void BackgroundModifier::end() {
@@ -77,7 +77,7 @@ PositionModifier::PositionModifier(int position, int num) :
 void PositionModifier::begin() {
     glPushMatrix();
     GLfloat f = 2. / num_ * ((1. + num_) / 2. - position_);
-    glTranslated(.0, f, .0);
+    glTranslatef(.0, f, .0);
 }
 
 void PositionModifier::end() {
@@ -186,20 +186,20 @@ GLfloat Label::getWidth() {
 
 void Label::doDraw() {
     Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
-    glColor3d(.0, .0, .0);
+    glColor3f(.0, .0, .0);
     glBindTexture(GL_TEXTURE_2D, texture_);
     glBegin(GL_QUADS);
-    glTexCoord2d(.0, 1.);
-    glVertex2d(-width_, -height_);
-    glTexCoord2d(1., 1.);
-    glVertex2d(width_, -height_);
-    glTexCoord2d(1., .0);
-    glVertex2d(width_, height_);
-    glTexCoord2d(.0, .0);
-    glVertex2d(-width_, height_);
+    glTexCoord2f(.0, 1.);
+    glVertex2f(-width_, -height_);
+    glTexCoord2f(1., 1.);
+    glVertex2f(width_, -height_);
+    glTexCoord2f(1., .0);
+    glVertex2f(width_, height_);
+    glTexCoord2f(.0, .0);
+    glVertex2f(-width_, height_);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
-    glColor3d(1.0, 1.0, 1.0);
+    glColor3f(1.0, 1.0, 1.0);
 }
 
 void Label::make() {
@@ -304,10 +304,10 @@ void ButtonGraphic::doDraw() {
     else
         glColor4f(1.f, 0.f, 0.f, 1.f);
     glBegin(GL_QUADS);
-    glVertex2d(width_, -height_);
-    glVertex2d(-width_, -height_);
-    glVertex2d(-width_, height_);
-    glVertex2d(width_, height_);
+    glVertex2f(width_, -height_);
+    glVertex2f(-width_, -height_);
+    glVertex2f(-width_, height_);
+    glVertex2f(width_, height_);
     glEnd();
     glColor4f(1.f, 1.f, 1.f, 1.f);
 }

@@ -61,9 +61,9 @@ void Camera::update(GLfloat deltaTime) {
 }
 
 void Camera::apply() {
-    glRotated(rotation_, 0.0, 0.0, -1.0);
-    glScaled(1.0 / radius_, 1.0 / radius_, 0.0);
-    glTranslated(-state_.p.x, -state_.p.y, 0.0);
+    glRotatef(rotation_, 0.0, 0.0, -1.0);
+    glScalef(1.0 / radius_, 1.0 / radius_, 0.0);
+    glTranslatef(-state_.p.x, -state_.p.y, 0.0);
 }
 
 void Camera::begin() {
