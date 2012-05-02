@@ -80,7 +80,7 @@ class FixtureSpring: public Link {
 public:
     FixtureSpring(SmallBody* a, SmallBody* b, phys_t lStiff, phys_t lDamp,
             phys_t aStiff, phys_t aDamp);
-    void setEnabled(bool stats);
+    void setEnabled(bool status);
     void setPosition(vector2p position);
     void setOrientation(phys_t orientation);
     state2p getTargetState();
