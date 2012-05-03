@@ -176,6 +176,7 @@ void Game::main() {
     state2p camState = state2p()(0, 0, 0, 0);
     // Characters
     int i = 0;
+    double j = 0.0;
     for (std::vector<Character*>::const_iterator it = characters_.begin();
             it != characters_.end(); ++it) {
         (*it)->update(steps / STEPS_PER_SECOND);
@@ -183,7 +184,10 @@ void Game::main() {
         if ((*it)->isDead())
             continue;
         camState += (*it)->getState();
-        up += ((*it)->getState().p - planetPos).unit();
+        vector2p k = (*it)->getState().p - planetPos;
+        phys_t l = 1 / k.length();
+        up += k * l * l;
+        j += l;
         ++i;
     }
     phys_t camRadius = 0.0;
@@ -192,8 +196,10 @@ void Game::main() {
         ++i;
         camRadius = 100.0;
     }
+    if (j == 0)
+        ++j;
     camState /= i;
-    up /= i;
+    up /= j;
     for (std::vector<Character*>::const_iterator it = characters_.begin();
             it != characters_.end(); ++it) {
         if ((*it)->isDead())
