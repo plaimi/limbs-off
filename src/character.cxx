@@ -98,6 +98,8 @@ void Character::addToUniverse(GameUniverse* u) {
 }
 
 void Character::die() {
+    if (dead_)
+        return;
     dead_ = true;
     // Disable all the links, making the game live up to its name.
     neck_.setEnabled(false);
@@ -120,7 +122,7 @@ void Character::hit(Body* part, phys_t impulse) {
     if (part == &head_)
         impulse *= 10.0;
     // Apply impulse as a force on the main body
-    body_.changeMass(impulse / 100000.0);
+    body_.changeMass(impulse / 300.0);
 }
 
 void Character::leftKick(bool state) {

@@ -127,11 +127,11 @@ void GameUniverse::update(phys_t dt) {
             SmallBody* body0 = (SmallBody*) c.body[0];
             body0->setBodyState(c.state[0]);
             impulse = bounce2(body0, body1, c.position, pos1, c.normal,
-                    1.5, 0.2, 0.02, 0.05);
+                    1.25, 0.2, 0.02, 0.05);
             body0->applyImpulseAndRewind(impulse, c.position, dt, c.time);
         }
         body1->applyImpulseAndRewind(-impulse, pos1, dt, c.time);
-        collisionHandler->collide(c.body[0], body1, impulse.squared());
+        collisionHandler->collide(c.body[0], body1, impulse.length());
         // TODO: Update collision queue
     }
     for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
