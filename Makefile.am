@@ -86,6 +86,8 @@ limbs_off_SOURCES = \
 	src/player.cxx \
 	src/game.hxx \
 	src/game/game.cxx \
+	src/game_loop.hxx \
+	src/game_loop.cxx \
 	src/bin/limbs_off.cxx
 
 limbs_off_LDFLAGS = 

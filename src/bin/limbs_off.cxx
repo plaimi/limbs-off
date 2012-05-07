@@ -22,14 +22,10 @@
 #include <config.h>
 #endif
 
-#include <GL/gl.h>
-#include <SDL/SDL.h>
-#include "event_code.hxx"
-#include "game.hxx"
-#include "menu.hxx"
+#include "graphics/game_graphics_gl.hxx"
+#include "game_loop.hxx"
 
 int main(int argc, char *argv[]) {
-
 #if VERBOSE
     printf("LIMBS OFF - verbose version\n\n"
             "feel free to explore our little world.\n"
@@ -46,72 +42,10 @@ int main(int argc, char *argv[]) {
     printf("hit alt+enter to enter and leave fullscreen.\n\n");
 #endif
     Screen::setVideoMode(1024, 768, 32);
-    Screen* screen = Screen::getInstance();
-    screen->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
-    SDL_Event event;
-    Game* limbsOff = NULL;
-    int j = SDL_NumJoysticks();
-    for (int i = 0; i < j; ++i)
-        SDL_JoystickOpen(i);
-    Menu menu;
-    MenuGraphic menugraphic(&menu);
-    bool running = true;
-    bool menuP = true;
-    int prevWidth_, prevHeight_;
-    Uint8 *keystate = SDL_GetKeyState(NULL);
-    while (running) {
-        // Events
-        while (SDL_PollEvent(&event)) {
-            //Quit
-            if (event.type == SDL_QUIT) {
-                    running = false;
-                    if (limbsOff)
-                        limbsOff->cease();
-            }
-            // Screen
-            if (keystate[SDLK_LALT] && event.type == SDL_KEYDOWN && 
-                    event.key.keysym.sym == SDLK_RETURN) {
-                // Enter/leave fullscreen
-                if (!screen->getFullscreen()) {
-                    prevWidth_ = screen->getSurfaceWidth();
-                    prevHeight_ = screen->getSurfaceHeight();
-                    screen->setVideoMode(0, 0, 32, true);
-                } else
-                    screen->setVideoMode(prevWidth_, prevHeight_, 32, false);
-            }
-            if (screen->handle(event))
-                continue;
-            // Menu
-            if (event.type == SDL_KEYDOWN &&
-                    event.key.keysym.sym == SDLK_ESCAPE)
-                menuP = !menuP;
-            if (menuP)
-                menuP = !menu.handle(event);
-            // Game
-            else
-                if (limbsOff)
-                    limbsOff->handle(event);
-            if (event.type == SDL_USEREVENT) {
-                if (event.user.code == NEW_GAME) {
-                    if (limbsOff)
-                        delete limbsOff;
-                    limbsOff = new Game(screen);
-                }
-            }
-        }
-        // Draw
-        glClear(GL_COLOR_BUFFER_BIT);
-        // Menu
-        if (menuP)
-            menugraphic.draw();
-        // Game
-        if (limbsOff)
-            limbsOff->main();
-        // Swap buffers
-        SDL_GL_SwapBuffers();
-    }
+    GameLoop loop;
+    int code = loop.run();
 #if VERBOSE
     printf("thank you for playing LIMBS OFF.\n");
 #endif
-    return 0;
+    return code;
 }

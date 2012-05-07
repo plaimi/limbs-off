@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011, 2012 Alexander Berntsen <alexander@plaimi.net>
- * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -24,7 +24,6 @@
 #include "graphics/game_graphics_gl.hxx"
 #include "physics/game_physics.hxx"
 #include "player.hxx"
-#include "step_timer.hxx"
 
 class Game : public EventHandler {
 public:
@@ -33,23 +32,17 @@ public:
     ~Game();
     /** Handle input. */
     bool handle(const SDL_Event& event);
-    /** Set existing_ to false. */
-    void cease();
     /** Create objects. */
     void conceive();
     /** Main game loop. */
-    void main();
-    void pause();
-    void resume();
+    void update(phys_t dt);
+    void updateCamera(GLfloat dt);
+    void draw();
 private:
-    /** Max frames per second. */
-    static const double MAX_FPS;
     /** Max player characters. */
     static const int MAX_PC;
     /** Max planets. */
     static const int MAX_PLAN;
-    /** Max steps simulated per second. */
-    static const double STEPS_PER_SECOND;
     /** Planet colour. */
     static const float COL_PLANET[];
     /** Planet gravity "mass". */
@@ -60,10 +53,6 @@ private:
     static const phys_t S;
     /** Planet radius. */
     static const phys_t PR;
-    /** If the game is running or not. */
-    bool existing_;
-    /** If the game has been paused or not. */
-    bool pause_;
     std::vector<AstroBody*> planets_;
     BackgroundModifier* backgroundModifier_;
     Camera* camera_;
@@ -77,10 +66,8 @@ private:
     std::vector<Player*> players_;
     Screen* screen_;
     StackGraphic* scene_, * foreground_;
-    StepTimer* timer_;
     Sprite* backgroundSprite_;
     TestDisk* planetDisk_;
-    Uint32 time_;
 };
 
 #endif /* GAME_H_ */

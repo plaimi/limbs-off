@@ -27,8 +27,6 @@
 #include "menu.hxx"
 #include "config_parser.hxx"
 
-const double Game::MAX_FPS = 200;
-const double Game::STEPS_PER_SECOND = 600;
 const int Game::MAX_PC = 16;
 const int Game::MAX_PLAN = 1;
 const float Game::COL_PLANET[] = { 0.4, 0.8, 0.4 };
@@ -98,8 +96,6 @@ Game::Game(Screen* screen) :
             foreground_->addGraphic(*i);
         foreground_->addModifier(camera_);
         scene_->addGraphic(foreground_);
-        time_ = SDL_GetTicks();
-        pause_ = false;
 }
 
 Game::~Game() {
@@ -125,12 +121,7 @@ Game::~Game() {
     delete scene_;
     delete camera_;
     delete backgroundModifier_;
-    delete timer_;
     glDeleteTextures(1, &tex_);
-}
-
-void Game::cease() {
-    existing_ = false;
 }
 
 void Game::conceive() {
@@ -160,17 +151,16 @@ void Game::conceive() {
     // Camera
     camera_ = new Camera(characters_[0]->getState(), 0.5, 0.0);
     backgroundModifier_ = new BackgroundModifier(camera_);
-    // Timer
-    timer_ = new StepTimer();
 }
 
-void Game::main() {
-    // Timer
-    int steps = timer_->getStepTime() * STEPS_PER_SECOND;
-    timer_->time(steps / STEPS_PER_SECOND);
-    // Universe
-    for (int i = 0; i < steps; ++i)
-        universe_->update(1.0 / STEPS_PER_SECOND);
+void Game::update(phys_t dt) {
+    universe_->update(dt);
+    for (std::vector<Character*>::const_iterator it = characters_.begin();
+            it != characters_.end(); ++it)
+        (*it)->update(dt);
+}
+
+void Game::updateCamera(GLfloat dt) {
     // Camera
     vector2p planetPos = planets_[0]->getPosition(), up = vector2p()(0, 0);
     state2p camState = state2p()(0, 0, 0, 0);
@@ -179,7 +169,6 @@ void Game::main() {
     double j = 0.0;
     for (std::vector<Character*>::const_iterator it = characters_.begin();
             it != characters_.end(); ++it) {
-        (*it)->update(steps / STEPS_PER_SECOND);
         // Camera
         if ((*it)->isDead())
             continue;
@@ -213,24 +202,10 @@ void Game::main() {
     camera_->setTargetState(camState);
     vector2p camToPlanet = camState.p - planetPos;
     camera_->setTargetRotation(up.angle() * IN_DEG - 90.0, up.squared());
-    camera_->update(steps / STEPS_PER_SECOND);
-    // Draw
+    camera_->update(dt);
+}
+
+void Game::draw() {
     scene_->draw();
-    // Target time
-    Uint32 delta = SDL_GetTicks() - time_;
-    int wait = 1000 / MAX_FPS - delta;
-    if (wait > 0) {
-        SDL_Delay(wait);
-        delta = SDL_GetTicks() - time_;
-    }
-    time_ += delta;
-    timer_->targetTime(delta / 1000.0);
 }
 
-void Game::pause() {
-    pause_ = true;
-}
-
-void Game::resume() {
-    pause_ = false;
-}
