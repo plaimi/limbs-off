@@ -65,10 +65,6 @@ Character::Character(state2p state, phys_t orientation) :
     CollisionHandler* collisionHandler = CollisionHandler::getInstance();
     collisionHandler->monitor(&body_, this);
     collisionHandler->monitor(&head_, this);
-    collisionHandler->monitor(&footBack_, this);
-    collisionHandler->monitor(&footFront_, this);
-    collisionHandler->monitor(&handBack_, this);
-    collisionHandler->monitor(&handFront_, this);
 }
 
 bool Character::isDead() {
