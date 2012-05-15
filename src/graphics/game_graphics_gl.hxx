@@ -34,7 +34,6 @@
 // cause the need for them in the first place. This looks a bit silly Lulzy
 // McQuickfix (tm).
 class Camera;
-class GuiGraphic;
 
 class GraphicFixture: public GraphicModifier {
 public:
