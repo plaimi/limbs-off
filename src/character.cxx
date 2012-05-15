@@ -75,6 +75,11 @@ double Character::getVel() {
     return vel_;
 }
 
+phys_t Character::getMass() {
+    return body_.getMass();
+}
+
+
 state2p Character::getState() {
     return body_.getState();
 }
@@ -273,4 +278,8 @@ CharacterGraphic::CharacterGraphic(Character* c) :
     addGraphic(&head_);
     addGraphic(&footFront_);
     addGraphic(&handFront_);
+}
+
+ColorModifier* CharacterGraphic::getColourModifier() {
+    return &bodyColor_;
 }

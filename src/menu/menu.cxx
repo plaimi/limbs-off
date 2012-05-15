@@ -101,7 +101,7 @@ void Menu::raiseEvent(EVENT_ID id) {
     SDL_PushEvent(&event);
 }
 
-void Menu::setSelected(ScreenElement* selected) {
+void Menu::setSelected(Button* selected) {
     activeElement_->setSelected(false);
     activeElement_ = selected;
     activeElement_->setSelected(true);

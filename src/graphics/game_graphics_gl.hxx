@@ -64,11 +64,14 @@ private:
 
 class PositionModifier: public GraphicModifier {
 public:
-    PositionModifier(int position, int num);
+    PositionModifier(int position, int num, bool horizontalP,
+            float offset = 0.0);
     void begin();
     void end();
 private:
+    bool horizontalP_;
     int position_, num_;
+    float offset_;
 };
 
 class SizeModifier: public GraphicModifier {
@@ -137,8 +140,6 @@ private:
     int size_;
     /** The font colour. */
     SDL_Color colour_;
-    /** The surface the text is rendered to. */
-    SDL_Surface* surface_;
     /** The actual TTF_Font. */
     TTF_Font* font_;
 };
@@ -161,6 +162,14 @@ public:
     Disk* getSquare();
 private:
     Disk disk_, square_;
+};
+
+class MassIndicatorGraphic: public ScreenGraphic {
+public:
+    MassIndicatorGraphic(GLfloat width, GLfloat height, MassIndicator* logic,
+            Label* label = NULL);
+    Label* const label;
+    void doDraw();
 };
 
 class ButtonGraphic: public ScreenGraphic {

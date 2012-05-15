@@ -24,6 +24,7 @@
 
 #include <SDL/SDL.h>
 #include "game.hxx"
+#include "get_font.hxx"
 #include "menu.hxx"
 #include "config_parser.hxx"
 
@@ -97,6 +98,10 @@ Game::Game(Screen* screen) :
             foreground_->addGraphic(*i);
         foreground_->addModifier(camera_);
         scene_->addGraphic(foreground_);
+        for (std::vector<MassIndicatorGraphic*>::const_iterator i =
+                massIndicatorGfx_.begin();
+                i != massIndicatorGfx_.end(); ++i)
+            scene_->addGraphic(*i);
 }
 
 Game::~Game() {
@@ -108,6 +113,19 @@ Game::~Game() {
         delete (*i);
     for (std::vector<CharacterGraphic*>::const_iterator i =
             characterGraphics_.begin(); i != characterGraphics_.end(); ++i)
+        delete (*i);
+    for (std::vector<Label*>::const_iterator i = massIndicatorLabels_.begin();
+            i != massIndicatorLabels_.end(); ++i)
+        delete (*i);
+    for (std::vector<MassIndicator*>::const_iterator i =
+            massIndicators_.begin(); i != massIndicators_.end(); ++i)
+        delete (*i);
+    for (std::vector<MassIndicatorGraphic*>::const_iterator i =
+            massIndicatorGfx_.begin(); i != massIndicatorGfx_.end(); ++i)
+        delete (*i);
+    for (std::vector<PositionModifier*>::iterator i =
+            massIndicatorPosMods_.begin(); i != massIndicatorPosMods_.end();
+            ++i)
         delete (*i);
     delete planetCircle_;
     for (std::vector<AstroBody*>::const_iterator i = planets_.begin();
@@ -133,6 +151,20 @@ void Game::conceive() {
         characters_.push_back(new Character(state2p()(pos, vel), i * angle));
         players_.push_back(new Player(characters_[i]));
         characterGraphics_.push_back(new CharacterGraphic(characters_[i]));
+        char font[256];
+        getFont(font, sizeof(font));
+        char mass [4];
+        snprintf(mass, sizeof(mass), "%.0f", characters_[i]->getMass());
+        massIndicatorLabels_.push_back(new Label(font, mass, 74, .05,
+                    .02));
+        massIndicators_.push_back(new MassIndicator(i));
+        massIndicatorGfx_.push_back(new MassIndicatorGraphic(0.05f, 0.02f,
+                    massIndicators_[i], massIndicatorLabels_[i]));
+        massIndicatorPosMods_.push_back(new PositionModifier(i + 1,
+                    NUM_PLAYERS, true, -0.9));
+        massIndicatorGfx_[i]->addModifier(massIndicatorPosMods_[i]);
+        massIndicatorGfx_[i]->addModifier(
+                characterGraphics_[i]->getColourModifier());
         pos.rotate(a);
         vel.rotate(a);
     }
@@ -207,5 +239,12 @@ void Game::updateCamera(GLfloat dt) {
 
 void Game::draw() {
     scene_->draw();
+    int i = 0;
+    char mass [4];
+    for (std::vector<Character*>::const_iterator it = characters_.begin();
+            it != characters_.end(); ++it, ++i) {
+        snprintf(mass, sizeof(mass), "%.0f", (*it)->getMass());
+        massIndicatorLabels_[i]->setText(mass);
+    }
 }
 

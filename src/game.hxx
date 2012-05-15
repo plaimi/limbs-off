@@ -24,6 +24,7 @@
 #include "graphics/game_graphics_gl.hxx"
 #include "physics/game_physics.hxx"
 #include "player.hxx"
+#include "screen_element.hxx"
 
 class Game : public EventHandler {
 public:
@@ -64,8 +65,12 @@ private:
     GameUniverse* universe_;
     GLuint tex_;
     GraphicFixture* planetFixture_;
+    std::vector<Label*> massIndicatorLabels_;
+    std::vector<MassIndicator*> massIndicators_;
+    std::vector<MassIndicatorGraphic*> massIndicatorGfx_;
     Circle<phys_t>* planetCircle_;
     std::vector<Player*> players_;
+    std::vector<PositionModifier*> massIndicatorPosMods_;
     Screen* screen_;
     StackGraphic* scene_, * foreground_;
     Sprite* backgroundSprite_;

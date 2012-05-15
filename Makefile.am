@@ -50,6 +50,7 @@ bin_PROGRAMS = limbs-off
 limbs_off_SOURCES = \
 	src/config_parser.hxx \
 	src/config_parser.cxx \
+	src/get_font.hxx \
 	src/step_timer.hxx \
 	src/step_timer.cxx \
 	src/template_math.hxx \

@@ -40,6 +40,7 @@ public:
     Character(state2p state, phys_t orientation);
     void addToUniverse(GameUniverse* u);
     bool isDead();
+    phys_t getMass();
     double getVel();
     state2p getState();
     void crouch(bool state);
@@ -74,6 +75,7 @@ private:
 class CharacterGraphic: public StackGraphic {
 public:
     CharacterGraphic(Character* c);
+    ColorModifier* getColourModifier();
 private:
     Character* c_;
     GraphicFixture bodyFixture_, headFixture_, footBackFixture_,

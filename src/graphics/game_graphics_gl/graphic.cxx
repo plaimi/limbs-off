@@ -19,7 +19,7 @@
  */
 
 #include <math.h>
-#include <fontconfig/fontconfig.h>
+#include "get_font.hxx"
 #include "graphics/game_graphics_gl.hxx"
 #include "geometry.hxx"
 
@@ -69,15 +69,19 @@ void BackgroundModifier::end() {
     glPopMatrix();
 }
 
-PositionModifier::PositionModifier(int position, int num) :
-    position_(position),
-    num_(num) {
+PositionModifier::PositionModifier(int position, int num, bool horizontalP,
+        float offset) :
+    position_(position), num_(num), horizontalP_(horizontalP), offset_(offset) {
 }
 
 void PositionModifier::begin() {
     glPushMatrix();
-    GLfloat f = 2. / num_ * ((1. + num_) / 2. - position_);
-    glTranslatef(.0, f, .0);
+    // Evenly distribute the elements horizontally or vertically
+    GLfloat f = 2.0 / num_ * ((1.0 + num_) / 2.0 - position_);
+    if (horizontalP_)
+        glTranslatef(-f, offset_, 0.0);
+    else
+        glTranslatef(offset_, f, 0.0);
 }
 
 void PositionModifier::end() {
@@ -157,14 +161,16 @@ void ScreenGraphic::setSize(GLfloat w, GLfloat h) {
 
 Label::Label(const char* face, const char* text, int size, GLfloat width,
         GLfloat height) :
-    size_(size),
-    width_(width),
-    height_(height) {
-        face_ = (char*) malloc(strlen(face) + 1);
-        strcpy(face_, face);
+    face_(NULL), size_(size), width_(width), height_(height), font_(NULL) {
+        TTF_Init();
+        if (!TTF_WasInit() && TTF_Init() == -1) {
+            printf("error initialising fontconfig: %s\n", TTF_GetError());
+            exit(1);
+        }
         text_ = (char*) malloc(strlen(text) + 1);
         strcpy(text_, text);
-        make();
+        texture_ = 0;
+        setFace(face);
 }
 
 Label::~Label() {
@@ -186,7 +192,8 @@ GLfloat Label::getWidth() {
 
 void Label::doDraw() {
     Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
-    glColor3f(.0, .0, .0);
+    glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
+    glColor3f(0.0, 0.0, 0.0);
     glBindTexture(GL_TEXTURE_2D, texture_);
     glBegin(GL_QUADS);
     glTexCoord2f(.0, 1.);
@@ -199,30 +206,36 @@ void Label::doDraw() {
     glVertex2f(-width_, height_);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
-    glColor3f(1.0, 1.0, 1.0);
+    glPopAttrib();
 }
 
 void Label::make() {
-    TTF_Init();
-    font_ = TTF_OpenFont(face_, size_);
-    if (!font_)
+    if (font_ == NULL)
+        font_ = TTF_OpenFont(face_, size_);
+    if (font_ == NULL)
         printf("error opening font: %s\n", TTF_GetError());
     // Doesn't matter
     SDL_Color bg = {0, 0, 0};
-    surface_ = TTF_RenderText_Shaded(font_, text_, bg, bg);
+    SDL_Surface* surface = TTF_RenderText_Shaded(font_, text_, bg, bg);
+    if (texture_)
+        glDeleteTextures(1, &texture_);
     glGenTextures(1, &texture_);
     glBindTexture(GL_TEXTURE_2D, texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA8, surface_->w, surface_->h, 0, 
-            GL_ALPHA, GL_UNSIGNED_BYTE, surface_->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA8, surface->w, surface->h, 0,
+            GL_ALPHA, GL_UNSIGNED_BYTE, surface->pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
+    SDL_FreeSurface(surface);
 }
 
 void Label::setFace(const char* face) {
-    free(face_);
+    if (face_ != NULL)
+        free(face_);
     face_ = (char*) malloc(strlen(face) + 1);
     strcpy(face_, face);
+    TTF_CloseFont(font_);
+    font_ == NULL;
     make();
 }
 
@@ -232,7 +245,10 @@ void Label::setSize(int size) {
 }
 
 void Label::setText(const char* text) {
-    free(text_);
+    if (strcmp(text_, text) == 0)
+            return;
+    if (text_ != NULL)
+        free(text_);
     text_ = (char*) malloc(strlen(text) + 1);
     strcpy(text_, text);
     make();
@@ -284,6 +300,26 @@ Disk* TestDisk::getSquare() {
     return &square_;
 }
 
+MassIndicatorGraphic::MassIndicatorGraphic(GLfloat width, GLfloat height,
+        MassIndicator* logic, Label* label) :
+        label(label) {
+    setSize(width, height);
+    logic_ = logic;
+}
+
+void MassIndicatorGraphic::doDraw() {
+    // This draws front to back
+    if (label) {
+        label->draw();
+    }
+    glBegin(GL_QUADS);
+    glVertex2f(width_, -height_);
+    glVertex2f(-width_, -height_);
+    glVertex2f(-width_, height_);
+    glVertex2f(width_, height_);
+    glEnd();
+}
+
 ButtonGraphic::ButtonGraphic(GLfloat width, GLfloat height, Button* logic,
         Label* label, bool selected) :
         label(label) {
@@ -299,7 +335,7 @@ void ButtonGraphic::doDraw() {
     if (label) {
         label->draw();
     }
-    if (logic_->isSelected())
+    if (((Button*)logic_)->isSelected())
         glColor4f(0.f, 1.f, 0.f, 1.f);
     else
         glColor4f(1.f, 0.f, 0.f, 1.f);
@@ -332,7 +368,7 @@ void SubmenuGraphic::addButton(Button* logic, Label* label,
     // Create a PositionModifier
     positionModifiers_.push_back(new PositionModifier(
                 buttonGraphics_.back()->getLogic()->getPosition(), 
-                submenu_->buttons.size()));
+                submenu_->buttons.size(), false));
     // Add the ButtonGraphic to graphics_
     addGraphic(buttonGraphics_.back());
     // Pair up the ButtonGraphic with the PositionModifier
@@ -341,32 +377,17 @@ void SubmenuGraphic::addButton(Button* logic, Label* label,
 
 MenuGraphic::MenuGraphic(Menu* menu) :
     menu_(menu) {
-        const char* fontFamily = "Anonymous Pro";
-        const char* fontStyle = "Bold";
-        const char* fontSpacing = "Monospace";
-        char* font;
-        FcPattern* fontPattern = FcPatternCreate();
-        FcResult fontResult = FcResultMatch;
-        int fontSize = 74;
-        FcPatternAddString(fontPattern, FC_FAMILY, 
-                (const FcChar8*) fontFamily);
-        FcPatternAddDouble(fontPattern, FC_SIZE, fontSize);
-        FcPatternAddString(fontPattern, FC_SPACING, 
-                (const FcChar8*) fontSpacing);
-        FcPatternAddString(fontPattern, FC_STYLE, 
-                (const FcChar8*) fontStyle);
-        FcDefaultSubstitute(fontPattern);
-        FcPattern* fontMatch = FcFontMatch(NULL, fontPattern, &fontResult);
-        FcPatternGetString(fontMatch, FC_FILE, 0, (FcChar8**) &font);
         for (int i = 0; i < Menu::NUM_MENU; ++i) {
             // Create a new SubmenuGraphic for each Submenu
             menuGraphics_[i] = new SubmenuGraphic(menu->getMenu(i));
             Submenu* submenu = menu->getMenu(i);
             // Add buttons and labels
+            char font[256];
+            getFont(font, sizeof(font));
             for (std::vector<Button*>::iterator j =
                     submenu->buttons.begin(); j < submenu->buttons.end(); ++j) {
                 labels_.push_back(new Label(font, ((Button*) (*j))->getText(), 
-                            fontSize, .5, .1));
+                            74, .5, .1));
                 menuGraphics_[i]->addButton((*j), labels_.back(), 
                         (*j)->isSelected());
             }

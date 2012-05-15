@@ -48,12 +48,11 @@ public:
     int getActiveMenu();
     Submenu* getMenu(int menu);
 private:
-    ScreenElement* getScreenElement(std::vector<ScreenElement*> vector,
-            int position);
-    ScreenElement* getSelected();
+    Button* getButton(std::vector<Button*> vector, int position);
+    Button* getSelected();
     void raiseEvent(EVENT_ID id);
-    void setSelected(ScreenElement* selected);
-    ScreenElement* activeElement_;
+    void setSelected(Button* selected);
+    Button* activeElement_;
     int activeMenu_;
     /** Menus are hardcoded. */
     Submenu* menus_[NUM_MENU];

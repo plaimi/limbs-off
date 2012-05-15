@@ -21,10 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool ScreenElement::isSelected() {
-    return selected_;
-}
-
 int ScreenElement::getPosition() {
     return position_;
 }
@@ -33,7 +29,11 @@ void ScreenElement::setPosition(int pos) {
     position_ = pos;
 }
 
-void ScreenElement::setSelected(bool selected) {
+bool GuiElement::isSelected() {
+    return selected_;
+}
+
+void GuiElement::setSelected(bool selected) {
     selected_ = selected;
 }
 
@@ -52,6 +52,6 @@ char* Button::getText() {
     return text_;
 }
 
-int Button::getPosition() {
-    return position_;
+MassIndicator::MassIndicator(int position) {
+    setPosition(position);
 }

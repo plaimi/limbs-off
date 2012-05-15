@@ -22,25 +22,36 @@
 
 class ScreenElement {
 public:
-    bool isSelected();
     int getPosition();
     void setPosition(int pos);
-    void setSelected(bool selected);
 protected:
-    bool selected_;
     int position_;
 };
 
-class Button: public ScreenElement {
+class GuiElement: public ScreenElement {
+public:
+    bool isSelected();
+    void setSelected(bool selected);
+protected:
+    bool selected_;
+};
+
+class Button: public GuiElement {
 public:
     Button(const char* text, int position, bool selected = false);
     ~Button();
     char* getText();
-    int getPosition();
 private:
     bool selected_;
     char* text_;
-    int position_;
+};
+
+class HudElement: public ScreenElement {
+};
+
+class MassIndicator: public HudElement {
+public:
+    MassIndicator(int position);
 };
 
 #endif /*SCREEN_ELEMENT_H_*/
