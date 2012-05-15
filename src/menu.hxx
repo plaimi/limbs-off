@@ -29,7 +29,7 @@ public:
     Submenu();
     void addButton(const char* text, int position, bool selected);
     /** Buttons are hardcoded. */
-    std::vector<ScreenElement*> buttons;
+    std::vector<Button*> buttons;
 };
 
 class Menu: public EventHandler {

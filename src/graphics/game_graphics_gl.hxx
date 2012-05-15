@@ -166,13 +166,12 @@ private:
 
 class ButtonGraphic: public ScreenGraphic {
 public:
-    ButtonGraphic(GLfloat width, GLfloat height, ScreenElement* logic,
+    ButtonGraphic(GLfloat width, GLfloat height, Button* logic,
             Label* label = NULL, bool selected = false);
     ~ButtonGraphic();
     /** The button's label if any. */
     Label* const label;
     void doDraw();
-private:
 };
 
 class SubmenuGraphic: public StackGraphic {
@@ -180,8 +179,7 @@ public:
     SubmenuGraphic(Submenu* submenu);
     ~SubmenuGraphic();
     /** Add a button to buttonGraphics_ and to graphics_. */
-    void addButton(ScreenElement* logic, Label* label = NULL,
-            bool selected = false);
+    void addButton(Button* logic, Label* label = NULL, bool selected = false);
 private:
     /** The logic. */
     Submenu* submenu_;

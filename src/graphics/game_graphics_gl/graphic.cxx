@@ -284,11 +284,11 @@ Disk* TestDisk::getSquare() {
     return &square_;
 }
 
-ButtonGraphic::ButtonGraphic(GLfloat width, GLfloat height,
-        ScreenElement* logic, Label* label, bool selected) :
-    label(label) {
-        setSize(width, height);
-        logic_ = logic;
+ButtonGraphic::ButtonGraphic(GLfloat width, GLfloat height, Button* logic,
+        Label* label, bool selected) :
+        label(label) {
+    setSize(width, height);
+    logic_ = logic;
 }
 
 ButtonGraphic::~ButtonGraphic() {
@@ -324,7 +324,7 @@ SubmenuGraphic::~SubmenuGraphic() {
             delete (*i), ++i);
 }
 
-void SubmenuGraphic::addButton(ScreenElement* logic, Label* label,
+void SubmenuGraphic::addButton(Button* logic, Label* label,
         bool selected) {
     // Create a ButtonGraphic
     buttonGraphics_.push_back(new ButtonGraphic(label->getWidth(), 
@@ -363,7 +363,7 @@ MenuGraphic::MenuGraphic(Menu* menu) :
             menuGraphics_[i] = new SubmenuGraphic(menu->getMenu(i));
             Submenu* submenu = menu->getMenu(i);
             // Add buttons and labels
-            for (std::vector<ScreenElement*>::iterator j =
+            for (std::vector<Button*>::iterator j =
                     submenu->buttons.begin(); j < submenu->buttons.end(); ++j) {
                 labels_.push_back(new Label(font, ((Button*) (*j))->getText(), 
                             fontSize, .5, .1));

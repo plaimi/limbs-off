@@ -41,7 +41,7 @@ Menu::Menu() {
 
 Menu::~Menu() {
     for (int i = 0; i < NUM_MENU; ++i) {
-        for (std::vector<ScreenElement*>::const_iterator j =
+        for (std::vector<Button*>::const_iterator j =
                 menus_[i]->buttons.begin(); j != menus_[i]->buttons.end(); ++j)
             delete (*j);
         delete menus_[i];
