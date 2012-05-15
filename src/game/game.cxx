@@ -29,6 +29,7 @@
 
 const int Game::MAX_PC = 16;
 const int Game::MAX_PLAN = 1;
+const int Game::NUM_PLAYERS = 3;
 const float Game::COL_PLANET[] = { 0.4, 0.8, 0.4 };
 const phys_t Game::GM = 628;
 const phys_t Game::R = 9.0;
@@ -126,10 +127,9 @@ Game::~Game() {
 
 void Game::conceive() {
     // Characters
-    // TODO: We have hard coded three players. We should not do that...
-    phys_t angle = 2 * PI / 3;
+    phys_t angle = 2 * PI / NUM_PLAYERS;
     vector2p pos = { R, 0 }, vel = { 0, S }, a = vector2p::fromAngle(angle);
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < NUM_PLAYERS; ++i) {
         characters_.push_back(new Character(state2p()(pos, vel), i * angle));
         players_.push_back(new Player(characters_[i]));
         characterGraphics_.push_back(new CharacterGraphic(characters_[i]));

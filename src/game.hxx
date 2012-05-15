@@ -43,6 +43,8 @@ private:
     static const int MAX_PC;
     /** Max planets. */
     static const int MAX_PLAN;
+    /** Number of players. */
+    static const int NUM_PLAYERS;
     /** Planet colour. */
     static const float COL_PLANET[];
     /** Planet gravity "mass". */
