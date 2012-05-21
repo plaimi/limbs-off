@@ -62,8 +62,8 @@ bar any pre-processor statements.
 If several files rely on the same header, it might be time to create a 
 directory for those files. It should rarely be necessary, but see the 
 directory style that's already there for some clues. The best thing to do is 
-probably to e-mail a core developer from AUTHORS to discuss it properly. 
-Either one should be able to help you decide.
+probably to email a core developer from AUTHORS to discuss it properly. Either 
+one should be able to help you decide.
 
 -"do while"s
 "while"-part of do-whiles are on the same line as '}'. Try to avoid "do 

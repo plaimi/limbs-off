@@ -5,7 +5,7 @@ Items are prefixed by '!'s. The amount of '!'s signify how important an item
 is. Please keep them in alphabetical order.
 
 To assign yourself to a task, put a * in front of it, and add your name and 
-e-mail address on a new line, indented once.
+email address on a new line, indented once.
 
 Replies are on their own lines, indented once and prefixed with '>'s. The 
 amount of '>'s dictate the level of nesting. If necessary, add your name, 
