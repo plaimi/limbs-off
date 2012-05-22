@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEMPLATE_MATH_INL_H_
-#define TEMPLATE_MATH_INL_H_
+#ifndef TEMPLATE_MATH_INL_HXX_
+#define TEMPLATE_MATH_INL_HXX_
 
 #include "template_math.hxx"
 
@@ -152,4 +152,4 @@ inline T clampmag(T x, T m) {
     return max<T> (-m, min<T> (m, x));
 }
 
-#endif /* TEMPLATE_MATH_INL_H_ */
+#endif /* TEMPLATE_MATH_INL_HXX_ */

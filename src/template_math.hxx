@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEMPLATE_MATH_H_
-#define TEMPLATE_MATH_H_
+#ifndef TEMPLATE_MATH_HXX_
+#define TEMPLATE_MATH_HXX_
 
 #include <math.h>
 #include <algorithm>
@@ -58,4 +58,4 @@ T clampmag(T x, T m);
 
 #include "template_math_inl.hxx"
 
-#endif /* TEMPLATE_MATH_H_ */
+#endif /* TEMPLATE_MATH_HXX_ */

@@ -18,8 +18,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GAME_H_
-#define GAME_H_
+#ifndef GAME_HXX_
+#define GAME_HXX_
 
 #include "graphics/game_graphics_gl.hxx"
 #include "physics/game_physics.hxx"
@@ -77,4 +77,4 @@ private:
     TestDisk* planetDisk_;
 };
 
-#endif /* GAME_H_ */
+#endif /* GAME_HXX_ */

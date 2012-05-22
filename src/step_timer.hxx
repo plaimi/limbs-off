@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STEP_TIMER_H_
-#define STEP_TIMER_H_
+#ifndef STEP_TIMER_HXX_
+#define STEP_TIMER_HXX_
 
 class StepTimer {
 public:
@@ -30,4 +30,4 @@ private:
     double time_, targetTime_, deltaTargetTime_;
 };
 
-#endif /* STEP_TIMER_H_ */
+#endif /* STEP_TIMER_HXX_ */

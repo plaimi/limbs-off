@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHYSICS_INL_H_
-#define PHYSICS_INL_H_
+#ifndef PHYSICS_INL_HXX_
+#define PHYSICS_INL_HXX_
 
 #include "physics.hxx"
 
@@ -276,4 +276,4 @@ inline phys_t momentInertia(phys_t mass, phys_t radius, phys_t dist) {
     return radius * radius * dist * mass;
 }
 
-#endif /* PHYSICS_INL_H_ */
+#endif /* PHYSICS_INL_HXX_ */

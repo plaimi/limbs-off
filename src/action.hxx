@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACTION_H_
-#define ACTION_H_
+#ifndef ACTION_HXX_
+#define ACTION_HXX_
 
 class Action {
 public:
@@ -41,4 +41,4 @@ enum ActionType {
     NUM_ACTIONTYPE
 };
 
-#endif /* ACTION_H_ */
+#endif /* ACTION_HXX_ */

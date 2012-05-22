@@ -18,8 +18,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GAME_GRAPHICS_GL_H_
-#define GAME_GRAPHICS_GL_H_
+#ifndef GAME_GRAPHICS_GL_HXX_
+#define GAME_GRAPHICS_GL_HXX_
 
 #include <vector>
 #include <GL/gl.h>
@@ -280,4 +280,4 @@ private:
     GLfloat rotation_, targetRotation_, rotationSpeed_;
 };
 
-#endif /* GAME_GRAPHICS_GL_H_ */
+#endif /* GAME_GRAPHICS_GL_HXX_ */

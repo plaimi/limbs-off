@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHICS_H_
-#define GRAPHICS_H_
+#ifndef GRAPHICS_HXX_
+#define GRAPHICS_HXX_
 
 #include <vector>
 
@@ -47,4 +47,4 @@ protected:
     std::vector<GraphicModifier*> modifiers_;
 };
 
-#endif /* GRAPHICS_H_ */
+#endif /* GRAPHICS_HXX_ */

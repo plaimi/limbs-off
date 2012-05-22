@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MENU_H_
-#define MENU_H_
+#ifndef MENU_HXX_
+#define MENU_HXX_
 
 #include <vector>
 #include "event_handler.hxx"
@@ -58,4 +58,4 @@ private:
     Submenu* menus_[NUM_MENU];
 };
 
-#endif /* MENU_H_ */
+#endif /* MENU_HXX_ */

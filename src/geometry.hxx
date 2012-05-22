@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GEOMETRY_H_
-#define GEOMETRY_H_
+#ifndef GEOMETRY_HXX_
+#define GEOMETRY_HXX_
 
 #include "template_math.hxx"
 
@@ -98,4 +98,4 @@ bool intersectLineCircle(vector2<T> a, vector2<T> b, T rr, T& t1, T& t2);
 
 #include "geometry_inl.hxx"
 
-#endif /* GEOMETRY_H_ */
+#endif /* GEOMETRY_HXX_ */

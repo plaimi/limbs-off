@@ -17,11 +17,11 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CODE_H_
-#define CODE_H_
+#ifndef CODE_HXX_
+#define CODE_HXX_
 
 enum EventCode {
     NEW_GAME
 };
 
-#endif /* CODE_H_ */
+#endif /* CODE_HXX_ */

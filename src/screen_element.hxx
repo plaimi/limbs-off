@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SCREEN_ELEMENT_H_
-#define SCREEN_ELEMENT_H_
+#ifndef SCREEN_ELEMENT_HXX_
+#define SCREEN_ELEMENT_HXX_
 
 class ScreenElement {
 public:
@@ -54,4 +54,4 @@ public:
     MassIndicator(int position);
 };
 
-#endif /*SCREEN_ELEMENT_H_*/
+#endif /*SCREEN_ELEMENT_HXX_*/

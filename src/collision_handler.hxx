@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COLLISION_HANDLER_H_
-#define COLLISION_HANDLER_H_
+#ifndef COLLISION_HANDLER_HXX_
+#define COLLISION_HANDLER_HXX_
 
 #include <map>
 #include "character.hxx"
@@ -36,4 +36,4 @@ private:
     std::map<Body*, Character*> monitored_;
 };
 
-#endif /*COLLISION_HANDLER_H_*/
+#endif /*COLLISION_HANDLER_HXX_*/

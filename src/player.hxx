@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PLAYER_H_
-#define PLAYER_H_ 
+#ifndef PLAYER_HXX_
+#define PLAYER_HXX_
 
 #include "actor.hxx"
 #include "action.hxx"
@@ -42,4 +42,4 @@ private:
     Uint8 joyDevice_;
 };
 
-#endif /* PLAYER_H_ */
+#endif /* PLAYER_HXX_ */

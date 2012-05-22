@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACTOR_H_
-#define ACTOR_H_ 
+#ifndef ACTOR_HXX_
+#define ACTOR_HXX_
 
 #include "character.hxx"
 
@@ -29,4 +29,4 @@ protected:
     Character* character_;
 };
 
-#endif /* ACTOR_H_ */
+#endif /* ACTOR_HXX_ */

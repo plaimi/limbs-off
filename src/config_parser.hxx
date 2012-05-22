@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIG_PARSER_H_
-#define CONFIG_PARSER_H_
+#ifndef CONFIG_PARSER_HXX_
+#define CONFIG_PARSER_HXX_
 
 #include "player.hxx"
 
@@ -27,4 +27,4 @@ namespace ConfigParser {
 void readBindings(Player* player, const char* file);
 }
 
-#endif /*CONFIG_PARSER_H_*/
+#endif /*CONFIG_PARSER_HXX_*/

@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHYSICS_H_
-#define PHYSICS_H_
+#ifndef PHYSICS_HXX_
+#define PHYSICS_HXX_
 
 #include <math.h>
 #include <list>
@@ -156,4 +156,4 @@ vector2p bounce2(Body* a, Body* b, vector2p& pa, vector2p& pb, vector2p n,
 
 #include "physics_inl.hxx"
 
-#endif /* PHYSICS_H_ */
+#endif /* PHYSICS_HXX_ */

@@ -17,8 +17,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EVENT_HANDLER_H_
-#define EVENT_HANDLER_H_
+#ifndef EVENT_HANDLER_HXX_
+#define EVENT_HANDLER_HXX_
 
 #include <SDL/SDL.h>
 
@@ -28,4 +28,4 @@ public:
     virtual bool handle(const SDL_Event& event) = 0;
 };
 
-#endif /* EVENT_HANDLER_H_ */
+#endif /* EVENT_HANDLER_HXX_ */

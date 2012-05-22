@@ -18,8 +18,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GAME_PHYSICS_H_
-#define GAME_PHYSICS_H_
+#ifndef GAME_PHYSICS_HXX_
+#define GAME_PHYSICS_HXX_
 
 #include <vector>
 #include "physics.hxx"
@@ -92,4 +92,4 @@ protected:
     phys_t orientation_;
 };
 
-#endif /* GAME_PHYSICS_H_ */
+#endif /* GAME_PHYSICS_HXX_ */

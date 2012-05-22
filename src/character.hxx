@@ -18,8 +18,8 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CHARACTER_H_
-#define CHARACTER_H_
+#ifndef CHARACTER_HXX_
+#define CHARACTER_HXX_
 
 #include "graphics/game_graphics_gl.hxx"
 #include "physics/game_physics.hxx"
@@ -86,4 +86,4 @@ private:
     TestDisk body_, head_, footBack_, footFront_, handBack_, handFront_;
 };
 
-#endif /* CHARACTER_H_ */
+#endif /* CHARACTER_HXX_ */
