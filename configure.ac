@@ -35,6 +35,11 @@ AS_IF(
 # Set SDL flags
 SDL_CFLAGS="`$SDLCONFIG --cflags`"
 SDL_LIBS="$($SDLCONFIG --libs)"
+
+# Check for additional SDL libraries
+AC_SEARCH_LIBS([TTF_Init], [SDL_ttf],, AC_MSG_ERROR([missing sdl-ttf!]))
+
+SDL_LIBS="${SDL_LIBS} -lSDL_ttf"
 AC_SUBST([SDL_CFLAGS])
 AC_SUBST([SDL_LIBS])
 
