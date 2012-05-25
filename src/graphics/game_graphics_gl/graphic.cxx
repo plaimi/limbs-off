@@ -335,17 +335,18 @@ void ButtonGraphic::doDraw() {
     if (label) {
         label->draw();
     }
+    glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
     if (((Button*)logic_)->isSelected())
-        glColor4f(0.f, 1.f, 0.f, 1.f);
+        glColor4f(0.0, 1.0, 0.0, 1.0);
     else
-        glColor4f(1.f, 0.f, 0.f, 1.f);
+        glColor4f(0.25, 0.0, 0.0, 0.5);
     glBegin(GL_QUADS);
     glVertex2f(width_, -height_);
     glVertex2f(-width_, -height_);
     glVertex2f(-width_, height_);
     glVertex2f(width_, height_);
     glEnd();
-    glColor4f(1.f, 1.f, 1.f, 1.f);
+    glPopAttrib();
 }
 
 SubmenuGraphic::SubmenuGraphic(Submenu* submenu) :
