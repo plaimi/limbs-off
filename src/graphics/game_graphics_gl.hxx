@@ -127,7 +127,6 @@ public:
     void setSize(int size);
     void setText(const char* text);
 private:
-    void make();
     /** The font name. */
     char* face_;
     /** The actual text printed. */
@@ -142,6 +141,8 @@ private:
     SDL_Color colour_;
     /** The actual TTF_Font. */
     TTF_Font* font_;
+    void drawShadow();
+    void make();
 };
 
 class Disk: public Graphic {

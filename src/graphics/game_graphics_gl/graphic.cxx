@@ -193,7 +193,7 @@ GLfloat Label::getWidth() {
 void Label::doDraw() {
     Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
     glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, texture_);
     glBegin(GL_QUADS);
     glTexCoord2f(.0, 1.);
@@ -205,8 +205,24 @@ void Label::doDraw() {
     glTexCoord2f(.0, .0);
     glVertex2f(-width_, height_);
     glEnd();
+    drawShadow();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopAttrib();
+}
+
+void Label::drawShadow() {
+    // TODO: Implement shadow properly...
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(.0, 1.);
+    glVertex2f(-width_ + width_ / 50.0, -height_ - height_ / 10.0);
+    glTexCoord2f(1., 1.);
+    glVertex2f(width_ + width_ / 50.0, -height_ - height_ / 10.0);
+    glTexCoord2f(1., .0);
+    glVertex2f(width_ + width_ / 50.0, height_ - height_ / 10.0);
+    glTexCoord2f(.0, .0);
+    glVertex2f(-width_ + width_ / 50.0, height_ - height_ / 10.0);
+    glEnd();
 }
 
 void Label::make() {
