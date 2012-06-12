@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
+ * Copyright (C) 2012 Alexander Berntsen <alexander@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
@@ -31,6 +32,15 @@ TextureLoader* TextureLoader::getInstance() {
 }
 
 TextureLoader::TextureLoader() {
+}
+
+GLuint TextureLoader::getTexture(const char* filename) {
+    std::map<std::string, GLuint>::iterator it = loaded_.find(filename);
+    if (it != loaded_.end())
+        return it->second;
+    GLuint tex = loadTexture(filename, true);
+    loaded_.insert(std::pair<std::string, GLuint>(filename, tex));
+    return tex;
 }
 
 GLuint TextureLoader::loadTexture(const char* filename, bool premultiply) {

@@ -63,8 +63,9 @@ private:
             rightPunch_;
     Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
-    double powerCrouch_, powerFire_, powerJump_, powerLeftKick_, powerLeftPunch_,
-            powerRightKick_, powerRightPunch_, vel_, velLeft_, velRight_;
+    double powerCrouch_, powerFire_, powerJump_, powerLeftKick_,
+            powerLeftPunch_, powerRightKick_, powerRightPunch_, vel_, velLeft_,
+            velRight_;
     FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
     static int collisionGroup_;
     SmallBody head_, footBack_, footFront_, handBack_, handFront_;
@@ -83,7 +84,7 @@ private:
     ColorModifier bodyColor_;
     float colour_[3];
     SizeModifier scaler_;
-    TestDisk body_, head_, footBack_, footFront_, handBack_, handFront_;
+    Sprite body_, head_, footBack_, footFront_, handBack_, handFront_;
 };
 
 #endif /* CHARACTER_HXX_ */

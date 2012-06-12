@@ -25,6 +25,7 @@
 #include <SDL/SDL.h>
 #include "game.hxx"
 #include "get_font.hxx"
+#include "get_texture.hxx"
 #include "menu.hxx"
 #include "config_parser.hxx"
 
@@ -47,9 +48,7 @@ bool Game::handle(const SDL_Event& event) {
 
 Game::Game(Screen* screen) :
     screen_(screen) {
-        TextureLoader* texLoader = TextureLoader::getInstance();
-        tex_ = texLoader->loadTexture(PACKAGE_GFX_DIR "background.png",
-                true);
+        tex_ = getTexture(PACKAGE_GFX_DIR "background.png");
         conceive();
         for (std::vector<Character*>::const_iterator i = characters_.begin();
                 i != characters_.end(); ++i)
@@ -140,7 +139,6 @@ Game::~Game() {
     delete scene_;
     delete camera_;
     delete backgroundModifier_;
-    glDeleteTextures(1, &tex_);
 }
 
 void Game::conceive() {

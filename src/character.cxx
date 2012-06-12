@@ -20,6 +20,7 @@
 
 #include "character.hxx"
 #include "collision_handler.hxx"
+#include "get_texture.hxx"
 
 int Character::collisionGroup_ = 0;
 
@@ -245,12 +246,19 @@ void Character::CharacterBody::changeMass(phys_t delta) {
 }
 
 CharacterGraphic::CharacterGraphic(Character* c) :
-    c_(c), bodyFixture_(&c->body_), headFixture_(&c->head_),
-            footBackFixture_(&c->footBack_), footFrontFixture_(&c->footFront_),
-            handBackFixture_(&c->handBack_), handFrontFixture_(&c->handFront_),
-            bodyColor_(colour_), scaler_(c->body_.getShape()), body_(1.0, 16),
-            head_(0.15, 16), footBack_(0.075, 8), footFront_(0.075, 8),
-            handBack_(0.1, 8), handFront_(0.1, 8) {
+        c_(c),
+        body_(getTexture(PACKAGE_GFX_DIR "character_body.png"), 1.0, 1.0),
+        head_(getTexture(PACKAGE_GFX_DIR "character_head.png"), 0.15, 0.15),
+        footFront_(getTexture(PACKAGE_GFX_DIR "character_foot.png"), 0.075,
+                0.075),
+        footBack_(getTexture(PACKAGE_GFX_DIR "character_foot.png"), 0.075,
+                0.075),
+        handFront_(getTexture(PACKAGE_GFX_DIR "character_hand.png"), 0.1, 0.1),
+        handBack_(getTexture(PACKAGE_GFX_DIR "character_hand.png"), 0.1, 0.1),
+        bodyFixture_(&c->body_), headFixture_(&c->head_),
+        footBackFixture_(&c->footBack_), footFrontFixture_(&c->footFront_),
+        handBackFixture_(&c->handBack_), handFrontFixture_(&c->handFront_),
+        bodyColor_(colour_), scaler_(c->body_.getShape()) {
     // Temporary differentiation of characters.
     // TODO: Use sprites.
     static int n = 0;
@@ -261,17 +269,17 @@ CharacterGraphic::CharacterGraphic(Character* c) :
 
     body_.addModifier(&scaler_);
     body_.addModifier(&bodyFixture_);
-    body_.getDisk()->addModifier(&bodyColor_);
+    body_.addModifier(&bodyColor_);
     head_.addModifier(&headFixture_);
-    head_.getDisk()->addModifier(&bodyColor_);
+    head_.addModifier(&bodyColor_);
     footBack_.addModifier(&footBackFixture_);
-    footBack_.getDisk()->addModifier(&bodyColor_);
+    footBack_.addModifier(&bodyColor_);
     footFront_.addModifier(&footFrontFixture_);
-    footFront_.getDisk()->addModifier(&bodyColor_);
+    footFront_.addModifier(&bodyColor_);
     handBack_.addModifier(&handBackFixture_);
-    handBack_.getDisk()->addModifier(&bodyColor_);
+    handBack_.addModifier(&bodyColor_);
     handFront_.addModifier(&handFrontFixture_);
-    handFront_.getDisk()->addModifier(&bodyColor_);
+    handFront_.addModifier(&bodyColor_);
     addGraphic(&handBack_);
     addGraphic(&footBack_);
     addGraphic(&body_);

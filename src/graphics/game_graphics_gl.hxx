@@ -21,6 +21,8 @@
 #ifndef GAME_GRAPHICS_GL_HXX_
 #define GAME_GRAPHICS_GL_HXX_
 
+#include <map>
+#include <string>
 #include <vector>
 #include <GL/gl.h>
 #include <SDL/SDL.h>
@@ -214,12 +216,19 @@ private:
 
 class TextureLoader {
 public:
+    /** Get singleton. */
     static TextureLoader* getInstance();
-    GLuint loadTexture(const char* filename, bool premultiply);
+    /** Get a texture if file is loaded, make a new one if not loaded. */
+    GLuint getTexture(const char* filename);
 protected:
     TextureLoader();
 private:
+    /** Load a texture from file. */
+    GLuint loadTexture(const char* filename, bool premultiply);
+    /** The singleton. */
     static TextureLoader* instance_;
+    /** Loaded textures. */
+    std::map<std::string, GLuint> loaded_;
 };
 
 class Screen: EventHandler {
