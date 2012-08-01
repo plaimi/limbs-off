@@ -3,9 +3,8 @@ Major TODOs
 
 !!! Artificial intelligence
 
-!!! Character life (hit points/damage meter/something)
-
-!!! HUD with damage indication
+!!! Character orientation for sprites
+	alexander alexander@plaimi.net
 
 !!! Inter-planetary travel via cannons
 
@@ -35,8 +34,6 @@ Minor TODOs
 
 ! Add/remove players via menu
 
-! Arcade version
-
 ! Camera is a bit borked, so fix camera
 
 ! Characters & character creation
@@ -49,8 +46,6 @@ Minor TODOs
 
 ! Day/night cycle effect - something to signify time moving forward
 
-! debian software package
-
 ! Debug options in menu
 
 ! Factory pattern
@@ -59,23 +54,19 @@ Minor TODOs
 
 ! Light - stars/suns/fire/explosions should produce diffuse & specular light
 
-! Mac OS X build
-
 ! Mobile devices version
 
 ! Music
 
-! On-line game lobby
+! Online game lobby
 
-! On-line match making
+! Online match making
 
-! On-line user accounts with player statistics
+! Online user accounts with player statistics
 
 ! Picture in picture effect for multi-player camera
 
 ! Planet models
-
-! RPM package
 
 ! Shadows
 
