@@ -18,6 +18,7 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <math.h>
 #include "get_font.hxx"
 #include "graphics/game_graphics_gl.hxx"
@@ -102,8 +103,20 @@ void SizeModifier::end() {
     glPopMatrix();
 }
 
-void StackGraphic::addGraphic(Graphic* g) {
-    graphics_.push_back(g);
+void StackGraphic::addGraphic(Graphic* graphic, std::size_t index) {
+    if (index == -1)
+        graphics_.push_back(graphic);
+    else
+        graphics_.insert(graphics_.begin() + index + 0, graphic);
+}
+
+std::size_t StackGraphic::removeGraphic(Graphic* g) {
+    std::vector<Graphic*>::iterator it=std::find(graphics_.begin(),
+            graphics_.end(), g);
+    std::size_t i=std::distance(graphics_.begin(), it);
+    if (it != graphics_.end())
+        graphics_.erase(it);
+    return i;
 }
 
 void StackGraphic::doDraw() {

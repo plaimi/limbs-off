@@ -188,6 +188,9 @@ void Game::update(phys_t dt) {
     for (std::vector<Character*>::const_iterator it = characters_.begin();
             it != characters_.end(); ++it)
         (*it)->update(dt);
+    for (std::vector<CharacterGraphic*>::const_iterator it =
+            characterGraphics_.begin(); it != characterGraphics_.end(); ++it)
+        (*it)->update();
 }
 
 void Game::updateCamera(GLfloat dt) {

@@ -40,6 +40,7 @@ public:
     Character(state2p state, phys_t orientation);
     void addToUniverse(GameUniverse* u);
     bool isDead();
+    char getOrientation();
     phys_t getMass();
     double getVel();
     state2p getState();
@@ -56,11 +57,14 @@ public:
     void moveRight(double vel);
     void rightKick(bool state);
     void rightPunch(bool state);
+    void setOrientation(char orientation);
     /** Update power meters. */
     void update(double deltaTime);
 private:
     bool crouch_, dead_, fire_, jump_, leftKick_, leftPunch_, rightKick_,
             rightPunch_;
+    /** Which direction the character is facing. */
+    char orientation_;
     Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
     double powerCrouch_, powerFire_, powerJump_, powerLeftKick_,
@@ -77,14 +81,21 @@ class CharacterGraphic: public StackGraphic {
 public:
     CharacterGraphic(Character* c);
     ColorModifier* getColourModifier();
+    void update();
 private:
+    char orientation_;
     Character* c_;
-    GraphicFixture bodyFixture_, headFixture_, footBackFixture_,
-            footFrontFixture_, handBackFixture_, handFrontFixture_;
+    GraphicFixture bodyFixture_, headFixture_,
+            footBackFixture_, footFrontFixture_,
+            handBackFixture_, handFrontFixture_;
     ColorModifier bodyColor_;
     float colour_[3];
     SizeModifier scaler_;
-    Sprite body_, head_, footBack_, footFront_, handBack_, handFront_;
+    Sprite bodyLeft_, bodyRight_, headLeft_, headRight_, footBack_, footFront_,
+           handBack_, handFront_;
+    /** Pointer to left- or right-facing sprite, depending on orientation. */
+    Sprite* body_, * head_;
+    bool updateOrientation();
 };
 
 #endif /* CHARACTER_HXX_ */

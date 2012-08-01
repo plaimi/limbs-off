@@ -89,7 +89,9 @@ private:
 class StackGraphic: public Graphic {
 public:
     /** Add a graphic to the top of the stack. */
-    void addGraphic(Graphic* g);
+    void addGraphic(Graphic* g, std::size_t index = -1);
+    /** Removes a graphic from the stack. */
+    std::size_t removeGraphic(Graphic* g);
     void doDraw();
 private:
     std::vector<Graphic*> graphics_;

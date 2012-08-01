@@ -57,6 +57,8 @@ Character::Character(state2p state, phys_t orientation) :
         powerRightPunch_(0.0),
         // Velocity
         vel_(0), velLeft_(0), velRight_(0),
+        // Orientation
+        orientation_('l'),
         // State
         dead_(false) {
     neck_.setPosition(vector2p()(0.0, 0.40));
@@ -70,6 +72,10 @@ Character::Character(state2p state, phys_t orientation) :
 
 bool Character::isDead() {
     return dead_;
+}
+
+char Character::getOrientation() {
+    return orientation_;
 }
 
 double Character::getVel() {
@@ -157,6 +163,10 @@ void Character::rightPunch(bool state) {
     rightPunch_ = state;
 }
 
+void Character::setOrientation(char orientation) {
+    orientation_ = orientation;
+}
+
 void Character::update(double deltaTime) {
     double decay = pow(.2, deltaTime);
     // If crouching, raise the crouching power to a max of 0.75.
@@ -193,6 +203,8 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     vector2p posCharacter = getPosition(), posBody = body->getPosition();
     vector2p legA = posCharacter - posBody;
     phys_t hVel = (getVelocity() - body->getVelocityAt(legA)) / legA.unit();
+    // Set the character's orientation to the direction its body is moving.
+    parent_->setOrientation(hVel > 0 ? 'r' : 'l');
     phys_t angle = legA.angle() - PI / 2 - getOrientation();
     phys_t accel = clampmag(hVel / 8.0 - parent_->vel_, 1.0);
     angle = clampmag(remainder(angle, PI * 2) + accel * PI / 4, PI / 2);
@@ -247,8 +259,15 @@ void Character::CharacterBody::changeMass(phys_t delta) {
 
 CharacterGraphic::CharacterGraphic(Character* c) :
         c_(c),
-        body_(getTexture(PACKAGE_GFX_DIR "character_body.png"), 1.0, 1.0),
-        head_(getTexture(PACKAGE_GFX_DIR "character_head.png"), 0.15, 0.15),
+        body_(&bodyLeft_), head_(&headLeft_),
+        bodyLeft_(getTexture(PACKAGE_GFX_DIR "character_body_left.png"), 1.0,
+                1.0),
+        bodyRight_(getTexture(PACKAGE_GFX_DIR "character_body_right.png"), 1.0,
+                1.0),
+        headLeft_(getTexture(PACKAGE_GFX_DIR "character_head_left.png"), 0.15,
+                0.15),
+        headRight_(getTexture(PACKAGE_GFX_DIR "character_head_right.png"), 0.15,
+                0.15),
         footFront_(getTexture(PACKAGE_GFX_DIR "character_foot.png"), 0.075,
                 0.075),
         footBack_(getTexture(PACKAGE_GFX_DIR "character_foot.png"), 0.075,
@@ -258,20 +277,24 @@ CharacterGraphic::CharacterGraphic(Character* c) :
         bodyFixture_(&c->body_), headFixture_(&c->head_),
         footBackFixture_(&c->footBack_), footFrontFixture_(&c->footFront_),
         handBackFixture_(&c->handBack_), handFrontFixture_(&c->handFront_),
-        bodyColor_(colour_), scaler_(c->body_.getShape()) {
-    // Temporary differentiation of characters.
-    // TODO: Use sprites.
+        bodyColor_(colour_), scaler_(c->body_.getShape()),
+        orientation_(c->getOrientation()) {
     static int n = 0;
     int m = n % 3, d = n / 3, mm = d / 2 % 4, dd = d / 8;
     for (int i = 0; i < 3; i++)
         colour_[i] = (3 * ((m == i) ^ d & 1) ^ ((mm == i + 1) ^ dd & 1)) / 4.0;
     ++n;
 
-    body_.addModifier(&scaler_);
-    body_.addModifier(&bodyFixture_);
-    body_.addModifier(&bodyColor_);
-    head_.addModifier(&headFixture_);
-    head_.addModifier(&bodyColor_);
+    bodyLeft_.addModifier(&scaler_);
+    bodyLeft_.addModifier(&bodyFixture_);
+    bodyLeft_.addModifier(&bodyColor_);
+    bodyRight_.addModifier(&scaler_);
+    bodyRight_.addModifier(&bodyFixture_);
+    bodyRight_.addModifier(&bodyColor_);
+    headLeft_.addModifier(&headFixture_);
+    headLeft_.addModifier(&bodyColor_);
+    headRight_.addModifier(&headFixture_);
+    headRight_.addModifier(&bodyColor_);
     footBack_.addModifier(&footBackFixture_);
     footBack_.addModifier(&bodyColor_);
     footFront_.addModifier(&footFrontFixture_);
@@ -282,12 +305,40 @@ CharacterGraphic::CharacterGraphic(Character* c) :
     handFront_.addModifier(&bodyColor_);
     addGraphic(&handBack_);
     addGraphic(&footBack_);
-    addGraphic(&body_);
-    addGraphic(&head_);
+    addGraphic(body_);
+    addGraphic(head_);
     addGraphic(&footFront_);
     addGraphic(&handFront_);
 }
 
+bool CharacterGraphic::updateOrientation() {
+    char orientation = c_->getOrientation();
+    if (orientation_ == orientation)
+        return false;
+    orientation_ = orientation;
+    return true;
+}
+
 ColorModifier* CharacterGraphic::getColourModifier() {
     return &bodyColor_;
+}
+
+void CharacterGraphic::update() {
+    if (updateOrientation()) {
+        // Remove old graphics.
+        std::size_t oldBody = removeGraphic(body_);
+        std::size_t oldHead = removeGraphic(head_);
+        // Determine whether going left or right.
+        if (orientation_ == 'l') {
+            head_ = &headLeft_;
+            body_ = &bodyLeft_;
+        }
+        else {
+            head_ = &headRight_;
+            body_ = &bodyRight_;
+        }
+        // Add new graphics.
+        addGraphic(head_, oldHead);
+        addGraphic(body_, oldBody);
+    }
 }
