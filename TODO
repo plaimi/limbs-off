@@ -1,9 +1,15 @@
 Major TODOs
 ===========
 
+*!!! Add/remove players via menu
+	alexander alexander@plaimi.net
+
 !!! Artificial intelligence
 
-!!! Character orientation for sprites
+*!!! Clean up controller handling and make it configurable
+	stian stian@plaimi.net
+
+*!!! Configurable options in menu
 	alexander alexander@plaimi.net
 
 !!! Inter-planetary travel via cannons
@@ -14,12 +20,12 @@ Major TODOs
 
 !!! Objects
 
-*!!! Player interaction
-	stian stian@plaimi.net
+!!! Post-match statistics/end screen of sorts
 
 !!! Shooting and weapons
 
-!!! Smooth character movement
+*!!! Smooth character movement
+	stian stian@plaimi.net
 
 *!!! Sound system
 	alexander alexander@plaimi.net
@@ -32,8 +38,6 @@ Minor TODOs
 
 ! 3D Sound
 
-! Add/remove players via menu
-
 ! Camera is a bit borked, so fix camera
 
 ! Characters & character creation
@@ -41,8 +45,6 @@ Minor TODOs
 ! Character models
 
 ! Character types with different strengths to encourage different gameplay
-
-! Clean up controller handling
 
 ! Day/night cycle effect - something to signify time moving forward
 
@@ -69,8 +71,6 @@ Minor TODOs
 ! Planet models
 
 ! Shadows
-
-! Sliders for menus
 
 ! Sounds
 
