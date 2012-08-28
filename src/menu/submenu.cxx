@@ -23,6 +23,6 @@
 Submenu::Submenu() {
 }
 
-void Submenu::addButton(const char* text, int position, bool selected) {
-    buttons.push_back(new Button(text, position, selected));
+void Submenu::addButton(const char* text, bool selected) {
+    buttons.push_back(new Button(text, buttons.size() + 1, selected));
 }

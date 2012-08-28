@@ -27,7 +27,7 @@
 class Submenu {
 public:
     Submenu();
-    void addButton(const char* text, int position, bool selected);
+    void addButton(const char* text, bool selected);
     /** Buttons are hardcoded. */
     std::vector<Button*> buttons;
 };

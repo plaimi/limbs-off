@@ -29,8 +29,8 @@
 Menu::Menu() {
     menus_[MAINMENU] = new Submenu();
     Submenu** mainmenu = menus_ + MAINMENU;
-    (*mainmenu)->addButton("NEW GAME", 1, true);
-    (*mainmenu)->addButton("EXIT GAME", 2, false);
+    (*mainmenu)->addButton("NEW GAME", true);
+    (*mainmenu)->addButton("EXIT GAME",false);
     activeMenu_ = 0;
     activeElement_ = (*mainmenu)->buttons[0];
 #if VERBOSE
