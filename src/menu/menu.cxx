@@ -28,11 +28,16 @@
 
 Menu::Menu() {
     menus_[MAINMENU] = new Submenu();
+    menus_[OPTIONS] = new Submenu();
     Submenu** mainmenu = menus_ + MAINMENU;
-    (*mainmenu)->addButton("NEW GAME", true);
-    (*mainmenu)->addButton("EXIT GAME",false);
-    activeMenu_ = 0;
-    activeElement_ = (*mainmenu)->buttons[0];
+    Submenu** options = menus_ + OPTIONS;
+    (*mainmenu)->addButton("NEW GAME", false);
+    (*mainmenu)->addButton("OPTIONS", false);
+    (*mainmenu)->addButton("EXIT GAME", false);
+    (*options)->addButton("BACK TO MAIN MENU", false);
+    // setActiveMenu calls setActiveElement which needs to use activeElement
+    activeElement_ = NULL;
+    setActiveMenu(MAINMENU);
 #if VERBOSE
     printf("use arrow keys to navigate the menu.\n"
             "make your choice with return or space.\n\n");
@@ -50,6 +55,13 @@ Menu::~Menu() {
 
 int Menu::getActiveMenu() {
     return activeMenu_;
+}
+
+void Menu::setActiveMenu(int menu) {
+    if (menu >= NUM_MENU || menu < 0)
+        return;
+    activeMenu_ = menu;
+    setSelected(menus_[activeMenu_]->buttons[0]);
 }
 
 bool Menu::handle(const SDL_Event &event) {
@@ -71,14 +83,17 @@ bool Menu::handle(const SDL_Event &event) {
         case SDLK_SPACE:
             ; // Fall through
         case SDLK_RETURN:
-            // New game
-            if (activeElement_->getPosition() == 1)
+            char* activeElement = activeElement_->getText();
+            if (!strcmp(activeElement, "NEW GAME"))
                 raiseEvent(NEW_GAME_EVENT);
-            // Exit game
-            else {
+            else if (!strcmp(activeElement, "OPTIONS"))
+                setActiveMenu(OPTIONS);
+            else if (!strcmp(activeElement, "EXIT GAME"))
                 raiseEvent(QUIT_EVENT);
-            }
-            return true;
+            else if (!strcmp(activeElement, "BACK TO MAIN MENU"))
+                setActiveMenu(MAINMENU);
+            return !strcmp(activeElement, "OPTIONS") || !strcmp(activeElement,
+                    "BACK TO MAIN MENU") ? false : true;
         }
     }
     return false;
@@ -102,7 +117,8 @@ void Menu::raiseEvent(EVENT_ID id) {
 }
 
 void Menu::setSelected(Button* selected) {
-    activeElement_->setSelected(false);
+    if (activeElement_)
+        activeElement_->setSelected(false);
     activeElement_ = selected;
     activeElement_->setSelected(true);
 }

@@ -38,6 +38,7 @@ public:
     ~Menu();
     enum {
         MAINMENU,
+        OPTIONS,
         NUM_MENU
     };
     enum EVENT_ID {
@@ -46,6 +47,7 @@ public:
     };
     bool handle(const SDL_Event &event);
     int getActiveMenu();
+    void setActiveMenu(int menu);
     Submenu* getMenu(int menu);
 private:
     Button* getButton(std::vector<Button*> vector, int position);
