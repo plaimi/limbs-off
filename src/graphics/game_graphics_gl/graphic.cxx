@@ -107,7 +107,7 @@ void StackGraphic::addGraphic(Graphic* graphic, std::size_t index) {
     if (index == -1)
         graphics_.push_back(graphic);
     else
-        graphics_.insert(graphics_.begin() + index + 0, graphic);
+        graphics_.insert(graphics_.begin() + index, graphic);
 }
 
 std::size_t StackGraphic::removeGraphic(Graphic* g) {
