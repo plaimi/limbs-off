@@ -51,9 +51,9 @@ public:
     Submenu* getMenu(int menu);
 private:
     Button* getButton(std::vector<Button*> vector, int position);
-    Button* getSelected();
+    Button* getActiveElement();
+    void setActiveElement(Button* active);
     void raiseEvent(EVENT_ID id);
-    void setSelected(Button* selected);
     Button* activeElement_;
     int activeMenu_;
     /** Menus are hardcoded. */

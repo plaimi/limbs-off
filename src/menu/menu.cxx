@@ -61,7 +61,7 @@ void Menu::setActiveMenu(int menu) {
     if (menu >= NUM_MENU || menu < 0)
         return;
     activeMenu_ = menu;
-    setSelected(menus_[activeMenu_]->buttons[0]);
+    setActiveElement(menus_[activeMenu_]->buttons[0]);
 }
 
 bool Menu::handle(const SDL_Event &event) {
@@ -72,12 +72,12 @@ bool Menu::handle(const SDL_Event &event) {
             return false;
         switch (event.key.keysym.sym) {
         case SDLK_DOWN:
-            setSelected(menus_[activeMenu_]->buttons[std::min(
+            setActiveElement(menus_[activeMenu_]->buttons[std::min(
                         activeElement_->getPosition(), 
                         (int) menus_[activeMenu_]->buttons.size() - 1)]);
             break;
         case SDLK_UP:
-            setSelected(menus_[activeMenu_]->buttons[std::max(
+            setActiveElement(menus_[activeMenu_]->buttons[std::max(
                         activeElement_->getPosition() - 2, 0)]);
             break;
         case SDLK_SPACE:
@@ -116,9 +116,9 @@ void Menu::raiseEvent(EVENT_ID id) {
     SDL_PushEvent(&event);
 }
 
-void Menu::setSelected(Button* selected) {
+void Menu::setActiveElement(Button* element) {
     if (activeElement_)
         activeElement_->setSelected(false);
-    activeElement_ = selected;
+    activeElement_ = element;
     activeElement_->setSelected(true);
 }
