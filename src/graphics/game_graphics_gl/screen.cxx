@@ -64,6 +64,9 @@ void Screen::setVideoMode(int width, int height, int depth, bool fullscreen) {
 void Screen::updateVideoMode() {
     surface_ = SDL_SetVideoMode(surfaceWidth_, surfaceHeight_, depth_,
             SDL_OPENGL | (fullscreen_ ? SDL_FULLSCREEN : SDL_RESIZABLE));
+    if (!surface_)
+        printf("\nERROR: SDL_SetVideoMode failed, did you forget\n"
+                "to compile SDL with OpenGL Support?\n\n");
     initGl();
 }
 

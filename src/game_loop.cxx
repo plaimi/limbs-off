@@ -66,6 +66,8 @@ bool GameLoop::handleEvents() {
 
 int GameLoop::run() {
     screen_ = Screen::getInstance();
+    if (!screen_)
+        return 1;
     screen_->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
     limbsOff_ = NULL;
     StepTimer timer;
