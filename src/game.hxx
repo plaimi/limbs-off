@@ -26,7 +26,7 @@
 #include "player.hxx"
 #include "screen_element.hxx"
 
-class Game : public EventHandler {
+class Game: public EventHandler {
 public:
     /** Initialise the game. */
     Game(Screen* screen);
