@@ -23,6 +23,17 @@
 #include "event_code.hxx"
 #include "step_timer.hxx"
 
+GameLoop::GameLoop() :
+        screen_(Screen::getInstance()),
+        prevWidth_(0),
+        prevHeight_(0),
+        limbsOff_(NULL),
+        running_(true),
+        menuP_(true),
+        keystate_(SDL_GetKeyState(NULL)),
+        stepCounter_(0) {
+}
+
 bool GameLoop::handleEvents() {
     SDL_Event event;
     stepCounter_ = 0;
@@ -65,20 +76,14 @@ bool GameLoop::handleEvents() {
 }
 
 int GameLoop::run() {
-    screen_ = Screen::getInstance();
     if (!screen_)
         return 1;
     screen_->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
-    limbsOff_ = NULL;
     StepTimer timer;
     int j = SDL_NumJoysticks();
     for (int i = 0; i < j; ++i)
         SDL_JoystickOpen(i);
     MenuGraphic menugraphic(&menu_);
-    running_ = true;
-    menuP_ = true;
-    keystate_ = SDL_GetKeyState(NULL);
-    stepCounter_ = 0;
     Uint32 time = SDL_GetTicks();
     while (running_) {
         int steps = timer.getStepTime() * STEPS_PER_SECOND;

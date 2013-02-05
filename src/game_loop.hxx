@@ -30,6 +30,7 @@ public:
     static const double MAX_FPS = 200;
     /** Number of simulation steps between each event update. */
     static const int EVENT_INTERVAL = 20;
+    GameLoop();
     int run();
 private:
     bool running_, menuP_;
