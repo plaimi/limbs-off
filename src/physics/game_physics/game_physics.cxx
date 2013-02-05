@@ -73,7 +73,7 @@ void GameUniverse::update(phys_t dt) {
     const phys_t dts[] = { 0.5 * dt, 0.5 * dt, dt };
     std::vector<SmallBody*>::iterator ib, ib2;
     CollisionQueue collisions;
-    for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
+    for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ++ib) {
         SmallBody* b = *ib;
         for (int i = 0; i < 4; i++) {
             vector2p v = b->getVelocity();
@@ -99,7 +99,7 @@ void GameUniverse::update(phys_t dt) {
             Collision c = { t, planet_, b, np, bs, p, n };
             collisions.add(c);
         }
-        for (ib2 = smallBodies_.begin(); ib2 < ib; ib2++) {
+        for (ib2 = smallBodies_.begin(); ib2 < ib; ++ib2) {
             SmallBody* b2 = *ib2;
             if (b->collisionGroup_ == b2->collisionGroup_)
                 continue;
@@ -134,7 +134,7 @@ void GameUniverse::update(phys_t dt) {
         collisionHandler->collide(c.body[0], body1, impulse.length());
         // TODO: Update collision queue
     }
-    for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ib++) {
+    for (ib = smallBodies_.begin(); ib < smallBodies_.end(); ++ib) {
         SmallBody* b = *ib;
         b->setBodyState(b->nextState_);
         vector2p pg, im;
@@ -142,7 +142,7 @@ void GameUniverse::update(phys_t dt) {
             b->applyImpulseAt(im, pg - b->getPosition());
     }
     std::vector<Link*>::iterator il;
-    for (il = links_.begin(); il < links_.end(); il++)
+    for (il = links_.begin(); il < links_.end(); ++il)
         (*il)->update(dt, this);
 }
 

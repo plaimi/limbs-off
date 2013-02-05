@@ -123,11 +123,11 @@ void StackGraphic::doDraw() {
     // Draw all the graphics in the stack in the correct order.
     if (Screen::getInstance()->getDrawingMode() & Screen::DM_FRONT_TO_BACK) {
         std::vector<Graphic*>::reverse_iterator i;
-        for (i = graphics_.rbegin(); i < graphics_.rend(); i++)
+        for (i = graphics_.rbegin(); i < graphics_.rend(); ++i)
             (*i)->draw();
     } else {
         std::vector<Graphic*>::iterator i;
-        for (i = graphics_.begin(); i < graphics_.end(); i++)
+        for (i = graphics_.begin(); i < graphics_.end(); ++i)
             (*i)->draw();
     }
 }
