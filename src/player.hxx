@@ -39,7 +39,6 @@ private:
     ActionType keyBindings_[SDLK_LAST];
     ActionType joyAxisBindings_[256];
     ActionType joyButtonBindings_[256];
-    Uint8 joyDevice_;
 };
 
 #endif /* PLAYER_HXX_ */

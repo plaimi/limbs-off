@@ -143,8 +143,6 @@ private:
     GLuint texture_;
     /** The font size. */
     int size_;
-    /** The font colour. */
-    SDL_Color colour_;
     /** The actual TTF_Font. */
     TTF_Font* font_;
     void drawShadow();

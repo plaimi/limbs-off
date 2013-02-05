@@ -45,7 +45,6 @@ public:
     virtual ~Button();
     char* getText();
 private:
-    bool selected_;
     char* text_;
 };
 
