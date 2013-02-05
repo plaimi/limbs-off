@@ -44,7 +44,7 @@ struct state2 {
     vector2<T> p, v;
     vector2<T>& operator[](unsigned int i);
     const vector2<T>& operator[](unsigned int i) const;
-    const state2<T> operator()(const vector2<T> p0, const vector2<T> v0);
+    const state2<T> operator()(const vector2<T> &p0, const vector2<T> &v0);
     const state2<T> operator()(const T x, const T y, const T vx, const T vy);
     const state2<T> operator-() const;
     const state2<T> operator+(const state2<T>& s) const;

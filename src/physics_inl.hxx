@@ -65,8 +65,8 @@ inline const vector2<T>& state2<T>::operator[](unsigned int i) const {
 }
 
 template<typename T>
-inline const state2<T> state2<T>::operator()(const vector2<T> p0,
-        const vector2<T> v0) {
+inline const state2<T> state2<T>::operator()(const vector2<T> &p0,
+        const vector2<T> &v0) {
     p = p0;
     v = v0;
     return *this;
