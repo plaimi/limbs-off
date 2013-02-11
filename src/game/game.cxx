@@ -47,60 +47,79 @@ bool Game::handle(const SDL_Event& event) {
 }
 
 Game::Game(Screen* screen) :
-    screen_(screen) {
-        tex_ = getTexture(PACKAGE_GFX_DIR "background.png");
-        conceive();
-        for (std::vector<Character*>::const_iterator i = characters_.begin();
-                i != characters_.end(); ++i)
-            (*i)->addToUniverse(universe_);
-        planetDisk_->addModifier(planetFixture_);
-        planetDisk_->getDisk()->addModifier(planetColour_);
-        // Bad hard coding incoming. The game is hard coded for three players.
-        ConfigParser::readBindings(players_[0], 
-                PACKAGE_CFG_DIR "controllers1.conf");
-        ConfigParser::readBindings(players_[1], 
-                PACKAGE_CFG_DIR "controllers2.conf");
-        ConfigParser::readBindings(players_[2], 
-                PACKAGE_CFG_DIR "controllers3.conf");
-        // TODO: When the game is abstracted for more players, fix ^
+        screen_(screen),
+        planets_(),
+        backgroundModifier_(NULL),
+        camera_(NULL),
+        characters_(),
+        characterGraphics_(),
+        planetColour_(NULL),
+        universe_(NULL),
+        tex_(0),
+        planetFixture_(NULL),
+        massIndicatorLabels_(),
+        planetCircle_(NULL),
+        players_(),
+        massIndicatorPosMods_(),
+        scene_(NULL),
+        foreground_(NULL),
+        backgroundSprite_(NULL),
+        planetDisk_(NULL),
+        massIndicators_(),
+        massIndicatorGfx_() {
+    tex_ = getTexture(PACKAGE_GFX_DIR "background.png");
+    conceive();
+    for (std::vector<Character*>::const_iterator i = characters_.begin();
+            i != characters_.end(); ++i)
+        (*i)->addToUniverse(universe_);
+    planetDisk_->addModifier(planetFixture_);
+    planetDisk_->getDisk()->addModifier(planetColour_);
+    // Bad hard coding incoming. The game is hard coded for three players.
+    ConfigParser::readBindings(players_[0],
+            PACKAGE_CFG_DIR "controllers1.conf");
+    ConfigParser::readBindings(players_[1],
+            PACKAGE_CFG_DIR "controllers2.conf");
+    ConfigParser::readBindings(players_[2],
+            PACKAGE_CFG_DIR "controllers3.conf");
+    // TODO: When the game is abstracted for more players, fix ^
 #if VERBOSE
-        printf("controllers player 1:\n"
-                "\t left:       \t\t        left arrow\n"
-                "\t right:      \t\t        right arrow\n"
-                "\t jump:       \t\t        up arrow\n"
-                "\t crouch:     \t\t        down arrow\n"
-                "\t suicide:    \t\t        end\n"
-                "\n"
-                "controllers player 2:\n"
-                "\t left:       \t\t        a\n"
-                "\t right:      \t\t        e\n"
-                "\t jump:       \t\t        ,\n"
-                "\t crouch:     \t\t        o\n"
-                "\t suicide:    \t\t        delete\n"
-                "\n"
-                "controllers player 3:\n"
-                "\t left:       \t\t        left button\n"
-                "\t right:      \t\t        right button\n"
-                "\t jump:       \t\t        up button\n"
-                "\t crouch:     \t\t        down button\n"
-                "\t suicide:    \t\t        triangle\n\n"
-                "\t note: these buttons are for the Sony Sixaxis\n"
-                "\t and are not guaranteed to work with other gamepads.\n\n");
-        printf("press escape to bring up the menu again.\n"
-                "press escape again to close it.\n\n\n\n");
+    printf("controllers player 1:\n"
+            "\t left:       \t\t        left arrow\n"
+            "\t right:      \t\t        right arrow\n"
+            "\t jump:       \t\t        up arrow\n"
+            "\t crouch:     \t\t        down arrow\n"
+            "\t suicide:    \t\t        end\n"
+            "\n"
+            "controllers player 2:\n"
+            "\t left:       \t\t        a\n"
+            "\t right:      \t\t        e\n"
+            "\t jump:       \t\t        ,\n"
+            "\t crouch:     \t\t        o\n"
+            "\t suicide:    \t\t        delete\n"
+            "\n"
+            "controllers player 3:\n"
+            "\t left:       \t\t        left button\n"
+            "\t right:      \t\t        right button\n"
+            "\t jump:       \t\t        up button\n"
+            "\t crouch:     \t\t        down button\n"
+            "\t suicide:    \t\t        triangle\n\n"
+            "\t note: these buttons are for the Sony Sixaxis\n"
+            "\t and are not guaranteed to work with other gamepads.\n\n");
+    printf("press escape to bring up the menu again.\n"
+            "press escape again to close it.\n\n\n\n");
 #endif
-        backgroundSprite_->addModifier(backgroundModifier_);
-        scene_->addGraphic(backgroundSprite_);
-        foreground_->addGraphic(planetDisk_);
-        for (std::vector<CharacterGraphic*>::const_iterator i = 
-                characterGraphics_.begin(); i != characterGraphics_.end(); ++i)
-            foreground_->addGraphic(*i);
-        foreground_->addModifier(camera_);
-        scene_->addGraphic(foreground_);
-        for (std::vector<MassIndicatorGraphic*>::const_iterator i =
-                massIndicatorGfx_.begin();
-                i != massIndicatorGfx_.end(); ++i)
-            scene_->addGraphic(*i);
+    backgroundSprite_->addModifier(backgroundModifier_);
+    scene_->addGraphic(backgroundSprite_);
+    foreground_->addGraphic(planetDisk_);
+    for (std::vector<CharacterGraphic*>::const_iterator i =
+            characterGraphics_.begin(); i != characterGraphics_.end(); ++i)
+        foreground_->addGraphic(*i);
+    foreground_->addModifier(camera_);
+    scene_->addGraphic(foreground_);
+    for (std::vector<MassIndicatorGraphic*>::const_iterator i =
+            massIndicatorGfx_.begin();
+            i != massIndicatorGfx_.end(); ++i)
+        scene_->addGraphic(*i);
 }
 
 Game::~Game() {

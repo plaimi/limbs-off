@@ -88,6 +88,7 @@ private:
 
 class StackGraphic: public Graphic {
 public:
+    StackGraphic();
     /** Add a graphic to the top of the stack. */
     void addGraphic(Graphic* g, std::size_t index = -1);
     /** Removes a graphic from the stack. */
@@ -108,6 +109,7 @@ private:
 
 class ScreenGraphic: public Graphic {
 public:
+    ScreenGraphic();
     GLfloat getHeight();
     GLfloat getWidth();
     ScreenElement* getLogic();

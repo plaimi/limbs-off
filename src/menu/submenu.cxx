@@ -20,7 +20,8 @@
 #include <GL/glu.h>
 #include "menu.hxx"
 
-Submenu::Submenu() {
+Submenu::Submenu() :
+        buttons() {
 }
 
 void Submenu::addButton(const char* text, bool selected) {

@@ -137,6 +137,7 @@ public:
 
 class CollisionQueue {
 public:
+    CollisionQueue();
     void add(Collision c);
     Collision pop();
     bool empty();

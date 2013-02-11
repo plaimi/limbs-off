@@ -20,7 +20,9 @@
 #include "step_timer.hxx"
 
 StepTimer::StepTimer() :
-    time_(0.0), targetTime_(0.0), deltaTargetTime_(0.0) {
+        time_(0.0),
+        targetTime_(0.0),
+        deltaTargetTime_(0.0) {
 }
 
 void StepTimer::targetTime(double dt) {

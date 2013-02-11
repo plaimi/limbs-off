@@ -21,6 +21,10 @@
 
 CollisionHandler* CollisionHandler::instance_ = NULL;
 
+CollisionHandler::CollisionHandler() :
+        monitored_() {
+}
+
 CollisionHandler* CollisionHandler::getInstance() {
     if (!instance_)
         instance_ = new CollisionHandler();

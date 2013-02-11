@@ -25,7 +25,7 @@
 #include "geometry.hxx"
 
 GraphicFixture::GraphicFixture(Body* body) :
-    body_(body) {
+        body_(body) {
 }
 
 void GraphicFixture::begin() {
@@ -41,7 +41,7 @@ void GraphicFixture::end() {
 }
 
 ColorModifier::ColorModifier(const float* color) :
-    color_(color) {
+        color_(color) {
 }
 
 void ColorModifier::begin() {
@@ -54,7 +54,7 @@ void ColorModifier::end() {
 }
 
 BackgroundModifier::BackgroundModifier(Camera* camera) :
-    camera_(camera) {
+        camera_(camera) {
 }
 
 void BackgroundModifier::begin() {
@@ -72,7 +72,10 @@ void BackgroundModifier::end() {
 
 PositionModifier::PositionModifier(int position, int num, bool horizontalP,
         float offset) :
-    position_(position), num_(num), horizontalP_(horizontalP), offset_(offset) {
+        position_(position),
+        num_(num),
+        horizontalP_(horizontalP),
+        offset_(offset) {
 }
 
 void PositionModifier::begin() {
@@ -90,7 +93,7 @@ void PositionModifier::end() {
 }
 
 SizeModifier::SizeModifier(Shape<phys_t>* shape) :
-    shape_((Circle<phys_t>*) shape)  {
+        shape_((Circle<phys_t>*) shape)  {
 }
 
 void SizeModifier::begin() {
@@ -101,6 +104,10 @@ void SizeModifier::begin() {
 
 void SizeModifier::end() {
     glPopMatrix();
+}
+
+StackGraphic::StackGraphic() :
+        graphics_() {
 }
 
 void StackGraphic::addGraphic(Graphic* graphic, std::size_t index) {
@@ -133,7 +140,9 @@ void StackGraphic::doDraw() {
 }
 
 Sprite::Sprite(GLuint texture, GLfloat w, GLfloat h) :
-    texture_(texture), w_(w), h_(h) {
+        texture_(texture),
+        w_(w),
+        h_(h) {
 }
 
 void Sprite::doDraw() {
@@ -155,6 +164,12 @@ void Sprite::doDraw() {
     glPopMatrix();
 }
 
+ScreenGraphic::ScreenGraphic() :
+        width_(0),
+        height_(0),
+        logic_(NULL) {
+}
+
 GLfloat ScreenGraphic::getHeight() {
     return height_;
 }
@@ -174,16 +189,21 @@ void ScreenGraphic::setSize(GLfloat w, GLfloat h) {
 
 Label::Label(const char* face, const char* text, int size, GLfloat width,
         GLfloat height) :
-    face_(NULL), size_(size), width_(width), height_(height), font_(NULL) {
-        TTF_Init();
-        if (!TTF_WasInit() && TTF_Init() == -1) {
-            printf("error initialising fontconfig: %s\n", TTF_GetError());
-            exit(1);
-        }
-        text_ = (char*) malloc(strlen(text) + 1);
-        strcpy(text_, text);
-        texture_ = 0;
-        setFace(face);
+        face_(NULL),
+        size_(size),
+        width_(width),
+        height_(height),
+        font_(NULL),
+        text_(NULL),
+        texture_(0) {
+    TTF_Init();
+    if (!TTF_WasInit() && TTF_Init() == -1) {
+        printf("error initialising fontconfig: %s\n", TTF_GetError());
+        exit(1);
+    }
+    text_ = (char*) malloc(strlen(text) + 1);
+    strcpy(text_, text);
+    setFace(face);
 }
 
 Label::~Label() {
@@ -284,7 +304,9 @@ void Label::setText(const char* text) {
 }
 
 Disk::Disk(GLfloat r, int n) :
-    r_(r), n_(n), displayList_(0) {
+        r_(r),
+        n_(n),
+        displayList_(0) {
 }
 
 void Disk::doDraw() {
@@ -316,7 +338,8 @@ void Disk::makeDisplayList() {
 }
 
 TestDisk::TestDisk(GLfloat r, int n) :
-    disk_(r, n), square_(r, 4) {
+        disk_(r, n),
+        square_(r, 4) {
     addGraphic(&disk_);
     addGraphic(&square_);
 }
@@ -379,7 +402,9 @@ void ButtonGraphic::doDraw() {
 }
 
 SubmenuGraphic::SubmenuGraphic(Submenu* submenu) :
-    submenu_(submenu) {
+        submenu_(submenu),
+        buttonGraphics_(),
+        positionModifiers_() {
 }
 
 SubmenuGraphic::~SubmenuGraphic() {
@@ -406,22 +431,23 @@ void SubmenuGraphic::addButton(Button* logic, Label* label,
 }
 
 MenuGraphic::MenuGraphic(Menu* menu) :
-    menu_(menu) {
-        for (int i = 0; i < Menu::NUM_MENU; ++i) {
-            // Create a new SubmenuGraphic for each Submenu
-            menuGraphics_[i] = new SubmenuGraphic(menu->getMenu(i));
-            Submenu* submenu = menu->getMenu(i);
-            // Add buttons and labels
-            char font[256];
-            getFont(font, sizeof(font));
-            for (std::vector<Button*>::iterator j =
-                    submenu->buttons.begin(); j < submenu->buttons.end(); ++j) {
-                labels_.push_back(new Label(font, ((Button*) (*j))->getText(), 
-                            74, .5, .1));
-                menuGraphics_[i]->addButton((*j), labels_.back(), 
-                        (*j)->isSelected());
-            }
+        menu_(menu),
+        labels_() {
+    for (int i = 0; i < Menu::NUM_MENU; ++i) {
+        // Create a new SubmenuGraphic for each Submenu
+        menuGraphics_[i] = new SubmenuGraphic(menu->getMenu(i));
+        Submenu* submenu = menu->getMenu(i);
+        // Add buttons and labels
+        char font[256];
+        getFont(font, sizeof(font));
+        for (std::vector<Button*>::iterator j =
+                submenu->buttons.begin(); j < submenu->buttons.end(); ++j) {
+            labels_.push_back(new Label(font, ((Button*) (*j))->getText(),
+                        74, .5, .1));
+            menuGraphics_[i]->addButton((*j), labels_.back(),
+                    (*j)->isSelected());
         }
+    }
 }
 
 MenuGraphic::~MenuGraphic() {

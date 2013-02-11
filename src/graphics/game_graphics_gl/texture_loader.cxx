@@ -31,7 +31,8 @@ TextureLoader* TextureLoader::getInstance() {
     return instance_;
 }
 
-TextureLoader::TextureLoader() {
+TextureLoader::TextureLoader() :
+        loaded_() {
 }
 
 GLuint TextureLoader::getTexture(const char* filename) {

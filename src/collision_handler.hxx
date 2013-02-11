@@ -26,6 +26,7 @@
 
 class CollisionHandler {
 public:
+    CollisionHandler();
     /** Create or return a singleton. */
     static CollisionHandler* getInstance();
     void collide(Body* body0, Body* body1, phys_t impulse);

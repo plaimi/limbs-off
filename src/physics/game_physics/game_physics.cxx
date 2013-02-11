@@ -25,7 +25,9 @@
 
 SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
         phys_t moi, Shape<phys_t>* shape, int collisionGroup) :
-    Body(s, mass, orientation, av, moi, shape), collisionGroup_(collisionGroup) {
+        Body(s, mass, orientation, av, moi, shape),
+        nextState_(getBodyState()),
+        collisionGroup_(collisionGroup) {
 }
 
 bool SmallBody::interact(AstroBody* b, double dt, vector2p& p, vector2p& im) {
@@ -59,12 +61,15 @@ bodystate SmallBody::getNextState(phys_t dt) {
 }
 
 AstroBody::AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape) :
-    Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av, moi, shape, true),
+        Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av, moi, shape,
+                true),
         gm(gm) {
 }
 
 GameUniverse::GameUniverse(AstroBody* planet) :
-    planet_(planet) {
+        planet_(planet),
+        smallBodies_(),
+        links_() {
 }
 
 void GameUniverse::update(phys_t dt) {
@@ -166,7 +171,8 @@ void GameUniverse::applyAngularImpulse(SmallBody* a, SmallBody* b, phys_t im) {
 }
 
 Link::Link(SmallBody* a, SmallBody* b) :
-    a_(a), b_(b) {
+        a_(a),
+        b_(b) {
 }
 
 FixtureSpring::FixtureSpring(SmallBody* a, SmallBody* b, phys_t lStiff,

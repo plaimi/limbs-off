@@ -31,7 +31,8 @@ GameLoop::GameLoop() :
         running_(true),
         menuP_(true),
         keystate_(SDL_GetKeyState(NULL)),
-        stepCounter_(0) {
+        stepCounter_(0),
+        menu_() {
 }
 
 bool GameLoop::handleEvents() {

@@ -19,6 +19,10 @@
 
 #include "physics.hxx"
 
+CollisionQueue::CollisionQueue() :
+        collisions_() {
+}
+
 void CollisionQueue::add(Collision c) {
     std::list<Collision>::iterator other, end = collisions_.end();
     for (other = collisions_.begin(); other != end; ++other) {

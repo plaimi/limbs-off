@@ -22,6 +22,10 @@
 GraphicModifier::~GraphicModifier() {
 }
 
+Graphic::Graphic() :
+        modifiers_() {
+}
+
 Graphic::~Graphic() {
 }
 

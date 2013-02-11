@@ -23,8 +23,13 @@
 #include "graphics/game_graphics_gl.hxx"
 
 Camera::Camera(state2p state, GLfloat radius, GLfloat rotation) :
-    state_(state), targetState_(state), radius_(radius), targetRadius_(radius),
-            rotation_(rotation), targetRotation_(rotation), rotationSpeed_(0) {
+        state_(state),
+        targetState_(state),
+        radius_(radius),
+        targetRadius_(radius),
+        rotation_(rotation),
+        targetRotation_(rotation),
+        rotationSpeed_(0) {
 }
 
 state2p Camera::getState() {

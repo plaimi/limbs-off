@@ -65,6 +65,8 @@ public:
         return type_;
     }
 protected:
+    Shape(ShapeType type) :
+            type_(type) { }
     ShapeType type_;
 };
 
@@ -72,9 +74,8 @@ template<typename T>
 class Circle: public Shape<T> {
 public:
     Circle(T radius) :
-        radius_(radius) {
-        Shape<T>::type_ = CIRCLE;
-    }
+            Shape<T>(CIRCLE),
+            radius_(radius) { }
     T getRadius() {
         return radius_;
     }

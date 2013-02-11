@@ -32,6 +32,7 @@ public:
 
 class Graphic {
 public:
+    Graphic();
     virtual ~Graphic() = 0;
     /** Draws the graphic without modifiers. */
     virtual void doDraw() = 0;

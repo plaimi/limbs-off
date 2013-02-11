@@ -26,7 +26,10 @@
 #include "event_code.hxx"
 #include "menu.hxx"
 
-Menu::Menu() {
+Menu::Menu() :
+        // setActiveMenu calls setActiveElement which needs activeElement
+        activeElement_(NULL),
+        activeMenu_(0) {
     menus_[MAINMENU] = new Submenu();
     menus_[OPTIONS] = new Submenu();
     Submenu** mainmenu = menus_ + MAINMENU;
@@ -35,8 +38,6 @@ Menu::Menu() {
     (*mainmenu)->addButton("OPTIONS", false);
     (*mainmenu)->addButton("EXIT GAME", false);
     (*options)->addButton("BACK TO MAIN MENU", false);
-    // setActiveMenu calls setActiveElement which needs to use activeElement
-    activeElement_ = NULL;
     setActiveMenu(MAINMENU);
 #if VERBOSE
     printf("use arrow keys to navigate the menu.\n"

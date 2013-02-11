@@ -111,7 +111,7 @@ void Screen::initGl() {
 }
 
 Screen::Screen() :
-    drawingMode_(0) {
+        drawingMode_(0) {
 }
 
 void Screen::setDrawingMode(int mode, int mask, bool update) {

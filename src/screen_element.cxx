@@ -21,12 +21,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+ScreenElement::ScreenElement() :
+        position_(0) {
+}
+
 int ScreenElement::getPosition() {
     return position_;
 }
 
 void ScreenElement::setPosition(int pos) {
     position_ = pos;
+}
+
+GuiElement::GuiElement() :
+        selected_(false) {
 }
 
 bool GuiElement::isSelected() {
@@ -37,7 +45,8 @@ void GuiElement::setSelected(bool selected) {
     selected_ = selected;
 }
 
-Button::Button(const char* text, int position, bool selected) {
+Button::Button(const char* text, int position, bool selected) :
+        text_(NULL) {
     text_ = (char*) malloc(strlen(text) + 1);
     strcpy(text_, text);
     setSelected(selected);
