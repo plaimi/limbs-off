@@ -50,6 +50,8 @@ public:
     void setActiveMenu(int menu);
     Submenu* getMenu(int menu);
 private:
+    Menu& operator=(const Menu&);
+    Menu(const Menu&);
     Button* getButton(std::vector<Button*> vector, int position);
     Button* getActiveElement();
     void setActiveElement(Button* active);

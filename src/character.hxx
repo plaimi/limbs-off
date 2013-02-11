@@ -36,6 +36,9 @@ public:
         Character* parent_;
         phys_t walkCycle_;
         bool interact(AstroBody* b, double dt, vector2p& p, vector2p& im);
+    private:
+        CharacterBody(const CharacterBody&);
+        CharacterBody& operator=(const CharacterBody&);
     };
     Character(state2p state, phys_t orientation);
     void addToUniverse(GameUniverse* u);
@@ -83,6 +86,8 @@ public:
     ColorModifier* getColourModifier();
     void update();
 private:
+    CharacterGraphic(const CharacterGraphic&);
+    CharacterGraphic& operator=(const CharacterGraphic&);
     char orientation_;
     Character* c_;
     GraphicFixture bodyFixture_, headFixture_,

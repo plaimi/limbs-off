@@ -33,6 +33,8 @@ public:
     GameLoop();
     int run();
 private:
+    GameLoop(const GameLoop&);
+    GameLoop& operator=(const GameLoop&);
     bool running_, menuP_;
     Screen* screen_;
     Game* limbsOff_;

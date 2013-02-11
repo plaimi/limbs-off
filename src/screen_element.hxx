@@ -45,6 +45,8 @@ public:
     virtual ~Button();
     char* getText();
 private:
+    Button& operator=(const Button&);
+    Button(const Button&);
     char* text_;
 };
 

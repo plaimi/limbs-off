@@ -28,6 +28,9 @@ public:
     virtual ~Actor() { }
 protected:
     Character* character_;
+private:
+    Actor(const Actor&);
+    Actor& operator=(const Actor&);
 };
 
 #endif /* ACTOR_HXX_ */

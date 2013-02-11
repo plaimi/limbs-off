@@ -117,6 +117,9 @@ protected:
     void applyImpulseAt(vector2p i, vector2p p);
     void setBodyState(bodystate s);
     friend class Universe;
+private:
+    Body(const Body&);
+    Body& operator=(const Body&);
 };
 
 class Universe {

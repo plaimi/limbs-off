@@ -40,6 +40,8 @@ public:
     void updateCamera(GLfloat dt);
     void draw();
 private:
+    Game(const Game&);
+    Game& operator=(const Game&);
     /** Max player characters. */
     static const int MAX_PC;
     /** Max planets. */

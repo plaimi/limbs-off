@@ -43,6 +43,8 @@ public:
     void begin();
     void end();
 private:
+    GraphicFixture(const GraphicFixture&);
+    GraphicFixture& operator=(const GraphicFixture&);
     Body* body_;
 };
 
@@ -52,6 +54,8 @@ public:
     void begin();
     void end();
 private:
+    ColorModifier(const ColorModifier&);
+    ColorModifier& operator=(const ColorModifier&);
     const float* color_;
 };
 
@@ -61,6 +65,8 @@ public:
     void begin();
     void end();
 private:
+    BackgroundModifier(const BackgroundModifier&);
+    BackgroundModifier& operator=(const BackgroundModifier&);
     Camera* camera_;
 };
 
@@ -83,6 +89,8 @@ public:
     void end();
     void scale();
 private:
+    SizeModifier(const SizeModifier&);
+    SizeModifier& operator=(const SizeModifier&);
     Circle<phys_t>* shape_;
 };
 
@@ -118,6 +126,9 @@ protected:
     GLfloat width_, height_;
     /** The logic of the graphic. */
     ScreenElement* logic_;
+private:
+    ScreenGraphic(const ScreenGraphic&);
+    ScreenGraphic& operator=(const ScreenGraphic&);
 };
 
 class Label: public Graphic {
@@ -133,6 +144,8 @@ public:
     void setSize(int size);
     void setText(const char* text);
 private:
+    Label(const Label&);
+    Label& operator=(const Label&);
     /** The font name. */
     char* face_;
     /** The actual text printed. */
@@ -175,6 +188,9 @@ public:
             Label* label = NULL);
     Label* const label;
     void doDraw();
+private:
+    MassIndicatorGraphic(const MassIndicatorGraphic&);
+    MassIndicatorGraphic& operator=(const MassIndicatorGraphic&);
 };
 
 class ButtonGraphic: public ScreenGraphic {
@@ -185,6 +201,9 @@ public:
     /** The button's label if any. */
     Label* const label;
     void doDraw();
+private:
+    ButtonGraphic(const ButtonGraphic&);
+    ButtonGraphic& operator=(const ButtonGraphic&);
 };
 
 class SubmenuGraphic: public StackGraphic {
@@ -194,6 +213,8 @@ public:
     /** Add a button to buttonGraphics_ and to graphics_. */
     void addButton(Button* logic, Label* label = NULL, bool selected = false);
 private:
+    SubmenuGraphic(const SubmenuGraphic&);
+    SubmenuGraphic& operator=(const SubmenuGraphic&);
     /** The logic. */
     Submenu* submenu_;
     /** The buttons to draw. */
@@ -208,6 +229,8 @@ public:
     ~MenuGraphic();
     void doDraw();
 private:
+    MenuGraphic(const MenuGraphic&);
+    MenuGraphic& operator=(const MenuGraphic&);
     /** The logic. */
     Menu* menu_;
     /** The menus to draw. */

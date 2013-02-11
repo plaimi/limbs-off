@@ -61,6 +61,9 @@ public:
 protected:
     SmallBody* const a_;
     SmallBody* const b_;
+private:
+    Link(const Link&);
+    Link& operator=(const Link&);
 };
 
 class GameUniverse: public Universe {
@@ -72,6 +75,8 @@ public:
     void applyImpulse(SmallBody* a, SmallBody* b, vector2p im, vector2p pos);
     void applyAngularImpulse(SmallBody* a, SmallBody* b, phys_t im);
 private:
+    GameUniverse(const GameUniverse&);
+    GameUniverse& operator=(const GameUniverse&);
     AstroBody* planet_;
     std::vector<SmallBody*> smallBodies_;
     std::vector<Link*> links_;
