@@ -91,9 +91,9 @@ the optional body, in which you further detail your commit if necessary. The
 title should be no more than fifty characters.
 
 For grammatical tense our rules are basically - don't do it. A commit log is 
-always in the infinitive form. NEVER PAST OR PRESENT.  So, "Add stuff", not 
+always in the imperative mood. NEVER PAST OR PRESENT.  So, "Add stuff", not 
 "Added stuff" or "Adds stuff". This is because we want to read what a commit 
-will do, and it makes more sense if it is in the infinitive form. This is what 
+will do, and it makes more sense if it is on the imperative mood. This is what 
 generated commit messages (e.g. by git merge) looks like as well.
 
 Cap your width to seventy-two characters.
