@@ -25,6 +25,7 @@
 class Actor {
 public:
     Actor(Character* character);
+    virtual ~Actor() { }
 protected:
     Character* character_;
 };

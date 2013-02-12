@@ -22,6 +22,7 @@
 
 class ScreenElement {
 public:
+    virtual ~ScreenElement() { }
     int getPosition();
     void setPosition(int pos);
 protected:
@@ -39,7 +40,7 @@ protected:
 class Button: public GuiElement {
 public:
     Button(const char* text, int position, bool selected = false);
-    ~Button();
+    virtual ~Button();
     char* getText();
 private:
     bool selected_;

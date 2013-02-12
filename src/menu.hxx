@@ -35,7 +35,7 @@ public:
 class Menu: public EventHandler {
 public:
     Menu();
-    ~Menu();
+    virtual ~Menu();
     enum {
         MAINMENU,
         OPTIONS,

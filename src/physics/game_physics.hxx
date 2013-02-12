@@ -55,6 +55,7 @@ public:
 
 class Link {
 public:
+    virtual ~Link() { }
     Link(SmallBody* a, SmallBody* b);
     virtual void update(phys_t dt, class GameUniverse* u) = 0;
 protected:

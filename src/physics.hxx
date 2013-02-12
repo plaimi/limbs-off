@@ -121,6 +121,7 @@ protected:
 
 class Universe {
 public:
+    virtual ~Universe() { }
     virtual void update(phys_t dt) = 0;
 };
 

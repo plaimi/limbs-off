@@ -30,7 +30,7 @@ class Game: public EventHandler {
 public:
     /** Initialise the game. */
     Game(Screen* screen);
-    ~Game();
+    virtual ~Game();
     /** Handle input. */
     bool handle(const SDL_Event& event);
     /** Create objects. */

@@ -24,6 +24,7 @@
 
 class EventHandler {
 public:
+    virtual ~EventHandler() { }
     /** Treat input event. */
     virtual bool handle(const SDL_Event& event) = 0;
 };

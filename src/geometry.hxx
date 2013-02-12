@@ -60,6 +60,7 @@ enum ShapeType {
 template<typename T>
 class Shape {
 public:
+    virtual ~Shape() { }
     ShapeType getType() {
         return type_;
     }
