@@ -1,4 +1,5 @@
-/* vim: set textwidth=78 formatoptions=actw2 autoindent: */
+/* vim: set tw=78 fo=actw2 sts=4 et ai: */
+
 Code Style
 ==========
 
@@ -65,6 +66,15 @@ directory for those files. It should rarely be necessary, but see the
 directory style that's already there for some clues. The best thing to do is 
 probably to email a core developer from AUTHORS to discuss it properly. Either 
 one should be able to help you decide.
+
+-Initialiser lists
+There are no pretty ways of doing this. We do this:
+Foo::Foo(int i, int j, int k) :
+        bar_(i),
+        foobar_(j),
+        fubaz_(k) {
+    lulz{);
+}
 
 -"do while"s
 "while"-part of do-whiles are on the same line as '}'.
