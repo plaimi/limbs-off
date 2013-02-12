@@ -25,11 +25,11 @@
 class GameLoop {
 public:
     /** Number of steps simulated per second. */
-    static const double STEPS_PER_SECOND = 600;
+    static const double _STEPS_PER_SECOND = 600;
     /** Max frames per second. */
-    static const double MAX_FPS = 200;
+    static const double _MAX_FPS = 200;
     /** Number of simulation steps between each event update. */
-    static const int EVENT_INTERVAL = 20;
+    static const int _EVENT_INTERVAL = 20;
     GameLoop();
     int run();
 private:

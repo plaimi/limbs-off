@@ -43,21 +43,21 @@ private:
     Game(const Game&);
     Game& operator=(const Game&);
     /** Max player characters. */
-    static const int MAX_PC;
+    static const int _MAX_PC;
     /** Max planets. */
-    static const int MAX_PLAN;
+    static const int _MAX_PLAN;
     /** Number of players. */
-    static const int NUM_PLAYERS;
+    static const int _NUM_PLAYERS;
     /** Planet colour. */
-    static const float COL_PLANET[];
+    static const float _COL_PLANET[];
     /** Planet gravity "mass". */
-    static const phys_t GM;
+    static const phys_t _GM;
     /** Orbit radius. */
-    static const phys_t R;
+    static const phys_t _R;
     /** Orbit speed. */
-    static const phys_t S;
+    static const phys_t _S;
     /** Planet radius. */
-    static const phys_t PR;
+    static const phys_t _PR;
     std::vector<AstroBody*> planets_;
     BackgroundModifier* backgroundModifier_;
     Camera* camera_;

@@ -29,14 +29,14 @@
 #include "menu.hxx"
 #include "config_parser.hxx"
 
-const int Game::MAX_PC = 16;
-const int Game::MAX_PLAN = 1;
-const int Game::NUM_PLAYERS = 3;
-const float Game::COL_PLANET[] = { 0.4, 0.8, 0.4 };
-const phys_t Game::GM = 628;
-const phys_t Game::R = 9.0;
-const phys_t Game::S = sqrt<phys_t> (GM / R) * 0.5;
-const phys_t Game::PR = 7.0;
+const int Game::_MAX_PC = 16;
+const int Game::_MAX_PLAN = 1;
+const int Game::_NUM_PLAYERS = 3;
+const float Game::_COL_PLANET[] = { 0.4, 0.8, 0.4 };
+const phys_t Game::_GM = 628;
+const phys_t Game::_R = 9.0;
+const phys_t Game::_S = sqrt<phys_t> (_GM / _R) * 0.5;
+const phys_t Game::_PR = 7.0;
 
 bool Game::handle(const SDL_Event& event) {
     // Input
@@ -162,9 +162,9 @@ Game::~Game() {
 
 void Game::conceive() {
     // Characters
-    phys_t angle = 2 * PI / NUM_PLAYERS;
-    vector2p pos = { R, 0 }, vel = { 0, S }, a = vector2p::fromAngle(angle);
-    for (int i = 0; i < NUM_PLAYERS; ++i) {
+    phys_t angle = 2 * PI / _NUM_PLAYERS;
+    vector2p pos = { _R, 0 }, vel = { 0, _S }, a = vector2p::fromAngle(angle);
+    for (int i = 0; i < _NUM_PLAYERS; ++i) {
         characters_.push_back(new Character(state2p()(pos, vel), i * angle));
         players_.push_back(new Player(characters_[i]));
         characterGraphics_.push_back(new CharacterGraphic(characters_[i]));
@@ -178,7 +178,7 @@ void Game::conceive() {
         massIndicatorGfx_.push_back(new MassIndicatorGraphic(0.05f, 0.02f,
                     massIndicators_[i], massIndicatorLabels_[i]));
         massIndicatorPosMods_.push_back(new PositionModifier(i + 1,
-                    NUM_PLAYERS, true, -0.9));
+                    _NUM_PLAYERS, true, -0.9));
         massIndicatorGfx_[i]->addModifier(massIndicatorPosMods_[i]);
         massIndicatorGfx_[i]->addModifier(
                 characterGraphics_[i]->getColourModifier());
@@ -186,15 +186,15 @@ void Game::conceive() {
         vel.rotate(a);
     }
     // Planets
-    planetCircle_ = new Circle<phys_t> (PR);
-    planets_.push_back(new AstroBody(GM, 2 * GM * PR * PR / 5, -0.05, 
+    planetCircle_ = new Circle<phys_t> (_PR);
+    planets_.push_back(new AstroBody(_GM, 2 * _GM * _PR * _PR / 5, -0.05, 
                 planetCircle_));
     universe_ = new GameUniverse(planets_[0]);
     // Graphics
     backgroundSprite_ = new Sprite(tex_, 1, 1);
     foreground_ = new StackGraphic();
-    planetColour_ = new ColorModifier(COL_PLANET);
-    planetDisk_ = new TestDisk(PR, 64);
+    planetColour_ = new ColorModifier(_COL_PLANET);
+    planetDisk_ = new TestDisk(_PR, 64);
     planetFixture_ = new GraphicFixture(planets_[0]);
     scene_ = new StackGraphic();
     // Camera

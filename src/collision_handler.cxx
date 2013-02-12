@@ -19,16 +19,16 @@
 
 #include "collision_handler.hxx"
 
-CollisionHandler* CollisionHandler::instance_ = NULL;
+CollisionHandler* CollisionHandler::_instance_ = NULL;
 
 CollisionHandler::CollisionHandler() :
         monitored_() {
 }
 
 CollisionHandler* CollisionHandler::getInstance() {
-    if (!instance_)
-        instance_ = new CollisionHandler();
-    return instance_;
+    if (!_instance_)
+        _instance_ = new CollisionHandler();
+    return _instance_;
 }
 
 void CollisionHandler::collide(Body* body0, Body* body1, phys_t impulse) {

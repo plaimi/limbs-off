@@ -23,12 +23,12 @@
 
 const GLint FORMAT[] = { GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA };
 
-TextureLoader* TextureLoader::instance_ = 0;
+TextureLoader* TextureLoader::_instance_ = 0;
 
 TextureLoader* TextureLoader::getInstance() {
-    if (!instance_ && Screen::getInstance())
-        instance_ = new TextureLoader();
-    return instance_;
+    if (!_instance_ && Screen::getInstance())
+        _instance_ = new TextureLoader();
+    return _instance_;
 }
 
 TextureLoader::TextureLoader() :

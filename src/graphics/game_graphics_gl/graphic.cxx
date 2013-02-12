@@ -128,7 +128,7 @@ std::size_t StackGraphic::removeGraphic(Graphic* g) {
 
 void StackGraphic::doDraw() {
     // Draw all the graphics in the stack in the correct order.
-    if (Screen::getInstance()->getDrawingMode() & Screen::DM_FRONT_TO_BACK) {
+    if (Screen::getInstance()->getDrawingMode() & Screen::_DM_FRONT_TO_BACK) {
         std::vector<Graphic*>::reverse_iterator i;
         for (i = graphics_.rbegin(); i < graphics_.rend(); ++i)
             (*i)->draw();
@@ -146,7 +146,7 @@ Sprite::Sprite(GLuint texture, GLfloat w, GLfloat h) :
 }
 
 void Sprite::doDraw() {
-    Screen::getInstance()->setDrawingMode(-1, Screen::DM_PREMUL);
+    Screen::getInstance()->setDrawingMode(-1, Screen::_DM_PREMUL);
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_);
@@ -224,7 +224,7 @@ GLfloat Label::getWidth() {
 }
 
 void Label::doDraw() {
-    Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
+    Screen::getInstance()->setDrawingMode(0, Screen::_DM_PREMUL);
     glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, texture_);
@@ -310,7 +310,7 @@ Disk::Disk(GLfloat r, int n) :
 }
 
 void Disk::doDraw() {
-    Screen::getInstance()->setDrawingMode(0, Screen::DM_PREMUL);
+    Screen::getInstance()->setDrawingMode(0, Screen::_DM_PREMUL);
     if (displayList_ == 0)
         makeDisplayList();
     else

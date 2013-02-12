@@ -21,57 +21,57 @@
 #include <SDL/SDL.h>
 #include "graphics/game_graphics_gl.hxx"
 
-bool Screen::fullscreen_ = false;
-int Screen::surfaceWidth_ = 640;
-int Screen::surfaceHeight_ = 480;
-int Screen::screenWidth_ = 0;
-int Screen::screenHeight_ = 0;
-int Screen::depth_ = 0;
-SDL_Surface* Screen::surface_ = NULL;
-Screen* Screen::instance_ = NULL;
+bool Screen::_fullscreen_ = false;
+int Screen::_surfaceWidth_ = 640;
+int Screen::_surfaceHeight_ = 480;
+int Screen::_screenWidth_ = 0;
+int Screen::_screenHeight_ = 0;
+int Screen::_depth_ = 0;
+SDL_Surface* Screen::_surface_ = NULL;
+Screen* Screen::_instance_ = NULL;
 
 Screen* Screen::getInstance() {
-    if (!instance_ && initialize())
-        instance_ = new Screen();
-    return instance_;
+    if (!_instance_ && initialize())
+        _instance_ = new Screen();
+    return _instance_;
 }
 
 bool Screen::getFullscreen() {
-    return fullscreen_;
+    return _fullscreen_;
 }
 
 int Screen::getSurfaceWidth() {
-    return surfaceWidth_;
+    return _surfaceWidth_;
 }
 
 int Screen::getSurfaceHeight() {
-    return surfaceHeight_;
+    return _surfaceHeight_;
 }
 
 int Screen::getDepth() {
-    return depth_;
+    return _depth_;
 }
 
 void Screen::setVideoMode(int width, int height, int depth, bool fullscreen) {
-    surfaceWidth_ = width ? width : screenWidth_;
-    surfaceHeight_ = height ? height : screenHeight_;
-    depth_ = depth;
-    fullscreen_ = fullscreen;
-    if (surface_)
+    _surfaceWidth_ = width ? width : _screenWidth_;
+    _surfaceHeight_ = height ? height : _screenHeight_;
+    _depth_ = depth;
+    _fullscreen_ = fullscreen;
+    if (_surface_)
         updateVideoMode();
 }
 
 void Screen::updateVideoMode() {
-    surface_ = SDL_SetVideoMode(surfaceWidth_, surfaceHeight_, depth_,
-            SDL_OPENGL | (fullscreen_ ? SDL_FULLSCREEN : SDL_RESIZABLE));
-    if (!surface_)
+    _surface_ = SDL_SetVideoMode(_surfaceWidth_, _surfaceHeight_, _depth_,
+            SDL_OPENGL | (_fullscreen_ ? SDL_FULLSCREEN : SDL_RESIZABLE));
+    if (!_surface_)
         printf("\nERROR: SDL_SetVideoMode failed, did you forget\n"
                 "to compile SDL with OpenGL Support?\n\n");
     initGl();
 }
 
 GLfloat Screen::getGlWidth() {
-    return 1.0 * surfaceWidth_ / surfaceHeight_;
+    return 1.0 * _surfaceWidth_ / _surfaceHeight_;
 }
 
 GLfloat Screen::getGlHeight() {
@@ -85,17 +85,17 @@ bool Screen::initialize() {
     atexit(SDL_Quit);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     const SDL_VideoInfo* screenSize = SDL_GetVideoInfo();
-    screenWidth_ = screenSize->current_w;
-    screenHeight_ = screenSize->current_h;
+    _screenWidth_ = screenSize->current_w;
+    _screenHeight_ = screenSize->current_h;
     updateVideoMode();
-    if (surface_ == NULL)
+    if (_surface_ == NULL)
         return false;
     SDL_WM_SetCaption("Limbs Off", 0);
     return glGetError() == GL_NO_ERROR;
 }
 
 void Screen::initGl() {
-    glViewport(0, 0, surfaceWidth_, surfaceHeight_);
+    glViewport(0, 0, _surfaceWidth_, _surfaceHeight_);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -126,8 +126,8 @@ int Screen::getDrawingMode() {
 
 void Screen::updateDrawingMode() {
     GLenum s, d;
-    bool pm = drawingMode_ & DM_PREMUL;
-    if (drawingMode_ & DM_FRONT_TO_BACK) {
+    bool pm = drawingMode_ & _DM_PREMUL;
+    if (drawingMode_ & _DM_FRONT_TO_BACK) {
         s = pm ? GL_ONE_MINUS_DST_ALPHA : GL_SRC_ALPHA_SATURATE;
         d = GL_ONE;
     } else {
@@ -135,7 +135,7 @@ void Screen::updateDrawingMode() {
         d = GL_ONE_MINUS_SRC_ALPHA;
     }
     glBlendFunc(s, d);
-    if ((drawingMode_ & (DM_SMOOTH | DM_PREMUL)) == DM_SMOOTH)
+    if ((drawingMode_ & (_DM_SMOOTH | _DM_PREMUL)) == _DM_SMOOTH)
         glEnable(GL_POLYGON_SMOOTH);
     else
         glDisable(GL_POLYGON_SMOOTH);
@@ -143,8 +143,8 @@ void Screen::updateDrawingMode() {
 
 bool Screen::handle(const SDL_Event& event) {
     if (event.type == SDL_VIDEORESIZE) {
-        surfaceWidth_ = event.resize.w;
-        surfaceHeight_ = event.resize.h;
+        _surfaceWidth_ = event.resize.w;
+        _surfaceHeight_ = event.resize.h;
         updateVideoMode();
         return true;
     }

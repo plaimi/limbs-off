@@ -33,7 +33,7 @@ public:
     void monitor(Body* body, Character* character);
 private:
     /** The singleton. */
-    static CollisionHandler* instance_;
+    static CollisionHandler* _instance_;
     std::map<Body*, Character*> monitored_;
 };
 

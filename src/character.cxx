@@ -22,7 +22,7 @@
 #include "collision_handler.hxx"
 #include "get_texture.hxx"
 
-int Character::collisionGroup_ = 0;
+int Character::_collisionGroup_ = 0;
 
 Character::Character(state2p state, phys_t orientation) :
         shapeBody_(0.25),
@@ -31,17 +31,17 @@ Character::Character(state2p state, phys_t orientation) :
         shapeHand_(0.1),
         // Physical object
         body_(this, state, 100, orientation, 0, momentInertia(100, 0.25, 0.4),
-                &shapeBody_, collisionGroup_),
+                &shapeBody_, _collisionGroup_),
         head_(getStateAt(vector2p()(0.0, 0.40)), 3, orientation, 0,
-                momentInertia(2.5, 0.15, 0.4), &shapeHead_, collisionGroup_),
+                momentInertia(2.5, 0.15, 0.4), &shapeHead_, _collisionGroup_),
         footBack_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                momentInertia(1, 0.075, 0.4), &shapeFoot_, collisionGroup_),
+                momentInertia(1, 0.075, 0.4), &shapeFoot_, _collisionGroup_),
         footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                momentInertia(1, 0.075, 0.4), &shapeFoot_, collisionGroup_),
+                momentInertia(1, 0.075, 0.4), &shapeFoot_, _collisionGroup_),
         handBack_(state, 2, orientation, 0, momentInertia(2, 0.1, 0.4),
-                &shapeHand_, collisionGroup_),
+                &shapeHand_, _collisionGroup_),
         handFront_(state, 2, orientation, 0, momentInertia(2, 0.1, 0.4),
-                &shapeHand_, collisionGroup_),
+                &shapeHand_, _collisionGroup_),
         // Links
         neck_(&body_, &head_, 1500.0, 150.0, 1.0, 1.0),
         legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
@@ -75,7 +75,7 @@ Character::Character(state2p state, phys_t orientation) :
     neck_.setPosition(vector2p()(0.0, 0.40));
     legBack_.setPosition(vector2p()(0.0, -0.40));
     legFront_.setPosition(vector2p()(0.0, -0.40));
-    ++collisionGroup_;
+    ++_collisionGroup_;
     CollisionHandler* collisionHandler = CollisionHandler::getInstance();
     collisionHandler->monitor(&body_, this);
     collisionHandler->monitor(&head_, this);

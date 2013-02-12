@@ -251,14 +251,14 @@ private:
     /** Load a texture from file. */
     GLuint loadTexture(const char* filename, bool premultiply);
     /** The singleton. */
-    static TextureLoader* instance_;
+    static TextureLoader* _instance_;
     /** Loaded textures. */
     std::map<std::string, GLuint> loaded_;
 };
 
 class Screen: EventHandler {
 public:
-    static const int DM_FRONT_TO_BACK = 1, DM_PREMUL = 2, DM_SMOOTH = 4;
+    static const int _DM_FRONT_TO_BACK = 1, _DM_PREMUL = 2, _DM_SMOOTH = 4;
     /** Create or return a singleton. */
     static Screen* getInstance();
     static void setVideoMode(int width, int height, int depth,
@@ -279,14 +279,14 @@ protected:
     static void initGl();
 private:
     /** Video mode. */
-    static bool fullscreen_;
+    static bool _fullscreen_;
     /** Screen & window dimensions, & depth info. */
-    static int screenWidth_, screenHeight_, depth_, surfaceWidth_,
-            surfaceHeight_;
+    static int _screenWidth_, _screenHeight_, _depth_, _surfaceWidth_,
+            _surfaceHeight_;
     /** The singleton. */
-    static Screen* instance_;
+    static Screen* _instance_;
     /** The surface pointer for SetVideoMode. */
-    static SDL_Surface* surface_;
+    static SDL_Surface* _surface_;
     int drawingMode_;
     static bool initialize();
 };

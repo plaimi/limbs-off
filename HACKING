@@ -31,11 +31,12 @@ Limit the width of all source files to 80 characters.
 
 -Naming
 Class names start with an uppercase letter, and are camelCase. Private 
-variable names end with an underscore. They give indication as to their usage, 
-and are abbreviated if they end up being unreasonably long. How long 
-"unreasonable" actually is, is left up to the programmer. Other variable names 
-are without suffixes. Procedures are verbs and camelCase, starting with a 
-lowercase letter.
+variable names end with an underscore, and class members begin with an 
+underscore. Other variables have no pre- or suffix. All variables give 
+indication of what they are used for, and are abbreviated if they end up being 
+unreasonably long. How long "unreasonable" actually is, is left up to the 
+programmer. Other variable names are without suffixes. Procedures are verbs 
+and camelCase, starting with a lowercase letter.
 
 -Comments
 Comments in header files that describe what the procedure, class or data 

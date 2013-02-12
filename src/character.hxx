@@ -74,7 +74,7 @@ private:
             powerLeftPunch_, powerRightKick_, powerRightPunch_, vel_, velLeft_,
             velRight_;
     FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
-    static int collisionGroup_;
+    static int _collisionGroup_;
     SmallBody head_, footBack_, footFront_, handBack_, handFront_;
     state2p getStateAt(vector2p p);
     friend class CharacterGraphic;

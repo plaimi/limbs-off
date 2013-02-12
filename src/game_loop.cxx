@@ -79,7 +79,8 @@ bool GameLoop::handleEvents() {
 int GameLoop::run() {
     if (!screen_)
         return 1;
-    screen_->setDrawingMode(Screen::DM_FRONT_TO_BACK | Screen::DM_SMOOTH, -1);
+    screen_->setDrawingMode(Screen::_DM_FRONT_TO_BACK | Screen::_DM_SMOOTH, 
+            -1);
     StepTimer timer;
     int j = SDL_NumJoysticks();
     for (int i = 0; i < j; ++i)
@@ -87,15 +88,15 @@ int GameLoop::run() {
     MenuGraphic menugraphic(&menu_);
     Uint32 time = SDL_GetTicks();
     while (running_) {
-        int steps = timer.getStepTime() * STEPS_PER_SECOND;
-        timer.time(steps / STEPS_PER_SECOND);
+        int steps = timer.getStepTime() * _STEPS_PER_SECOND;
+        timer.time(steps / _STEPS_PER_SECOND);
         if (limbsOff_) {
             for (int i = 0; i < steps; ++i) {
-                limbsOff_->update(1.0 / STEPS_PER_SECOND);
-                if (++stepCounter_ == EVENT_INTERVAL)
+                limbsOff_->update(1.0 / _STEPS_PER_SECOND);
+                if (++stepCounter_ == _EVENT_INTERVAL)
                     handleEvents();
             }
-            limbsOff_->updateCamera(steps / STEPS_PER_SECOND);
+            limbsOff_->updateCamera(steps / _STEPS_PER_SECOND);
         } else
             handleEvents();
         // Draw
@@ -107,7 +108,7 @@ int GameLoop::run() {
         if (limbsOff_)
             limbsOff_->draw();
         Uint32 delta = SDL_GetTicks() - time;
-        int wait = 1000 / MAX_FPS - delta;
+        int wait = 1000 / _MAX_FPS - delta;
         if (wait > 0) {
             SDL_Delay(wait);
             delta = SDL_GetTicks() - time;
