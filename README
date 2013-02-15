@@ -92,13 +92,10 @@ along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
 Contributing To the Project
 ===========================
 
-If you want to report a bug, use <https://plaimi.net/bugs>. If you want to 
-discuss some more general things regarding the game, use 
-<https://plaimi.net/forum>. If you want to contribute code, see HACKING for 
-coding style guidelines, submission information and more. See TODO for 
-information on what needs to be done. If you want to suggest a feature (i.e. 
-you lack the skill/time to code it yourself), or have questions regarding 
-anything, check the forum, or see AUTHORS for contact information.
-
+If you want to report a bug, use <https://secure.plaimi.net/bugs>.  If you 
+want to discuss the game, give us suggestions, etc. -- use 
+<https://secure.plaimi.net/mailing.php>.  If you want to contribute code, see 
+HACKING for coding style guidelines, submission information and more. See TODO 
+for information on what needs to be done.
 
 /* vim: set textwidth=78 formatoptions=actw2 autoindent: */
