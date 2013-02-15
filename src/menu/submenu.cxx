@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Alexander Berntsen <alexander@plaimi.net>
+ * Copyright (C) 2012, 2013 Alexander Berntsen <alexander@plaimi.net>
  *
  * This file is part of Limbs Off.
  *
