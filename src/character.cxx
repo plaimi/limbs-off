@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 Alexander Berntsen <alexander@plaimi.net>
+ * Copyright (C) 2011, 2012, 2013 Alexander Berntsen <alexander@plaimi.net>
  * Copyright (C) 2011, 2012 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
@@ -159,11 +159,13 @@ void Character::jump(bool state) {
 void Character::moveLeft(double vel) {
     velLeft_ = vel;
     vel_ = !velLeft_ ? velRight_ : -velLeft_;
+    setOrientation('l');
 }
 
 void Character::moveRight(double vel) {
     velRight_ = vel;
     vel_ = !velRight_ ? -velLeft_ : velRight_;
+    setOrientation('r');
 }
 
 void Character::rightKick(bool state) {
@@ -214,8 +216,6 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     vector2p posCharacter = getPosition(), posBody = body->getPosition();
     vector2p legA = posCharacter - posBody;
     phys_t hVel = (getVelocity() - body->getVelocityAt(legA)) / legA.unit();
-    // Set the character's orientation to the direction its body is moving.
-    parent_->setOrientation(hVel > 0 ? 'r' : 'l');
     phys_t angle = legA.angle() - PI / 2 - getOrientation();
     phys_t accel = clampmag(hVel / 8.0 - parent_->vel_, 1.0);
     angle = clampmag(remainder(angle, PI * 2) + accel * PI / 4, PI / 2);
