@@ -73,7 +73,7 @@ Foo::Foo(int i, int j, int k) :
         bar_(i),
         foobar_(j),
         fubaz_(k) {
-    lulz{);
+    lulz();
 }
 
 -"do while"s
