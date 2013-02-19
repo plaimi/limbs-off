@@ -127,12 +127,8 @@ void Character::fire(bool state) {
     actions_[FIRE].intention = state;
 }
 
-void Character::hit(Body* part, phys_t impulse) {
-    // Ten times damage for headshots
-    if (part == &head_)
-        impulse *= 10.0;
-    // Apply impulse as a force on the main body
-    body_.changeMass(impulse / 300.0);
+void Character::hit(Body* part, phys_t dmg) {
+    body_.changeMass(dmg);
 }
 
 void Character::leftKick(bool state) {
@@ -185,6 +181,12 @@ void Character::update(double deltaTime) {
     // If jumping, raise jump power. If not, set jump power to 0.
     actions_[JUMP].power = actions_[JUMP].intention ? 1.5 * (1.0 - decay) +
         actions_[JUMP].power * decay : 0.0;
+    for (Action* i = &actions_[LPUNCH];; i = &actions_[RPUNCH]) {
+        i->power = i->intention ? 250.0 * (1.0 - decay) + i->power * decay :
+            0.0;
+        if (i == &actions_[RPUNCH])
+            break;
+    }
 }
 
 state2p Character::getStateAt(vector2p p) {
@@ -220,6 +222,21 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     vector2p feetOffset = vector2p::fromAngle(walkCycle_) * 0.15;
     parent_->legBack_.setPosition(feetOrigin + feetOffset);
     parent_->legFront_.setPosition(feetOrigin - feetOffset);
+    {
+        vector2p p;
+        int f = (parent_->getOrientation() == 'r') ? 1 : -1;
+        Action* i;
+        FixtureSpring* j;
+        for (i = &(parent_->actions_[LPUNCH]),
+                j = f >> 1 ? &(parent_->armFront_) :
+                &(parent_->armBack_);; i = &(parent_->actions_[RPUNCH]),
+                j = j == &(parent_->armFront_) ? &(parent_->armBack_) :
+                &(parent_->armFront_)) {
+            j->setPosition(p(i->intention ? 0.25 * -f : i->power * f, 0));
+            if (i == &(parent_->actions_[RPUNCH]))
+                break;
+        }
+    }
     angle += PI / 2 + getOrientation();
     vector2p legB = legA - vector2p()(cos(angle), sin(angle));
     phys_t bodyRadius = ((Circle<phys_t>*) (body->getShape()))->getRadius();

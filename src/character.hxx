@@ -55,7 +55,7 @@ public:
     void die();
     void fire(bool state);
     /** Process collisions. */
-    void hit(Body* part, phys_t impulse);
+    void hit(Body* part, phys_t dmg);
     void leftKick(bool state);
     void leftPunch(bool state);
     void jump(bool state);
