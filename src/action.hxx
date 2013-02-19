@@ -20,11 +20,6 @@
 #ifndef ACTION_HXX_
 #define ACTION_HXX_
 
-class Action {
-public:
-    Action();
-};
-
 /** NUM_ACTIONTYPE is a length. */
 enum ActionType {
     NOTHING,
