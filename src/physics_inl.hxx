@@ -183,7 +183,9 @@ inline void Particle::getVelocity(phys_t& vx, phys_t& vy) {
 }
 
 inline Mass::Mass(state2p s, phys_t mass, bool immovable) :
-        Particle(s), mass_(mass), invMass_(immovable ? 0 : 1 / mass) {
+        Particle(s),
+        mass_(mass),
+        invMass_(immovable ? 0 : 1 / mass) {
 }
 
 inline Mass::~Mass() {
@@ -207,8 +209,12 @@ inline void Mass::applyImpulse(vector2p i) {
 
 inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av, phys_t
         moi, Shape<phys_t>* shape, Material* material, bool immovable) :
-        Mass(s, mass, immovable), orientation_(orientation), av_(av), moi_(moi),
-        shape_(shape), material_(material) {
+        Mass(s, mass, immovable),
+        orientation_(orientation),
+        av_(av),
+        moi_(moi),
+        shape_(shape),
+        material_(material) {
 }
 
 inline Body::~Body() {
