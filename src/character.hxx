@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 Alexander Berntsen <alexander@plaimi.net>
+ * Copyright (C) 2011, 2012, 2013 Alexander Berntsen <alexander@plaimi.net>
  * Copyright (C) 2011 Stian Ellingsen <stian@plaimi.net>
  *
  * This file is part of Limbs Off.
@@ -23,6 +23,7 @@
 
 #include "graphics/game_graphics_gl.hxx"
 #include "physics/game_physics.hxx"
+#include "action.hxx"
 
 class Character {
 public:
@@ -60,19 +61,20 @@ public:
     void moveRight(double vel);
     void rightKick(bool state);
     void rightPunch(bool state);
-    void setOrientation(char orientation);
     /** Update power meters. */
     void update(double deltaTime);
 private:
-    bool crouch_, dead_, fire_, jump_, leftKick_, leftPunch_, rightKick_,
-            rightPunch_;
-    /** Which direction the character is facing. */
-    char orientation_;
+    class Action {
+    public:
+        Action();
+        bool intention;
+        phys_t power;
+    };
+    bool dead_;
+    double vel_;
+    Action actions_[NUM_ACTIONTYPE];
     Circle<phys_t> shapeBody_, shapeHead_, shapeFoot_, shapeHand_;
     CharacterBody body_;
-    double powerCrouch_, powerFire_, powerJump_, powerLeftKick_,
-            powerLeftPunch_, powerRightKick_, powerRightPunch_, vel_, velLeft_,
-            velRight_;
     FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
     static int _collisionGroup_;
     SmallBody head_, footBack_, footFront_, handBack_, handFront_;

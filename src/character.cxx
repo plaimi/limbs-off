@@ -48,30 +48,11 @@ Character::Character(state2p state, phys_t orientation) :
         legFront_(&body_, &footFront_, 200.0, 20.0, 1.0, 1.0),
         armBack_(&body_, &handBack_, 200.0, 20.0, 1.0, 1.0),
         armFront_(&body_, &handFront_, 200.0, 20.0, 1.0, 1.0),
-        // Request states
-        crouch_(false),
-        fire_(false),
-        jump_(false),
-        leftKick_(false),
-        leftPunch_(false),
-        rightKick_(false),
-        rightPunch_(false),
-        // Power meters
-        powerCrouch_(0.0),
-        powerFire_(0.0),
-        powerJump_(0.0),
-        powerLeftKick_(0.0),
-        powerLeftPunch_(0.0),
-        powerRightKick_(0.0),
-        powerRightPunch_(0.0),
         // Velocity
         vel_(0),
-        velLeft_(0),
-        velRight_(0),
-        // Orientation
-        orientation_('l'),
         // State
         dead_(false) {
+    actions_[LEFT].intention = true;
     neck_.setPosition(vector2p()(0.0, 0.40));
     legBack_.setPosition(vector2p()(0.0, -0.40));
     legFront_.setPosition(vector2p()(0.0, -0.40));
@@ -86,7 +67,7 @@ bool Character::isDead() {
 }
 
 char Character::getOrientation() {
-    return orientation_;
+    return actions_[LEFT].intention ? 'l' : 'r';
 }
 
 double Character::getVel() {
@@ -129,11 +110,11 @@ void Character::die() {
 }
 
 void Character::crouch(bool state) {
-    crouch_ = state;
+    actions_[CROUCH].intention = state;
 }
 
 void Character::fire(bool state) {
-    fire_ = state;
+    actions_[FIRE].intention = state;
 }
 
 void Character::hit(Body* part, phys_t impulse) {
@@ -145,53 +126,55 @@ void Character::hit(Body* part, phys_t impulse) {
 }
 
 void Character::leftKick(bool state) {
-    leftKick_ = state;
+    actions_[LKICK].intention = state;
 }
 
 void Character::leftPunch(bool state) {
-    leftPunch_ = state;
+    actions_[LPUNCH].intention = state;
 }
 
 void Character::jump(bool state) {
-    jump_ = state;
+    actions_[JUMP].intention = state;
 }
 
 void Character::moveLeft(double vel) {
-    velLeft_ = vel;
-    vel_ = !velLeft_ ? velRight_ : -velLeft_;
-    setOrientation('l');
+    actions_[LEFT].power = vel;
+    vel_ = !actions_[LEFT].power ? actions_[RIGHT].power :
+        -actions_[LEFT].power;
+    actions_[LEFT].intention = true;
+    actions_[RIGHT].intention = false;
 }
 
 void Character::moveRight(double vel) {
-    velRight_ = vel;
-    vel_ = !velRight_ ? -velLeft_ : velRight_;
-    setOrientation('r');
+    actions_[RIGHT].power = vel;
+    vel_ = !actions_[RIGHT].power ? -actions_[LEFT].power :
+        actions_[RIGHT].power;
+    actions_[LEFT].intention = false;
+    actions_[RIGHT].intention = true;
 }
 
 void Character::rightKick(bool state) {
-    rightKick_ = state;
+    actions_[RKICK].intention = state;
 }
 
 void Character::rightPunch(bool state) {
-    rightPunch_ = state;
-}
-
-void Character::setOrientation(char orientation) {
-    orientation_ = orientation;
+    actions_[RPUNCH].intention = state;
 }
 
 void Character::update(double deltaTime) {
     double decay = pow(.2, deltaTime);
     // If crouching, raise the crouching power to a max of 0.75.
     // If not crouching, easily uncrouch without jumping.
-    powerCrouch_ = crouch_ ?
-            min(20.0 / body_.getMass(), 1.5 * (1.0 - decay) + powerCrouch_ * decay) :
-            max(0.0, powerCrouch_ - 3.0 * deltaTime );
+    actions_[CROUCH].power = actions_[CROUCH].intention ?
+            min(20.0 / body_.getMass(), 1.5 * (1.0 - decay) +
+            actions_[CROUCH].power * decay) : max(0.0, actions_[CROUCH].power
+                - 3.0 * deltaTime );
     // Cap jump power to 1.0 by forcejumping.
-    if (powerJump_ >= 1.0)
-        jump_ = false;
+    if (actions_[JUMP].power >= 1.0)
+        actions_[JUMP].intention = false;
     // If jumping, raise jump power. If not, set jump power to 0.
-    powerJump_ = jump_ ? 1.5 * (1.0 - decay) + powerJump_ * decay : 0.0;
+    actions_[JUMP].power = actions_[JUMP].intention ? 1.5 * (1.0 - decay) +
+        actions_[JUMP].power * decay : 0.0;
 }
 
 state2p Character::getStateAt(vector2p p) {
@@ -221,7 +204,8 @@ bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,
     angle = clampmag(remainder(angle, PI * 2) + accel * PI / 4, PI / 2);
     walkCycle_ = remainder(walkCycle_ - deltaTime * hVel * 5.0, PI * 2);
     // Calculate the leg length. Depends on jump/crouch power if any.
-    phys_t leg = 0.40 - 0.15 * max(parent_->powerCrouch_, parent_->powerJump_);
+    phys_t leg = 0.40 - 0.15 * max(parent_->actions_[CROUCH].power,
+            parent_->actions_[JUMP].power);
     vector2p feetOrigin = vector2p::fromAngle(angle - PI / 2) * (leg - 0.05);
     vector2p feetOffset = vector2p::fromAngle(walkCycle_) * 0.15;
     parent_->legBack_.setPosition(feetOrigin + feetOffset);
@@ -266,6 +250,11 @@ void Character::CharacterBody::changeMass(phys_t delta) {
     ((Circle<phys_t>*) shape_)->setRadius(radius);
     if (getMass() <= deathCap)
         parent_->die();
+}
+
+Character::Action::Action() :
+        intention(false),
+        power(0.0) {
 }
 
 CharacterGraphic::CharacterGraphic(Character* c) :
