@@ -69,6 +69,15 @@ struct bodystate {
     const bodystate operator*(const phys_t f) const;
 };
 
+class Material {
+public:
+    Material(phys_t stiffness, phys_t toughness);
+    phys_t getStiffness();
+    phys_t getToughness();
+private:
+    phys_t stiffness_, toughness_;
+};
+
 class Particle {
 public:
     state2p getState();
@@ -101,6 +110,8 @@ public:
     phys_t getOrientation();
     phys_t getAngularVelocity();
     phys_t getMomentOfInertia();
+    Material* getMaterial();
+    void setMaterial(Material* m);
     Shape<phys_t>* getShape();
     phys_t getAngularMomentum();
     vector2p getMomentumAt(vector2p p, vector2p vp);
@@ -112,8 +123,9 @@ protected:
     phys_t av_;
     phys_t moi_;
     Shape<phys_t>* shape_;
+    Material* material_;
     Body(state2p s, phys_t mass, phys_t orientation, phys_t av, phys_t moi,
-            Shape<phys_t>* shape, bool immovable = false);
+            Shape<phys_t>* shape, Material* material, bool immovable = false);
     void applyAngularImpulse(phys_t i);
     void applyImpulseAt(vector2p i, vector2p p);
     void setBodyState(bodystate s);

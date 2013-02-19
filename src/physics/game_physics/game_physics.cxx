@@ -24,8 +24,9 @@
 #include "physics/game_physics.hxx"
 
 SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
-        phys_t moi, Shape<phys_t>* shape, int collisionGroup) :
-        Body(s, mass, orientation, av, moi, shape),
+        phys_t moi, Shape<phys_t>* shape, Material* material,
+            int collisionGroup) :
+        Body(s, mass, orientation, av, moi, shape, material),
         nextState_(getBodyState()),
         collisionGroup_(collisionGroup) {
 }
@@ -60,9 +61,10 @@ bodystate SmallBody::getNextState(phys_t dt) {
     return r;
 }
 
-AstroBody::AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape) :
+AstroBody::AstroBody(phys_t gm, phys_t moi, phys_t av, Shape<phys_t>* shape,
+        Material* material) :
         Body(state2p()(0.0, 0.0, 0.0, 0.0), gm / G, 0.0, av, moi, shape,
-                true),
+                material, true),
         gm(gm) {
 }
 

@@ -31,7 +31,7 @@ public:
     public:
         CharacterBody(Character* parent, state2p state, phys_t mass,
                 phys_t orientation, phys_t angVel, phys_t inertiaMoment,
-                Shape<phys_t>* shape, int collisionGroup);
+                Shape<phys_t>* shape, Material* material, int collisionGroup);
         void changeMass(phys_t delta);
     protected:
         Character* parent_;
@@ -41,7 +41,9 @@ public:
         CharacterBody(const CharacterBody&);
         CharacterBody& operator=(const CharacterBody&);
     };
-    Character(state2p state, phys_t orientation);
+    Character(state2p state, phys_t orientation, Material* materialBody,
+            Material* materialHead, Material* materialLimbs, Material*
+            materialLimbsOff);
     void addToUniverse(GameUniverse* u);
     bool isDead();
     char getOrientation();
@@ -64,6 +66,8 @@ public:
     /** Update power meters. */
     void update(double deltaTime);
 private:
+    Character(const Character&);
+    Character& operator=(const Character&);
     class Action {
     public:
         Action();
@@ -78,6 +82,7 @@ private:
     FixtureSpring neck_, legBack_, legFront_, armBack_, armFront_;
     static int _collisionGroup_;
     SmallBody head_, footBack_, footFront_, handBack_, handFront_;
+    Material* materialLimbsOff_;
     state2p getStateAt(vector2p p);
     friend class CharacterGraphic;
 };

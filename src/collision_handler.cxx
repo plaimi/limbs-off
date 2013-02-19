@@ -33,10 +33,18 @@ CollisionHandler* CollisionHandler::getInstance() {
 
 void CollisionHandler::collide(Body* body0, Body* body1, phys_t impulse) {
     std::map<Body*, Character*>::iterator it;
+    phys_t dmg = 0.001 * impulse * impulse * (body0->getInvMass() +
+            body1->getInvMass()), dmg0, dmg1;
+    Material* m0 = body0->getMaterial();
+    Material* m1 = body1->getMaterial();
+    phys_t s0 = m0->getStiffness();
+    phys_t s1 = m1->getStiffness();
+    dmg0 = dmg * s1 / (s0 + s1);
+    dmg1 = dmg - dmg0;
     if ((it = monitored_.find(body0)) != monitored_.end())
-        it->second->hit(body0, impulse);
+        it->second->hit(body0, dmg0 / m0->getToughness());
     if ((it = monitored_.find(body1)) != monitored_.end())
-        it->second->hit(body1, impulse);
+        it->second->hit(body1, dmg1 / m1->getToughness());
 }
 
 void CollisionHandler::monitor(Body* body, Character* character) {

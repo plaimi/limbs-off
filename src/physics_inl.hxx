@@ -140,6 +140,19 @@ inline const bodystate bodystate::operator*(const phys_t f) const {
     return r;
 }
 
+inline Material::Material(phys_t stiffness, phys_t toughness) :
+        stiffness_(stiffness),
+        toughness_(toughness) {
+}
+
+inline phys_t Material::getToughness() {
+    return toughness_;
+}
+
+inline phys_t Material::getStiffness() {
+    return stiffness_;
+}
+
 inline Particle::Particle(state2p s) :
     s_(s) {
 }
@@ -193,9 +206,9 @@ inline void Mass::applyImpulse(vector2p i) {
 }
 
 inline Body::Body(state2p s, phys_t mass, phys_t orientation, phys_t av, phys_t
-        moi, Shape<phys_t>* shape, bool immovable) :
+        moi, Shape<phys_t>* shape, Material* material, bool immovable) :
         Mass(s, mass, immovable), orientation_(orientation), av_(av), moi_(moi),
-        shape_(shape) {
+        shape_(shape), material_(material) {
 }
 
 inline Body::~Body() {
@@ -219,6 +232,14 @@ inline Shape<phys_t>* Body::getShape() {
 
 inline phys_t Body::getAngularMomentum() {
     return av_ * moi_;
+}
+
+inline Material* Body::getMaterial() {
+    return material_;
+}
+
+inline void Body::setMaterial(Material* m) {
+    material_ = m;
 }
 
 inline vector2p Body::getMomentumAt(vector2p p, vector2p vp) {

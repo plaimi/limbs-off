@@ -67,6 +67,8 @@ private:
     GameUniverse* universe_;
     GLuint tex_;
     GraphicFixture* planetFixture_;
+    Material* matCharBody_, * matCharHead_, * matCharLimbs_,
+        * matCharLimbsOff_, * matPlanet_;
     std::vector<Label*> massIndicatorLabels_;
     std::vector<MassIndicator*> massIndicators_;
     std::vector<MassIndicatorGraphic*> massIndicatorGfx_;

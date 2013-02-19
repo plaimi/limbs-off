@@ -24,24 +24,29 @@
 
 int Character::_collisionGroup_ = 0;
 
-Character::Character(state2p state, phys_t orientation) :
+Character::Character(state2p state, phys_t orientation, Material* materialBody,
+        Material* materialHead, Material* materialLimbs,
+        Material* materialLimbsOff) :
         shapeBody_(0.25),
         shapeHead_(0.15),
         shapeFoot_(0.075),
         shapeHand_(0.1),
         // Physical object
         body_(this, state, 100, orientation, 0, momentInertia(100, 0.25, 0.4),
-                &shapeBody_, _collisionGroup_),
+                &shapeBody_, materialBody, _collisionGroup_),
         head_(getStateAt(vector2p()(0.0, 0.40)), 3, orientation, 0,
-                momentInertia(2.5, 0.15, 0.4), &shapeHead_, _collisionGroup_),
+                momentInertia(2.5, 0.15, 0.4), &shapeHead_, materialHead,
+                _collisionGroup_),
         footBack_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                momentInertia(1, 0.075, 0.4), &shapeFoot_, _collisionGroup_),
+                momentInertia(1, 0.075, 0.4), &shapeFoot_, materialLimbs,
+                _collisionGroup_),
         footFront_(getStateAt(vector2p()(0.0, -0.40)), 1, orientation, 0,
-                momentInertia(1, 0.075, 0.4), &shapeFoot_, _collisionGroup_),
+                momentInertia(1, 0.075, 0.4), &shapeFoot_, materialLimbs,
+                _collisionGroup_),
         handBack_(state, 2, orientation, 0, momentInertia(2, 0.1, 0.4),
-                &shapeHand_, _collisionGroup_),
+                &shapeHand_, materialLimbs, _collisionGroup_),
         handFront_(state, 2, orientation, 0, momentInertia(2, 0.1, 0.4),
-                &shapeHand_, _collisionGroup_),
+                &shapeHand_, materialLimbs, _collisionGroup_),
         // Links
         neck_(&body_, &head_, 1500.0, 150.0, 1.0, 1.0),
         legBack_(&body_, &footBack_, 200.0, 20.0, 1.0, 1.0),
@@ -51,7 +56,8 @@ Character::Character(state2p state, phys_t orientation) :
         // Velocity
         vel_(0),
         // State
-        dead_(false) {
+        dead_(false),
+        materialLimbsOff_(materialLimbsOff) {
     actions_[LEFT].intention = true;
     neck_.setPosition(vector2p()(0.0, 0.40));
     legBack_.setPosition(vector2p()(0.0, -0.40));
@@ -107,6 +113,10 @@ void Character::die() {
     legBack_.setEnabled(false);
     armBack_.setEnabled(false);
     armFront_.setEnabled(false);
+    footBack_.setMaterial(materialLimbsOff_);
+    footFront_.setMaterial(materialLimbsOff_);
+    handBack_.setMaterial(materialLimbsOff_);
+    handFront_.setMaterial(materialLimbsOff_);
 }
 
 void Character::crouch(bool state) {
@@ -185,9 +195,9 @@ state2p Character::getStateAt(vector2p p) {
 
 Character::CharacterBody::CharacterBody(Character* parent, state2p state,
         phys_t mass, phys_t orientation, phys_t angVel, phys_t inertiaMoment,
-        Shape<phys_t>* shape, int collisionGroup) :
+        Shape<phys_t>* shape, Material* material, int collisionGroup) :
     SmallBody(state, mass, orientation, angVel, inertiaMoment, shape,
-            collisionGroup), parent_(parent), walkCycle_(0.0) {
+            material, collisionGroup), parent_(parent), walkCycle_(0.0) {
 }
 
 bool Character::CharacterBody::interact(AstroBody* body, double deltaTime,

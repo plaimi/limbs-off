@@ -65,6 +65,11 @@ Game::Game(Screen* screen) :
         foreground_(NULL),
         backgroundSprite_(NULL),
         planetDisk_(NULL),
+        matCharBody_(NULL),
+        matCharHead_(NULL),
+        matCharLimbs_(NULL),
+        matCharLimbsOff_(NULL),
+        matPlanet_(NULL),
         massIndicators_(),
         massIndicatorGfx_() {
     tex_ = getTexture(PACKAGE_GFX_DIR "background.png");
@@ -164,8 +169,13 @@ void Game::conceive() {
     // Characters
     phys_t angle = 2 * PI / _NUM_PLAYERS;
     vector2p pos = { _R, 0 }, vel = { 0, _S }, a = vector2p::fromAngle(angle);
+    matCharBody_ = new Material(100.0, 0.5);
+    matCharHead_ = new Material(10000.0, 0.1);
+    matCharLimbs_ = new Material(50000.0, 1.5);
+    matCharLimbsOff_ = new Material(500.0, 1.5);
     for (int i = 0; i < _NUM_PLAYERS; ++i) {
-        characters_.push_back(new Character(state2p()(pos, vel), i * angle));
+        characters_.push_back(new Character(state2p()(pos, vel), i * angle,
+                matCharBody_, matCharHead_, matCharLimbs_, matCharLimbsOff_));
         players_.push_back(new Player(characters_[i]));
         characterGraphics_.push_back(new CharacterGraphic(characters_[i]));
         char font[256];
@@ -187,8 +197,9 @@ void Game::conceive() {
     }
     // Planets
     planetCircle_ = new Circle<phys_t> (_PR);
+    matPlanet_ = new Material(100.0, 50);
     planets_.push_back(new AstroBody(_GM, 2 * _GM * _PR * _PR / 5, -0.05, 
-                planetCircle_));
+                planetCircle_, matPlanet_));
     universe_ = new GameUniverse(planets_[0]);
     // Graphics
     backgroundSprite_ = new Sprite(tex_, 1, 1);
