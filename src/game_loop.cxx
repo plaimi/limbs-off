@@ -19,6 +19,7 @@
  */
 
 #include <GL/gl.h>
+#include "repeat.hxx"
 #include "game_loop.hxx"
 #include "event_code.hxx"
 #include "step_timer.hxx"
@@ -91,7 +92,7 @@ int GameLoop::run() {
         int steps = timer.getStepTime() * _STEPS_PER_SECOND;
         timer.time(steps / _STEPS_PER_SECOND);
         if (limbsOff_) {
-            for (int i = 0; i < steps; ++i) {
+            REPEAT(steps, I) {
                 limbsOff_->update(1.0 / _STEPS_PER_SECOND);
                 if (++stepCounter_ == _EVENT_INTERVAL)
                     handleEvents();

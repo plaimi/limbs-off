@@ -48,6 +48,7 @@ AM_CFLAGS =\
 bin_PROGRAMS = limbs-off
 
 limbs_off_SOURCES = \
+	src/repeat.hxx \
 	src/config_parser.hxx \
 	src/config_parser.cxx \
 	src/get_font.hxx \
