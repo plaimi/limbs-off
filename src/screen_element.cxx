@@ -61,6 +61,61 @@ char* Button::getText() {
     return text_;
 }
 
+InputField::InputField() :
+        text_(NULL) {
+        text_ = (char*) malloc(32);
+    strcpy(text_, " ");
+}
+
+bool InputField::getInput(SDL_Event &event, char* c){
+    if (event.type == SDL_KEYDOWN) {
+        int i = strlen(c);
+        switch (event.key.keysym.sym) {
+        case SDLK_RETURN:
+            // User is done.
+            return true;
+        case SDLK_ESCAPE:
+            // User doesn't want to do anything.
+            c[0] = '\0';
+            return true;
+        case SDLK_BACKSPACE:
+            // ^H if there is something to ^H.
+            if (i > 0) {
+                while ((c[--i] & 0xc0) == 0x80);
+                c[i] = '\0';
+            }
+            break;
+        default:
+            // Limit input length.
+            if (i > 27)
+                return false;
+            // UTF-16 to UTF-8 transcoding.
+            if (event.key.keysym.unicode < 0x80) {
+                c[i] = event.key.keysym.unicode;
+            } else if (event.key.keysym.unicode < 0x800) {
+                c[i] = (event.key.keysym.unicode >> 6) | 0xC0;
+                c[++i] = (event.key.keysym.unicode & 0x3F) | 0x80;
+            } else if (event.key.keysym.unicode < 0xFFFF) {
+                c[i] = ((event.key.keysym.unicode >> 12)) | 0xE0;
+                c[++i] = ((event.key.keysym.unicode >> 6) & 0x3F) | 0x80;
+                c[++i] = ((event.key.keysym.unicode) & 0x3F) | 0x80;
+            }
+            c[++i] = '\0';
+        }
+    }
+    // User is not done yet.
+    return false;
+}
+
+char* InputField::getText() {
+    return text_;
+}
+
+void InputField::setText(char* text) {
+    text_ = text;
+}
+
+
 MassIndicator::MassIndicator(int position) {
     setPosition(position);
 }

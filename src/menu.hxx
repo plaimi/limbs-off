@@ -43,17 +43,22 @@ public:
     };
     enum EVENT_ID {
         QUIT_EVENT,
-        NEW_GAME_EVENT
+        NEW_GAME_EVENT,
+        CHANGE_PLAYERS_EVENT,
+        CHANGE_CPUS_EVENT
     };
     bool handle(const SDL_Event &event);
+    bool getChoice(SDL_Event &event, char* c);
     int getActiveMenu();
     void setActiveMenu(int menu);
     Submenu* getMenu(int menu);
+    InputField* getInputField();
 private:
     Menu& operator=(const Menu&);
     Menu(const Menu&);
     Button* getButton(std::vector<Button*> vector, int position);
     Button* getActiveElement();
+    InputField* input_;
     void setActiveElement(Button* active);
     void raiseEvent(EVENT_ID id);
     Button* activeElement_;

@@ -29,14 +29,18 @@
 Menu::Menu() :
         // setActiveMenu calls setActiveElement which needs activeElement
         activeElement_(NULL),
-        activeMenu_(0) {
+        activeMenu_(0),
+        input_(NULL) {
     menus_[MAINMENU] = new Submenu();
     menus_[OPTIONS] = new Submenu();
+    input_ = new InputField();
     Submenu** mainmenu = menus_ + MAINMENU;
     Submenu** options = menus_ + OPTIONS;
     (*mainmenu)->addButton("NEW GAME", false);
     (*mainmenu)->addButton("OPTIONS", false);
     (*mainmenu)->addButton("EXIT GAME", false);
+    (*options)->addButton("SET NUMBER OF PLAYERS", false);
+    (*options)->addButton("SET NUMBER OF CPUS", false);
     (*options)->addButton("BACK TO MAIN MENU", false);
     setActiveMenu(MAINMENU);
 #if VERBOSE
@@ -91,6 +95,12 @@ bool Menu::handle(const SDL_Event &event) {
                 setActiveMenu(OPTIONS);
             else if (!strcmp(activeElement, "EXIT GAME"))
                 raiseEvent(QUIT_EVENT);
+            else if (!strcmp(activeElement, "SET NUMBER OF PLAYERS")) {
+                raiseEvent(CHANGE_PLAYERS_EVENT);
+            }
+            else if (!strcmp(activeElement, "SET NUMBER OF CPUS")) {
+                raiseEvent(CHANGE_CPUS_EVENT);
+            }
             else if (!strcmp(activeElement, "BACK TO MAIN MENU"))
                 setActiveMenu(MAINMENU);
             return !strcmp(activeElement, "OPTIONS") || !strcmp(activeElement,
@@ -98,6 +108,10 @@ bool Menu::handle(const SDL_Event &event) {
         }
     }
     return false;
+}
+
+bool Menu::getChoice(SDL_Event &event, char* c) {
+    return input_->getInput(event, c);
 }
 
 Submenu* Menu::getMenu(int menu) {
@@ -108,12 +122,21 @@ void Menu::raiseEvent(EVENT_ID id) {
     SDL_Event event;
     switch(id) {
     case NEW_GAME_EVENT:
-        event.type = SDL_USEREVENT;
         event.user.code = NEW_GAME;
-        break;
+        goto user_event;
+    case CHANGE_PLAYERS_EVENT:
+        event.user.code = CHANGE_PLAYERS;
+        goto user_event;
+    case CHANGE_CPUS_EVENT:
+        event.user.code = CHANGE_CPUS;
+        goto user_event;
     case QUIT_EVENT:
         event.type = SDL_QUIT;
+        goto push_event;
     }
+user_event:
+    event.type = SDL_USEREVENT;
+push_event:
     SDL_PushEvent(&event);
 }
 
@@ -122,4 +145,8 @@ void Menu::setActiveElement(Button* element) {
         activeElement_->setSelected(false);
     activeElement_ = element;
     activeElement_->setSelected(true);
+}
+
+InputField* Menu::getInputField() {
+    return input_;
 }

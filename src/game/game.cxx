@@ -31,7 +31,6 @@
 
 const int Game::_MAX_PC = 16;
 const int Game::_MAX_PLAN = 1;
-const int Game::_NUM_PLAYERS = 3;
 const float Game::_COL_PLANET[] = { 0.4, 0.8, 0.4 };
 const phys_t Game::_GM = 628;
 const phys_t Game::_R = 9.0;
@@ -46,7 +45,7 @@ bool Game::handle(const SDL_Event& event) {
     return true;
 }
 
-Game::Game(Screen* screen) :
+Game::Game(Screen* screen, int numPlayers, int numCPUs) :
         screen_(screen),
         planets_(),
         backgroundModifier_(NULL),
@@ -56,6 +55,8 @@ Game::Game(Screen* screen) :
         planetColour_(NULL),
         universe_(NULL),
         tex_(0),
+        numPlayers_(numPlayers),
+        numCPUs_(numCPUs),
         planetFixture_(NULL),
         massIndicatorLabels_(),
         planetCircle_(NULL),
@@ -80,12 +81,21 @@ Game::Game(Screen* screen) :
     planetDisk_->addModifier(planetFixture_);
     planetDisk_->getDisk()->addModifier(planetColour_);
     // Bad hard coding incoming. The game is hard coded for three players.
-    ConfigParser::readBindings(players_[0],
-            PACKAGE_CFG_DIR "controllers1.conf");
-    ConfigParser::readBindings(players_[1],
-            PACKAGE_CFG_DIR "controllers2.conf");
-    ConfigParser::readBindings(players_[2],
-            PACKAGE_CFG_DIR "controllers3.conf");
+    switch (numPlayers_) {
+    default:
+        if (numPlayers_ < 1)
+            break;
+        ;
+    case 3:
+        ConfigParser::readBindings(players_[2],
+                PACKAGE_CFG_DIR "controllers3.conf");
+    case 2:
+        ConfigParser::readBindings(players_[1],
+                PACKAGE_CFG_DIR "controllers2.conf");
+    case 1:
+        ConfigParser::readBindings(players_[0],
+                PACKAGE_CFG_DIR "controllers1.conf");
+    }
     // TODO: When the game is abstracted for more players, fix ^
 #if VERBOSE
     printf("controllers player 1:\n"
@@ -173,19 +183,19 @@ Game::~Game() {
 
 void Game::conceive() {
     // Characters
-    phys_t angle = 2 * PI / _NUM_PLAYERS;
+    phys_t angle = 2 * PI / numPlayers_;
     vector2p pos = { _R, 0 }, vel = { 0, _S }, a = vector2p::fromAngle(angle);
     matCharBody_ = new Material(100.0, 0.5);
     matCharHead_ = new Material(10000.0, 0.1);
     matCharLimbs_ = new Material(50000.0, 1.5);
     matCharLimbsOff_ = new Material(500.0, 1.5);
-    for (int i = 0; i < _NUM_PLAYERS; ++i) {
+    char font[256];
+    getFont(font, sizeof(font));
+    for (int i = 0; i < numPlayers_; ++i) {
         characters_.push_back(new Character(state2p()(pos, vel), i * angle,
                 matCharBody_, matCharHead_, matCharLimbs_, matCharLimbsOff_));
         players_.push_back(new Player(characters_[i]));
         characterGraphics_.push_back(new CharacterGraphic(characters_[i]));
-        char font[256];
-        getFont(font, sizeof(font));
         char mass [4];
         snprintf(mass, sizeof(mass), "%.0f", characters_[i]->getMass());
         massIndicatorLabels_.push_back(new Label(font, mass, 74, .05,
@@ -194,7 +204,7 @@ void Game::conceive() {
         massIndicatorGfx_.push_back(new MassIndicatorGraphic(0.05f, 0.02f,
                     massIndicators_[i], massIndicatorLabels_[i]));
         massIndicatorPosMods_.push_back(new PositionModifier(i + 1,
-                    _NUM_PLAYERS, true, -0.9));
+                    numPlayers_, true, -0.9));
         massIndicatorGfx_[i]->addModifier(massIndicatorPosMods_[i]);
         massIndicatorGfx_[i]->addModifier(
                 characterGraphics_[i]->getColourModifier());
@@ -284,4 +294,3 @@ void Game::draw() {
         massIndicatorLabels_[i]->setText(mass);
     }
 }
-

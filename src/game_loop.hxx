@@ -21,6 +21,7 @@
 #include <SDL/SDL.h>
 #include "game.hxx"
 #include "menu.hxx"
+#include "event_code.hxx"
 
 class GameLoop {
 public:
@@ -31,13 +32,18 @@ public:
     /** Number of simulation steps between each event update. */
     static const int _EVENT_INTERVAL = 20;
     GameLoop();
+    ~GameLoop();
     int run();
 private:
     GameLoop(const GameLoop&);
     GameLoop& operator=(const GameLoop&);
-    bool running_, menuP_;
+    int numPlayers_, numCPUs_;
+    bool running_, menuP_, inputP_;
+    char* userInput_;
+    EventCode activeInput_;
     Screen* screen_;
     Game* limbsOff_;
+    InputFieldGraphic* inputFieldGraphic_;
     Menu menu_;
     int prevWidth_, prevHeight_;
     Uint8* keystate_;

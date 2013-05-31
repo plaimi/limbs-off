@@ -29,7 +29,7 @@
 class Game: public EventHandler {
 public:
     /** Initialise the game. */
-    Game(Screen* screen);
+    Game(Screen* screen, int numPlayers, int numCPUs);
     virtual ~Game();
     /** Handle input. */
     bool handle(const SDL_Event& event);
@@ -46,8 +46,6 @@ private:
     static const int _MAX_PC;
     /** Max planets. */
     static const int _MAX_PLAN;
-    /** Number of players. */
-    static const int _NUM_PLAYERS;
     /** Planet colour. */
     static const float _COL_PLANET[];
     /** Planet gravity "mass". */
@@ -58,6 +56,10 @@ private:
     static const phys_t _S;
     /** Planet radius. */
     static const phys_t _PR;
+    /** Number of players. */
+    int numPlayers_;
+    /** Number of AIs. */
+    int numCPUs_;
     std::vector<AstroBody*> planets_;
     BackgroundModifier* backgroundModifier_;
     Camera* camera_;

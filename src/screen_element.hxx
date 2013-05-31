@@ -20,6 +20,8 @@
 #ifndef SCREEN_ELEMENT_HXX_
 #define SCREEN_ELEMENT_HXX_
 
+#include <SDL/SDL.h>
+
 class ScreenElement {
 public:
     ScreenElement();
@@ -29,6 +31,22 @@ public:
 protected:
     int position_;
 };
+
+class FloatElement: public ScreenElement {
+};
+
+class InputField: public FloatElement {
+public:
+    InputField();
+    bool getInput(SDL_Event &event, char* c);
+    char* getText();
+    void setText(char* text);
+private:
+    InputField& operator=(const InputField&);
+    InputField(const InputField&);
+    char* text_;
+};
+
 
 class GuiElement: public ScreenElement {
 public:

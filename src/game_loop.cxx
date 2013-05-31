@@ -20,6 +20,7 @@
 
 #include <GL/gl.h>
 #include "repeat.hxx"
+#include "get_font.hxx"
 #include "game_loop.hxx"
 #include "event_code.hxx"
 #include "step_timer.hxx"
@@ -31,9 +32,24 @@ GameLoop::GameLoop() :
         limbsOff_(NULL),
         running_(true),
         menuP_(true),
+        inputP_(false),
+        userInput_(),
+        numPlayers_(1),
+        numCPUs_(0),
+        activeInput_(NUM_EVENT_CODE),
         keystate_(SDL_GetKeyState(NULL)),
         stepCounter_(0),
-        menu_() {
+        menu_(),
+        inputFieldGraphic_(NULL) {
+    // This is necessary for the input field
+    SDL_EnableUNICODE(1);
+    // Stores user input from the input field in menu
+    userInput_ = (char*) malloc(32);
+    userInput_[0] = '\0';
+}
+
+GameLoop::~GameLoop() {
+    free(userInput_);
 }
 
 bool GameLoop::handleEvents() {
@@ -59,19 +75,57 @@ bool GameLoop::handleEvents() {
             continue;
         // Menu
         if (event.type == SDL_KEYDOWN &&
-                event.key.keysym.sym == SDLK_ESCAPE)
+                event.key.keysym.sym == SDLK_ESCAPE && !inputP_)
             menuP_ = !menuP_;
-        if (menuP_)
+        // Input field
+        if (inputP_) {
+            if (!menu_.getChoice(event, userInput_)) {
+                // Update the logic's text
+                menu_.getInputField()->setText(userInput_);
+                // Update the graphic's text
+                inputFieldGraphic_->setText();
+            }
+            else {
+                inputP_ = false;
+                menuP_ = true;
+                switch (activeInput_) {
+                case CHANGE_PLAYERS:
+                    numPlayers_ = max(strtol(userInput_, 0, 10), 1L);
+                    break;
+                case CHANGE_CPUS:
+                    numCPUs_ = max(strtol(userInput_, 0, 10), 1L);
+                    break;
+                default:
+                    ;
+                }
+                userInput_[0] = '\0';
+            }
+        }
+        else if (menuP_)
             menuP_ = !menu_.handle(event);
         // Game
         else
             if (limbsOff_)
                 limbsOff_->handle(event);
+        // Userevents
         if (event.type == SDL_USEREVENT) {
-            if (event.user.code == NEW_GAME) {
+            switch (event.user.code) {
+            case NEW_GAME:
                 if (limbsOff_)
                     delete limbsOff_;
-                limbsOff_ = new Game(screen_);
+                limbsOff_ = new Game(screen_, numPlayers_, numCPUs_);
+                break;
+            case CHANGE_PLAYERS:
+                activeInput_ = CHANGE_PLAYERS;
+                inputP_ = true;
+                break;
+            case CHANGE_CPUS:
+                activeInput_ = CHANGE_CPUS;
+                inputP_ = true;
+                inputP_ = true;
+                break;
+            default:
+                ;
             }
         }
     }
@@ -87,6 +141,9 @@ int GameLoop::run() {
     for (int i = 0; i < j; ++i)
         SDL_JoystickOpen(i);
     MenuGraphic menugraphic(&menu_);
+    char font[256];
+    getFont(font, sizeof(font));
+    inputFieldGraphic_ = new InputFieldGraphic(font, menu_.getInputField());
     Uint32 time = SDL_GetTicks();
     while (running_) {
         int steps = timer.getStepTime() * _STEPS_PER_SECOND;
@@ -102,6 +159,9 @@ int GameLoop::run() {
             handleEvents();
         // Draw
         glClear(GL_COLOR_BUFFER_BIT);
+        // Input field
+        if (inputP_)
+            inputFieldGraphic_->draw();
         // Menu
         if (menuP_)
             menugraphic.draw();

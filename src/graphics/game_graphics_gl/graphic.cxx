@@ -265,7 +265,7 @@ void Label::make() {
         printf("error opening font: %s\n", TTF_GetError());
     // Doesn't matter
     SDL_Color bg = {0, 0, 0};
-    SDL_Surface* surface = TTF_RenderText_Shaded(font_, text_, bg, bg);
+    SDL_Surface* surface = TTF_RenderUTF8_Shaded(font_, text_, bg, bg);
     if (texture_)
         glDeleteTextures(1, &texture_);
     glGenTextures(1, &texture_);
@@ -301,6 +301,105 @@ void Label::setText(const char* text) {
     text_ = (char*) malloc(strlen(text) + 1);
     strcpy(text_, text);
     make();
+}
+
+InputFieldGraphic::InputFieldGraphic(const char* face, ScreenElement* logic) :
+        face_(NULL),
+        size_(512),
+        width_(0.5),
+        height_(0.5),
+        font_(NULL),
+        text_(NULL),
+        texture_(0),
+        logic_(logic) {
+    TTF_Init();
+    if (!TTF_WasInit() && TTF_Init() == -1) {
+        printf("error initialising fontconfig: %s\n", TTF_GetError());
+        exit(1);
+    }
+    text_ = (char*) malloc(32);
+    setFace(face);
+    setText();
+}
+
+InputFieldGraphic::~InputFieldGraphic() {
+    free(face_);
+    free(text_);
+}
+
+void InputFieldGraphic::doDraw() {
+    Screen::getInstance()->setDrawingMode(0, Screen::_DM_PREMUL);
+    glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT);
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, texture_);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 1.0);
+    glVertex2f(-width_, -height_);
+    glTexCoord2f(1.0, 1.0);
+    glVertex2f(width_, -height_);
+    glTexCoord2f(1.0, 0.0);
+    glVertex2f(width_, height_);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2f(-width_, height_);
+    glEnd();
+    drawShadow();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPopAttrib();
+}
+
+void InputFieldGraphic::drawShadow() {
+    // TODO: Implement shadow properly...
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(.0, 1.);
+    glVertex2f(-width_ + width_ / 50.0, -height_ - height_ / 10.0);
+    glTexCoord2f(1., 1.);
+    glVertex2f(width_ + width_ / 50.0, -height_ - height_ / 10.0);
+    glTexCoord2f(1., .0);
+    glVertex2f(width_ + width_ / 50.0, height_ - height_ / 10.0);
+    glTexCoord2f(.0, .0);
+    glVertex2f(-width_ + width_ / 50.0, height_ - height_ / 10.0);
+    glEnd();
+}
+
+char* InputFieldGraphic::getText() {
+    return text_;
+}
+
+void InputFieldGraphic::setText() {
+    strcpy(text_, ((InputField*) logic_)->getText());
+    make();
+}
+
+void InputFieldGraphic::setFace(const char* face) {
+    if (face_ != NULL)
+        free(face_);
+    face_ = (char*) malloc(strlen(face) + 1);
+    strcpy(face_, face);
+    TTF_CloseFont(font_);
+    font_ == NULL;
+}
+
+void InputFieldGraphic::make() {
+    if (font_ == NULL)
+        font_ = TTF_OpenFont(face_, size_);
+    if (font_ == NULL)
+        printf("error opening font: %s\n", TTF_GetError());
+    // Doesn't matter
+    SDL_Color bg = {0, 0, 0};
+    if (text_[0] == '\0')
+        strcpy(text_, "ENTER VALUE");
+    SDL_Surface* surface = TTF_RenderUTF8_Shaded(font_, text_, bg, bg);
+    if (texture_)
+        glDeleteTextures(1, &texture_);
+    glGenTextures(1, &texture_);
+    glBindTexture(GL_TEXTURE_2D, texture_);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA8, surface->w, surface->h, 0,
+            GL_ALPHA, GL_UNSIGNED_BYTE, surface->pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    SDL_FreeSurface(surface);
 }
 
 Disk::Disk(GLfloat r, int n) :

@@ -21,7 +21,10 @@
 #define CODE_HXX_
 
 enum EventCode {
-    NEW_GAME
+    NEW_GAME,
+    CHANGE_PLAYERS,
+    CHANGE_CPUS,
+    NUM_EVENT_CODE
 };
 
 #endif /* CODE_HXX_ */

@@ -131,6 +131,35 @@ private:
     ScreenGraphic& operator=(const ScreenGraphic&);
 };
 
+class InputFieldGraphic: public ScreenGraphic {
+public:
+    InputFieldGraphic(const char* face, ScreenElement* logic);
+    ~InputFieldGraphic();
+    char* getText();
+    void doDraw();
+    void setFace(const char* face);
+    void setText();
+private:
+    ScreenElement* logic_; // Why the fuck isn't this inherited?
+    InputFieldGraphic(const InputFieldGraphic&);
+    InputFieldGraphic& operator=(const InputFieldGraphic&);
+    /** The font name. */
+    char* face_;
+    /** The printed text. */
+    char* text_;
+    /** The size of the field. */
+    GLfloat width_, height_;
+    /* The texture created from surface_. */
+    GLuint texture_;
+    /** The font size. */
+    int size_;
+    /** The actual TTF_Font. */
+    TTF_Font* font_;
+    void drawShadow();
+    void make();
+};
+
+
 class Label: public Graphic {
 public:
     Label(const char* face, const char* text, int size, GLfloat width,
