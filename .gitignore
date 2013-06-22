@@ -24,7 +24,9 @@ stamp-h1
 # Binaries.
 *.[oa]
 limbs-off
-test/input_bindings
+
+# Test art.
+*.png
 
 .*
 *~
