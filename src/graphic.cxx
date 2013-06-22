@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <math.h>
 #include "get_font.hxx"
-#include "graphics/game_graphics_gl.hxx"
+#include "game_graphics_gl.hxx"
 #include "geometry.hxx"
 
 GraphicFixture::GraphicFixture(Body* body) :

@@ -21,8 +21,8 @@
 #ifndef CHARACTER_HXX_
 #define CHARACTER_HXX_
 
-#include "graphics/game_graphics_gl.hxx"
-#include "physics/game_physics.hxx"
+#include "game_graphics_gl.hxx"
+#include "game_physics.hxx"
 #include "action.hxx"
 
 class Character {

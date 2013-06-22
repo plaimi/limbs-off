@@ -19,7 +19,7 @@
  */
 
 #include <png.h>
-#include "graphics/game_graphics_gl.hxx"
+#include "game_graphics_gl.hxx"
 
 const GLint FORMAT[] = { GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA };
 

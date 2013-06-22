@@ -21,8 +21,8 @@
 #ifndef GAME_HXX_
 #define GAME_HXX_
 
-#include "graphics/game_graphics_gl.hxx"
-#include "physics/game_physics.hxx"
+#include "game_graphics_gl.hxx"
+#include "game_physics.hxx"
 #include "player.hxx"
 #include "screen_element.hxx"
 

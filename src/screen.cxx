@@ -19,7 +19,7 @@
  */
 
 #include <SDL/SDL.h>
-#include "graphics/game_graphics_gl.hxx"
+#include "game_graphics_gl.hxx"
 
 bool Screen::_fullscreen_ = false;
 int Screen::_surfaceWidth_ = 640;

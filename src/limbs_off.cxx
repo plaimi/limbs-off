@@ -22,7 +22,7 @@
 #include <config.h>
 #endif
 
-#include "graphics/game_graphics_gl.hxx"
+#include "game_graphics_gl.hxx"
 #include "game_loop.hxx"
 
 int main(int argc, char *argv[]) {

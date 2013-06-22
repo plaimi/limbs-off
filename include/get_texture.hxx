@@ -20,7 +20,7 @@
 #ifndef GET_TEXTURE_H_
 #define GET_TEXTURE_H_
 
-#include "graphics/game_graphics_gl.hxx"
+#include "game_graphics_gl.hxx"
 
 GLuint getTexture(const char* filename);
 

@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "graphics/game_graphics_gl.hxx"
+#include "game_graphics_gl.hxx"
 
 Camera::Camera(state2p state, GLfloat radius, GLfloat rotation) :
         state_(state),

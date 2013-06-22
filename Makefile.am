@@ -47,50 +47,28 @@ AM_CFLAGS =\
 
 bin_PROGRAMS = limbs-off
 
+INCLUDES = -I${srcdir}/include
+
 limbs_off_SOURCES = \
-	src/repeat.hxx \
-	src/config_parser.hxx \
 	src/config_parser.cxx \
-	src/get_font.hxx \
-	src/step_timer.hxx \
 	src/step_timer.cxx \
-	src/template_math.hxx \
-	src/template_math_inl.hxx \
-	src/geometry.hxx \
-	src/geometry_inl.hxx \
-	src/physics.hxx \
-	src/physics_inl.hxx \
-	src/physics/physics.cxx \
-	src/physics/game_physics.hxx \
-	src/physics/game_physics/game_physics.cxx \
-	src/graphics.hxx \
-	src/graphics/graphics.cxx \
-	src/graphics/game_graphics_gl.hxx \
-	src/graphics/game_graphics_gl/camera.cxx \
-	src/graphics/game_graphics_gl/graphic.cxx \
-	src/graphics/game_graphics_gl/screen.cxx \
-	src/graphics/game_graphics_gl/texture_loader.cxx \
-	src/event_code.hxx \
-	src/screen_element.hxx \
+	src/physics.cxx \
+	src/game_physics.cxx \
+	src/graphics.cxx \
+	src/camera.cxx \
+	src/graphic.cxx \
+	src/screen.cxx \
+	src/texture_loader.cxx \
 	src/screen_element.cxx \
-	src/menu.hxx \
-	src/menu/menu.cxx \
-	src/menu/submenu.cxx \
-	src/event_handler.hxx \
-	src/collision_handler.hxx \
+	src/menu.cxx \
+	src/submenu.cxx \
 	src/collision_handler.cxx \
-	src/character.hxx \
 	src/character.cxx \
-	src/action.hxx \
-	src/actor.hxx \
 	src/actor.cxx \
-	src/player.hxx \
 	src/player.cxx \
-	src/game.hxx \
-	src/game/game.cxx \
-	src/game_loop.hxx \
+	src/game.cxx \
 	src/game_loop.cxx \
-	src/bin/limbs_off.cxx
+	src/limbs_off.cxx
 
 limbs_off_LDFLAGS = 
 

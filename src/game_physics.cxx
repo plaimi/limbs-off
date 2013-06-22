@@ -21,7 +21,7 @@
 #include <math.h>
 #include "collision_handler.hxx"
 #include "geometry.hxx"
-#include "physics/game_physics.hxx"
+#include "game_physics.hxx"
 
 SmallBody::SmallBody(state2p s, phys_t mass, phys_t orientation, phys_t av,
         phys_t moi, Shape<phys_t>* shape, Material* material,
