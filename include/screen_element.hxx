@@ -76,4 +76,4 @@ public:
     MassIndicator(int position);
 };
 
-#endif /*SCREEN_ELEMENT_HXX_*/
+#endif /* SCREEN_ELEMENT_HXX_ */

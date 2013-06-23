@@ -37,4 +37,4 @@ private:
     std::map<Body*, Character*> monitored_;
 };
 
-#endif /*COLLISION_HANDLER_HXX_*/
+#endif /* COLLISION_HANDLER_HXX_ */

@@ -28,4 +28,4 @@ inline GLuint getTexture(const char* filename) {
     return TextureLoader::getInstance()->getTexture(filename);
 }
 
-#endif /*GET_TEXTURE_H_*/
+#endif /* GET_TEXTURE_H_ */

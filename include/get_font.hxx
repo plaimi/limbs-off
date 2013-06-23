@@ -47,4 +47,4 @@ inline void getFont(char* result, size_t size, const char* fontFamily,
     FcPatternDestroy(fontPattern);
 }
 
-#endif /*GET_FONT_HXX_*/
+#endif /* GET_FONT_HXX_ */

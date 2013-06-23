@@ -18,6 +18,9 @@
  * along with Limbs Off.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef GAME_LOOP_HXX_
+#define GAME_LOPP_HXX_
+
 #include <SDL/SDL.h>
 #include "game.hxx"
 #include "menu.hxx"
@@ -50,3 +53,5 @@ private:
     unsigned int stepCounter_;
     bool handleEvents();
 };
+
+#endif /* GAME_LOOP_HXX_ */

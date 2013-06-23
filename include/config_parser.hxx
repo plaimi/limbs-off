@@ -27,4 +27,4 @@ namespace ConfigParser {
 void readBindings(Player* player, const char* file);
 }
 
-#endif /*CONFIG_PARSER_HXX_*/
+#endif /* CONFIG_PARSER_HXX_ */
