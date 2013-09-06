@@ -72,7 +72,7 @@ AC_ARG_WITH(
     [AS_HELP_STRING([--with-icondir=DIR], [path to icon directory (default: 
         $datadir/pixmaps)])],
     [ICONDIR="$withval"],
-    [ICONDIR="$datadir/pixmaps"]
+    [ICONDIR='$(datadir)/pixmaps']
 )
 
 # Let user specify desktopdir
@@ -81,7 +81,7 @@ AC_ARG_WITH(
     [AS_HELP_STRING([--with-desktopdir=DIR], [path to desktop directory 
         (default: $datadir/applications)])],
     [DESKTOPDIR="$withval"],
-    [DESKTOPDIR="$datadir/applications"]
+    [DESKTOPDIR='$(datadir)/applications']
 )
 
 AC_SUBST([DESKTOPDIR])
